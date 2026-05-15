@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: prestige_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER:-prestige_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-prestige_pass}
+      POSTGRES_DB: ${DB_NAME:-prestige_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    container_name: prestige_web
+    restart: always
+    command: scripts/entrypoint.sh
+    volumes:
+      - .:/app
+      - ./logs:/app/logs
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://${DB_USER:-prestige_user}:${DB_PASSWORD:-prestige_pass}@db:5432/${DB_NAME:-prestige_db}
+      FLASK_ENV: production
+      SECRET_KEY: ${SECRET_KEY}
+      MAIL_SERVER: ${MAIL_SERVER}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USE_TLS: ${MAIL_USE_TLS}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
