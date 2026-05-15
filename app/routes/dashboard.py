@@ -5,6 +5,7 @@ from app.models.user import User
 from app.models.investment import InvestmentPlan, UserInvestment
 from app.models.finance import Currency, Deposit, Withdrawal
 from app.models.notification import Notification
+from app.services.notification_service import notify_withdrawal_received, notify_deposit_received
 from app.forms.investment import InvestForm
 from app.forms.finance import DepositForm, WithdrawalForm
 import os
@@ -99,6 +100,8 @@ def deposit():
         db.session.add(deposit)
         db.session.commit()
         
+        notify_deposit_received(current_user, deposit)
+        
         flash('Deposit submitted successfully! Our team will verify it soon.', 'success')
         return redirect(url_for('dashboard.history'))
         
@@ -147,10 +150,12 @@ def withdraw():
         db.session.add(withdrawal)
         db.session.commit()
         
+        notify_withdrawal_received(current_user, withdrawal)
+        
         flash('Withdrawal request submitted successfully!', 'success')
         return redirect(url_for('dashboard.history'))
         
-    return render_template('dashboard/withdraw.html', title='Withdraw Funds', currencies=currencies, form=form)
+    return render_template('dashboard/withdraw.html', title='Transfer Funds', currencies=currencies, form=form)
 
 @dashboard_bp.route('/notifications')
 @login_required

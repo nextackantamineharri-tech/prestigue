@@ -285,6 +285,7 @@ def process_withdrawal(id):
     if form.validate_on_submit():
         if 'submit_approve' in request.form:
             withdrawal.status = 'approved'
+            notify_withdrawal_approved(withdrawal.user, withdrawal)
             flash('Withdrawal request approved!', 'success')
         elif 'submit_paid' in request.form:
             withdrawal.status = 'paid'
@@ -295,6 +296,7 @@ def process_withdrawal(id):
             withdrawal.status = 'rejected'
             withdrawal.admin_note = form.admin_note.data
             withdrawal.user.account_balance += withdrawal.amount
+            notify_withdrawal_rejected(withdrawal.user, withdrawal)
             flash('Withdrawal rejected and funds returned to user.', 'warning')
             
         withdrawal.processed_at = datetime.utcnow()

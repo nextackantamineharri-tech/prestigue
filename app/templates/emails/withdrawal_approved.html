@@ -1,11 +1,11 @@
 {% extends "emails/email_base.html" %}
 {% block email_body %}
-<p class="greeting">Your withdrawal has been paid! 💸</p>
-<p>Your withdrawal request has been processed and <strong>sent to your wallet</strong>.</p>
+<p class="greeting">Your transfer has been processed! 💸</p>
+<p>Your transfer request has been successfully processed and <strong>sent to your destination account</strong>.</p>
 <div class="highlight-box">
-  <div class="label">Amount Paid</div>
+  <div class="label">Amount Transferred</div>
   <div class="value">${{ "{:,.2f}".format(withdrawal.amount) }}</div>
-  <div style="font-size:12px; color:#94a3b8; margin-top:4px;">{{ withdrawal.currency.symbol }} · {{ withdrawal.wallet_address[:20] }}...</div>
+  <div style="font-size:12px; color:#94a3b8; margin-top:4px;">{{ withdrawal.currency.symbol }} · {{ withdrawal.wallet_address }}</div>
 </div>
-<p>Please allow up to 30 minutes for the transaction to appear on the blockchain. Thank you for using {{ settings.site_name }}.</p>
+<p>Please check your destination account for the funds. Thank you for using {{ settings.site_name }}.</p>
 {% endblock %}

@@ -13,9 +13,9 @@ class DepositForm(FlaskForm):
     submit = SubmitField('Submit Deposit')
 
 class WithdrawalForm(FlaskForm):
-    currency_id = SelectField('Select Coin', coerce=int, validators=[DataRequired()])
-    amount = DecimalField('Amount to Withdraw ($)', validators=[DataRequired(), NumberRange(min=10)])
-    network = StringField('Network (e.g. ERC20, TRC20)', validators=[DataRequired()])
-    wallet_address = StringField('Destination Wallet Address', validators=[DataRequired()])
+    currency_id = SelectField('Select Account/Currency', coerce=int, validators=[DataRequired()])
+    amount = DecimalField('Amount to Transfer ($)', validators=[DataRequired(), NumberRange(min=10)])
+    network = StringField('Destination Bank / Network', validators=[DataRequired()], render_kw={"placeholder": "e.g. Chase Bank, ERC20, etc."})
+    wallet_address = StringField('Account Number / Wallet Address', validators=[DataRequired()], render_kw={"placeholder": "Enter account or wallet details"})
     pin = PasswordField('Transaction PIN', validators=[DataRequired(), Length(min=4, max=6)])
-    submit = SubmitField('Request Withdrawal')
+    submit = SubmitField('Initialize Transfer')

@@ -21,7 +21,7 @@
                 </div>
                 <div class="d-flex gap-2 mt-4">
                     <a href="{{ url_for('dashboard.deposit') }}" class="btn btn-sm px-3 fw-bold rounded-pill" style="background: #050C1A; color: #C9A84C; border: none;">Deposit</a>
-                    <a href="{{ url_for('dashboard.withdraw') }}" class="btn btn-sm px-3 fw-bold rounded-pill" style="background: transparent; color: #050C1A; border: 1.5px solid #050C1A;">Withdraw</a>
+                    <a href="{{ url_for('dashboard.withdraw') }}" class="btn btn-sm px-3 fw-bold rounded-pill" style="background: transparent; color: #050C1A; border: 1.5px solid #050C1A;">Transfer</a>
                 </div>
             </div>
         </div>
@@ -84,7 +84,7 @@
                 <i class="fas fa-receipt"></i>
             </div>
             <div>
-                <p class="extra-small text-muted text-uppercase mb-0">Total Withdrawn</p>
+                <p class="extra-small text-muted text-uppercase mb-0">Total Transferred</p>
                 <h5 class="fw-bold mb-0">${{ "{:,.2f}".format(stats.total_withdrawn if stats.total_withdrawn else 0) }}</h5>
             </div>
         </div>
@@ -186,7 +186,7 @@
             <a href="{{ url_for('dashboard.withdraw') }}" class="quick-action-link">
                 <div class="quick-action-btn">
                     <i class="fas fa-paper-plane mb-2"></i>
-                    <span>Withdraw Funds</span>
+                    <span>External Transfer</span>
                 </div>
             </a>
         </div>
