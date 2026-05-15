@@ -1,13 +1,8 @@
 #!/bin/bash
 
-# Wait for database to be ready
-echo "Waiting for postgres..."
+# Wait for database (Railway handles service readiness, but we'll log attempt)
+echo "Initializing Prestige Terminal..."
 
-while ! nc -z db 5432; do
-  sleep 0.1
-done
-
-echo "PostgreSQL started"
 
 # Run migrations
 echo "Running database migrations..."
