@@ -1,9 +1,11 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField, URLField, EmailField, BooleanField
+from flask_wtf.file import FileField, FileAllowed
+from wtforms import StringField, SubmitField, TextAreaField, URLField, EmailField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Length, Optional
 
 class SystemSettingsForm(FlaskForm):
-    # Site Info
+    # ... (rest of SystemSettingsForm stays the same)
+    # I'll just keep the whole file structure for simplicity in replacement
     site_name = StringField('Website Name', validators=[DataRequired(), Length(max=100)])
     site_email = EmailField('Support Email', validators=[DataRequired()])
     site_phone = StringField('Support Phone', validators=[Optional()])
@@ -38,7 +40,14 @@ class InvestmentPlanForm(FlaskForm):
     roi_percentage = StringField('ROI Percentage (%)', validators=[DataRequired()])
     duration_days = StringField('Duration (Days)', validators=[DataRequired()])
     
-    profit_type = StringField('Profit Type (daily/fixed)', validators=[DataRequired()])
+    profit_type = SelectField('Profit Type', choices=[('daily', 'Daily Profit'), ('fixed', 'Fixed Profit (at end)')], validators=[DataRequired()])
+    payout_frequency = SelectField('Payout Frequency', choices=[
+        ('daily', 'Daily'),
+        ('weekly', 'Weekly'),
+        ('monthly', 'Monthly'),
+        ('fixed', 'At the end of duration')
+    ], validators=[DataRequired()])
+    
     return_capital = BooleanField('Return Capital at End')
     is_active = BooleanField('Active')
     is_featured = BooleanField('Featured Plan')
@@ -48,7 +57,12 @@ class InvestmentPlanForm(FlaskForm):
 class CurrencyForm(FlaskForm):
     name = StringField('Currency Name (e.g. Bitcoin)', validators=[DataRequired()])
     symbol = StringField('Symbol (e.g. BTC)', validators=[DataRequired()])
+    network = StringField('Network (e.g. ERC20, TRC20)', validators=[Optional()])
     wallet_address = StringField('Wallet Address', validators=[DataRequired()])
+    logo = FileField('Currency Logo', validators=[
+        Optional(),
+        FileAllowed(['jpg', 'png', 'jpeg', 'svg'], 'Images only!')
+    ])
     is_active = BooleanField('Active')
     submit = SubmitField('Save Currency')
 

@@ -3,55 +3,74 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-lg-6">
-        <div class="card shadow-lg border-0 p-4">
-            <h4 class="fw-bold mb-4">Withdraw Funds</h4>
+        <div class="animate-up">
+            <h1 class="section-heading mb-4" style="font-family: 'Playfair Display', serif;">Withdraw Liquidity</h1>
+            <div class="gold-divider mb-5"></div>
             
-            <div class="alert alert-info border-0 rounded-4 small mb-4">
-                <div class="d-flex">
-                    <i class="fas fa-info-circle me-3 mt-1"></i>
-                    <div>
-                        Available Balance: <strong>${{ "{:,.2f}".format(current_user.account_balance) }}</strong><br>
-                        <span class="extra-small">Minimum withdrawal is $10.00</span>
-                    </div>
-                </div>
+            <div class="glass-card p-4 mb-4 text-center border-0" style="background: linear-gradient(rgba(201,168,76,0.05), transparent);">
+                <p class="extra-small text-muted text-uppercase fw-bold letter-spacing-widest mb-2">Withdrawable Capital</p>
+                <h2 class="display-5 fw-bold text-primary mb-0" style="font-family: 'Playfair Display', serif;">${{ "{:,.2f}".format(current_user.account_balance) }}</h2>
             </div>
 
-            <form method="POST" action="">
-                {{ form.hidden_tag() }}
-                
-                <div class="mb-3">
-                    {{ form.currency_id.label(class="form-label small fw-bold") }}
-                    {{ form.currency_id(class="form-select", id="currencySelector") }}
-                </div>
-
-                <div class="mb-3">
-                    {{ form.amount.label(class="form-label small fw-bold") }}
-                    <div class="input-group">
-                        <span class="input-group-text bg-white border-end-0">$</span>
-                        {{ form.amount(class="form-control border-start-0", placeholder="0.00") }}
+            <div class="glass-card p-4 p-md-5">
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label">Asset Selection</label>
+                            {{ form.currency_id(class="form-select form-select-lg", id="currencySelector") }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Withdrawal Amount (USD)</label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-dark bg-opacity-50 border-end-0 text-primary">$</span>
+                                {{ form.amount(class="form-control border-start-0", placeholder="0.00") }}
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="mb-3">
-                    {{ form.wallet_address.label(class="form-label small fw-bold") }}
-                    {{ form.wallet_address(class="form-control", placeholder="Enter your destination wallet address") }}
-                </div>
+                    <div class="mb-4">
+                        <label class="form-label">Destination Network</label>
+                        {{ form.network(class="form-control form-control-lg", placeholder="e.g. ERC20, BEP20, TRC20") }}
+                        <div class="form-text extra-small opacity-50 mt-2">Critical: The network MUST match your destination wallet configuration.</div>
+                    </div>
 
-                <div class="mb-4">
-                    {{ form.pin.label(class="form-label small fw-bold") }}
-                    {{ form.pin(class="form-control text-center fs-4 tracking-widest", placeholder="••••", maxlength="6", type="password") }}
-                    <div class="form-text extra-small text-center">Enter your 4-6 digit Transaction PIN to authorize this request.</div>
-                </div>
+                    <div class="mb-4">
+                        <label class="form-label">Recipient Wallet Address</label>
+                        {{ form.wallet_address(class="form-control form-control-lg", placeholder="Enter institutional address") }}
+                    </div>
 
-                <div class="d-grid">
-                    {{ form.submit(class="btn btn-primary btn-lg rounded-pill", data_bs_toggle="tooltip", title="Submit withdrawal request for approval") }}
-                </div>
-            </form>
+                    <div class="mb-5">
+                        <label class="form-label d-block text-center mb-3">Security Authorization PIN</label>
+                        <div class="position-relative mx-auto" style="max-width: 200px;">
+                            <div class="position-absolute top-50 start-0 translate-middle-y ps-3">
+                                <i class="fas fa-shield-halved text-primary"></i>
+                            </div>
+                            {{ form.pin(class="form-control form-control-lg text-center fs-4 tracking-widest ps-5", placeholder="••••", maxlength="6", type="password") }}
+                        </div>
+                        <div class="form-text extra-small text-center mt-3 opacity-50">Authorized transaction PIN required for capital release.</div>
+                    </div>
+
+                    <div class="p-4 rounded-4 bg-warning bg-opacity-5 border border-warning border-opacity-10 d-flex gap-3 mb-5">
+                        <i class="fas fa-circle-info text-warning mt-1"></i>
+                        <div class="extra-small text-muted">
+                            <p class="mb-1 text-warning fw-bold">Withdrawal Protocol</p>
+                            All outflow requests are subject to internal audit for anti-money laundering compliance. Average processing time is 24-48 business hours.
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-gold btn-lg py-3") }}
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
 <style>
     .tracking-widest { letter-spacing: 0.5em; }
+    .letter-spacing-widest { letter-spacing: 0.15em; }
 </style>
 {% endblock %}

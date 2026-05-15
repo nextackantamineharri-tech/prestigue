@@ -1,46 +1,325 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="hero-section">
-    <div class="container text-center">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <h6 class="text-uppercase fw-bold text-primary mb-3">Professional Asset Management</h6>
-                <h1 class="display-3 fw-bold mb-4">Smart Crypto Investing for a <span class="text-gradient">Secure Future</span></h1>
-                <p class="lead text-muted mb-5">Experience a new era of investment. Our expert-managed portfolios are designed to deliver consistent returns while minimizing risk. Join thousands of investors worldwide.</p>
-                <div class="d-flex justify-content-center gap-3">
-                    <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg rounded-pill px-5">Get Started Now</a>
-                    <a href="{{ url_for('main.about') }}" class="btn btn-outline-dark btn-lg rounded-pill px-5">Learn More</a>
+<!-- SECTION 1 — HERO -->
+<section class="hero-section min-vh-100 d-flex align-items-center position-relative overflow-hidden" style="background: radial-gradient(circle at top right, rgba(26, 110, 255, 0.05), transparent);">
+    <!-- Decorative geometric background -->
+    <div class="position-absolute top-50 translate-middle-y end-0 d-none d-lg-block" style="right: -100px !important;">
+        <svg width="600" height="600" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity: 0.05;">
+            <path d="M300 50L550 175V425L300 550L50 425V175L300 50Z" stroke="#C9A84C" stroke-width="2"/>
+            <path d="M300 100L500 200V400L300 500L100 400V200L300 100Z" stroke="#C9A84C" stroke-width="1"/>
+        </svg>
+    </div>
+
+    <div class="container position-relative z-1">
+        <div class="row align-items-center">
+            <div class="col-lg-6 animate-up">
+                <h6 class="text-uppercase fw-bold text-primary mb-3" style="letter-spacing: 0.15em; font-size: 0.75rem;">INSTITUTIONAL ASSET MANAGEMENT</h6>
+                <h1 class="section-heading mb-4">Grow Your Wealth Through <span class="text-gradient">Expert-Managed</span> Crypto Investments</h1>
+                <p class="section-subheading mb-4">Prestige Finance Global gives you access to professionally managed digital asset portfolios. We handle the complexity. You enjoy the returns.</p>
+                <div class="gold-divider mb-5"></div>
+                <div class="d-flex flex-wrap gap-3 mb-5">
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-gold">Start Investing</a>
+                    <a href="#plans" class="btn btn-outline-gold">View Plans</a>
+                </div>
+                <div class="row g-0 align-items-center mt-4">
+                    <div class="col-auto">
+                        <span class="small text-muted fw-bold">10,000+ Investors</span>
+                    </div>
+                    <div class="col-auto px-3">
+                        <div style="width: 1px; height: 20px; background: rgba(201,168,76,0.3);"></div>
+                    </div>
+                    <div class="col-auto">
+                        <span class="small text-muted fw-bold">$50M+ Managed</span>
+                    </div>
+                    <div class="col-auto px-3">
+                        <div style="width: 1px; height: 20px; background: rgba(201,168,76,0.3);"></div>
+                    </div>
+                    <div class="col-auto">
+                        <span class="small text-muted fw-bold">150+ Countries</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mt-5 mt-lg-0 animate-up" style="animation-delay: 0.2s;">
+                <div class="glass-card p-4 p-md-5">
+                    <h3 class="mb-4 fw-bold" style="font-family: 'Playfair Display', serif;">Platform Overview</h3>
+                    
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2);">
+                            <i class="fas fa-vault text-primary small"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <span class="extra-small text-muted text-uppercase d-block letter-spacing-widest">Total Deposits</span>
+                            <span class="fw-bold text-white">$50M+</span>
+                        </div>
+                    </div>
+                    <hr style="border-color: rgba(255,255,255,0.05);">
+                    
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2);">
+                            <i class="fas fa-layer-group text-primary small"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <span class="extra-small text-muted text-uppercase d-block letter-spacing-widest">Active Plans</span>
+                            <span class="fw-bold text-white">12</span>
+                        </div>
+                    </div>
+                    <hr style="border-color: rgba(255,255,255,0.05);">
+                    
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2);">
+                            <i class="fas fa-chart-line text-primary small"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <span class="extra-small text-muted text-uppercase d-block letter-spacing-widest">Avg. ROI</span>
+                            <span class="fw-bold text-white">8-25%</span>
+                        </div>
+                    </div>
+                    <hr style="border-color: rgba(255,255,255,0.05);">
+                    
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2);">
+                            <i class="fas fa-coins text-primary small"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <span class="extra-small text-muted text-uppercase d-block letter-spacing-widest">Supported Coins</span>
+                            <span class="fw-bold text-white">BTC · ETH · USDT · BNB</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<section class="py-5">
+<!-- SECTION 2 — TRUST TICKER BAR -->
+<div class="ticker-bar py-3 overflow-hidden border-top border-bottom" style="background: var(--color-surface); border-color: var(--color-border) !important;">
+    <div class="d-flex ticker-animation align-items-center">
+        {% for i in range(4) %}
+        <div class="d-flex align-items-center px-4">
+            <i class="fab fa-bitcoin text-primary me-2"></i> <span class="text-muted small fw-bold">Bitcoin (BTC)</span>
+            <span class="mx-4 text-primary opacity-50">·</span>
+            <i class="fab fa-ethereum text-primary me-2"></i> <span class="text-muted small fw-bold">Ethereum (ETH)</span>
+            <span class="mx-4 text-primary opacity-50">·</span>
+            <i class="fas fa-dollar-sign text-primary me-2"></i> <span class="text-muted small fw-bold">USDT</span>
+            <span class="mx-4 text-primary opacity-50">·</span>
+            <i class="fas fa-cube text-primary me-2"></i> <span class="text-muted small fw-bold">BNB</span>
+            <span class="mx-4 text-primary opacity-50">·</span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+@keyframes scrollTicker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+.ticker-animation {
+    display: flex;
+    width: fit-content;
+    animation: scrollTicker 30s linear infinite;
+    white-space: nowrap;
+}
+.letter-spacing-widest { letter-spacing: 0.1em; }
+.extra-small { font-size: 0.65rem; }
+</style>
+
+<!-- SECTION 3 — HOW IT WORKS -->
+<section style="padding: 120px 0; background-color: var(--color-bg);">
+    <div class="container text-center mb-5 animate-up">
+        <h2 class="section-heading">How It Works</h2>
+        <p class="section-subheading mx-auto">Three steps to start earning</p>
+        <div class="gold-divider mx-auto"></div>
+    </div>
+    
     <div class="container">
-        <div class="row g-4 text-center">
-            <div class="col-md-4">
-                <div class="card p-4 h-100">
-                    <div class="text-primary mb-3"><i class="fas fa-shield-alt fa-3x"></i></div>
-                    <h5 class="fw-bold">Bank-Grade Security</h5>
-                    <p class="text-muted small">Your assets are protected by advanced encryption and cold storage solutions. Peace of mind is our priority.</p>
+        <div class="row g-4 position-relative">
+            <!-- Desktop connecting line -->
+            <div class="position-absolute top-50 start-0 w-100 d-none d-lg-block z-0" style="height: 1px; border-top: 1px dashed rgba(201,168,76,0.3);"></div>
+            
+            <div class="col-lg-4 animate-up" style="animation-delay: 0.1s;">
+                <div class="glass-card p-5 h-100 text-center position-relative z-1 overflow-hidden">
+                    <span class="position-absolute top-0 start-0 p-4 opacity-15" style="font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--color-primary); transform: translate(-10%, -10%);">01</span>
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 70px; height: 70px; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2);">
+                        <i class="fas fa-user-plus text-primary fa-lg"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Create Your Account</h5>
+                    <p class="text-muted small mb-0">Join our elite network of investors by completing our secure registration protocol.</p>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card p-4 h-100">
-                    <div class="text-primary mb-3"><i class="fas fa-chart-line fa-3x"></i></div>
-                    <h5 class="fw-bold">Automated Profits</h5>
-                    <p class="text-muted small">Watch your wealth grow. Our automated system distributes profits daily according to your chosen plan.</p>
+            
+            <div class="col-lg-4 animate-up" style="animation-delay: 0.2s;">
+                <div class="glass-card p-5 h-100 text-center position-relative z-1 overflow-hidden">
+                    <span class="position-absolute top-0 start-0 p-4 opacity-15" style="font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--color-primary); transform: translate(-10%, -10%);">02</span>
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 70px; height: 70px; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2);">
+                        <i class="fas fa-wallet text-primary fa-lg"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Fund Your Wallet</h5>
+                    <p class="text-muted small mb-0">Deposit capital using our multi-coin secure gateway. Assets are moved instantly to cold storage.</p>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card p-4 h-100">
-                    <div class="text-primary mb-3"><i class="fas fa-headset fa-3x"></i></div>
-                    <h5 class="fw-bold">24/7 Priority Support</h5>
-                    <p class="text-muted small">Our dedicated support team is always available to assist you with any questions or technical needs.</p>
+            
+            <div class="col-lg-4 animate-up" style="animation-delay: 0.3s;">
+                <div class="glass-card p-5 h-100 text-center position-relative z-1 overflow-hidden">
+                    <span class="position-absolute top-0 start-0 p-4 opacity-15" style="font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--color-primary); transform: translate(-10%, -10%);">03</span>
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 70px; height: 70px; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2);">
+                        <i class="fas fa-coins text-primary fa-lg"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Earn Daily Profits</h5>
+                    <p class="text-muted small mb-0">Select your strategy and watch your holdings grow as our team optimizes your returns.</p>
                 </div>
             </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 4 — INVESTMENT PLANS PREVIEW -->
+<section id="plans" style="padding: 120px 0; background-color: var(--color-surface);">
+    <div class="container text-center mb-5 animate-up">
+        <h2 class="section-heading">Investment Plans</h2>
+        <p class="section-subheading mx-auto">Choose a plan that matches your goals and start earning today</p>
+        <div class="gold-divider mx-auto"></div>
+    </div>
+
+    <div class="container">
+        <div class="row g-4 align-items-center">
+            <!-- Starter -->
+            <div class="col-lg-4 animate-up">
+                <div class="card p-5 border-0 shadow-sm" style="background: var(--color-surface-2);">
+                    <h4 class="mb-2 fw-bold" style="font-family: 'Playfair Display', serif;">Starter</h4>
+                    <div class="my-4">
+                        <span class="display-5 fw-bold text-gradient">5-8%</span>
+                        <span class="text-muted small ms-1">Monthly ROI</span>
+                    </div>
+                    <ul class="list-unstyled mb-5">
+                        <li class="mb-3 small text-muted"><i class="fas fa-check text-primary me-2"></i> Duration: 30 Days</li>
+                        <li class="mb-3 small text-muted"><i class="fas fa-check text-primary me-2"></i> Min Deposit: $500</li>
+                        <li class="mb-3 small text-muted"><i class="fas fa-check text-primary me-2"></i> Weekly Updates</li>
+                        <li class="mb-3 small text-muted"><i class="fas fa-check text-primary me-2"></i> Standard Support</li>
+                    </ul>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-gold w-100">Get Started</a>
+                </div>
+            </div>
+
+            <!-- Growth (Featured) -->
+            <div class="col-lg-4 animate-up">
+                <div class="card p-5 border shadow-lg position-relative" style="background: var(--color-surface); border-color: var(--color-primary) !important; transform: scale(1.05); z-index: 2;">
+                    <div class="position-absolute top-0 end-0 bg-primary text-dark fw-bold px-3 py-1 rounded-bl-lg extra-small" style="border-radius: 0 10px 0 10px;">MOST POPULAR</div>
+                    <h4 class="mb-2 fw-bold" style="font-family: 'Playfair Display', serif;">Growth</h4>
+                    <div class="my-4">
+                        <span class="display-4 fw-bold text-gradient">10-15%</span>
+                        <span class="text-muted small ms-1">Monthly ROI</span>
+                    </div>
+                    <ul class="list-unstyled mb-5">
+                        <li class="mb-3 small text-muted"><i class="fas fa-check text-primary me-2"></i> Duration: 60 Days</li>
+                        <li class="mb-3 small text-muted"><i class="fas fa-check text-primary me-2"></i> Min Deposit: $5,000</li>
+                        <li class="mb-3 small text-muted"><i class="fas fa-check text-primary me-2"></i> Daily Profit Accrual</li>
+                        <li class="mb-3 small text-muted"><i class="fas fa-check text-primary me-2"></i> Priority Support</li>
+                    </ul>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-gold w-100">Get Started</a>
+                </div>
+            </div>
+
+            <!-- Elite -->
+            <div class="col-lg-4 animate-up">
+                <div class="card p-5 border-0 shadow-sm" style="background: var(--color-surface-2);">
+                    <h4 class="mb-2 fw-bold" style="font-family: 'Playfair Display', serif;">Elite</h4>
+                    <div class="my-4">
+                        <span class="display-5 fw-bold text-gradient">18-25%</span>
+                        <span class="text-muted small ms-1">Monthly ROI</span>
+                    </div>
+                    <ul class="list-unstyled mb-5">
+                        <li class="mb-3 small text-muted"><i class="fas fa-check text-primary me-2"></i> Duration: 90 Days</li>
+                        <li class="mb-3 small text-muted"><i class="fas fa-check text-primary me-2"></i> Min Deposit: $20,000</li>
+                        <li class="mb-3 small text-muted"><i class="fas fa-check text-primary me-2"></i> Real-time Analytics</li>
+                        <li class="mb-3 small text-muted"><i class="fas fa-check text-primary me-2"></i> Personal Wealth Manager</li>
+                    </ul>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-gold w-100">Get Started</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <p class="extra-small text-muted mb-4"><i>* Returns are generated and managed by our investment team based on configured plan parameters.</i></p>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-outline-gold px-5">View All Plans</a>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 5 — WHY CHOOSE US -->
+<section style="padding: 120px 0; background-color: var(--color-bg);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-5 mb-lg-0 animate-up">
+                <h2 class="section-heading mb-4">Why Investors Trust Prestige Finance</h2>
+                <div class="gold-divider mb-4"></div>
+                <p class="text-muted mb-4">We combine decades of traditional wealth management experience with next-generation blockchain expertise to deliver a platform that prioritizes capital preservation and sustainable alpha generation.</p>
+                <a href="{{ url_for('main.about') }}" class="btn btn-outline-gold">Our Philosophy</a>
+            </div>
+            <div class="col-lg-6 animate-up">
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="d-flex align-items-center p-3 glass-card border-0">
+                            <div class="rounded-4 d-flex align-items-center justify-content-center me-3 border border-primary border-opacity-25" style="width: 50px; height: 50px; flex-shrink: 0;">
+                                <i class="fas fa-shield-check text-primary"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Admin-Verified Deposits</h6>
+                                <p class="extra-small text-muted mb-0">Every transaction is cross-checked for absolute ledger integrity.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="d-flex align-items-center p-3 glass-card border-0">
+                            <div class="rounded-4 d-flex align-items-center justify-content-center me-3 border border-primary border-opacity-25" style="width: 50px; height: 50px; flex-shrink: 0;">
+                                <i class="fas fa-key text-primary"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Withdrawal PIN Protection</h6>
+                                <p class="extra-small text-muted mb-0">Multi-layer authorization for all outgoing capital transfers.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="d-flex align-items-center p-3 glass-card border-0">
+                            <div class="rounded-4 d-flex align-items-center justify-content-center me-3 border border-primary border-opacity-25" style="width: 50px; height: 50px; flex-shrink: 0;">
+                                <i class="fas fa-id-card text-primary"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-1">KYC Identity Verification</h6>
+                                <p class="extra-small text-muted mb-0">Institutional-grade compliance to ensure a clean investment pool.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="d-flex align-items-center p-3 glass-card border-0">
+                            <div class="rounded-4 d-flex align-items-center justify-content-center me-3 border border-primary border-opacity-25" style="width: 50px; height: 50px; flex-shrink: 0;">
+                                <i class="fas fa-bell text-primary"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Real-Time Email Notifications</h6>
+                                <p class="extra-small text-muted mb-0">Stay informed of every account activity with instant Brevo-powered alerts.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 6 — CTA BANNER -->
+<section style="padding: 100px 0; background: linear-gradient(135deg, #0B1628 0%, #0F2045 50%, #0B1628 100%); position: relative; overflow: hidden; border-top: 2px solid; border-image: linear-gradient(to right, var(--color-primary), transparent) 1;">
+    <!-- Subtle dot grid background -->
+    <div class="position-absolute top-0 start-0 w-100 h-100 opacity-5" style="background-image: radial-gradient(var(--color-primary) 0.5px, transparent 0.5px); background-size: 20px 20px;"></div>
+    
+    <div class="container text-center position-relative z-1 animate-up">
+        <h2 class="section-heading mb-4" style="font-size: 3rem;">Ready to Build Your Wealth?</h2>
+        <p class="section-subheading mx-auto mb-5">Join the global elite in digital asset management. Your private account is waiting.</p>
+        <div class="d-flex justify-content-center flex-wrap gap-4">
+            <a href="{{ url_for('auth.register') }}" class="btn btn-gold btn-lg px-5">Get Started Now</a>
+            <a href="{{ url_for('main.about') }}" class="btn btn-outline-gold btn-lg px-5">Learn More</a>
         </div>
     </div>
 </section>

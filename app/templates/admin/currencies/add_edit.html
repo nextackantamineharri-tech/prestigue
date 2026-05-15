@@ -6,7 +6,7 @@
 <div class="row justify-content-center">
     <div class="col-lg-6">
         <div class="card p-4 shadow-sm">
-            <form method="POST" action="">
+            <form method="POST" action="" enctype="multipart/form-data">
                 {{ form.hidden_tag() }}
                 <div class="mb-3">
                     {{ form.name.label(class="form-label small fw-bold") }}
@@ -17,8 +17,27 @@
                     {{ form.symbol(class="form-control", placeholder="e.g. BTC") }}
                 </div>
                 <div class="mb-3">
+                    {{ form.network.label(class="form-label small fw-bold") }}
+                    {{ form.network(class="form-control", placeholder="e.g. ERC20, TRC20") }}
+                </div>
+                <div class="mb-3">
                     {{ form.wallet_address.label(class="form-label small fw-bold") }}
                     {{ form.wallet_address(class="form-control", placeholder="Enter your wallet address") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.logo.label(class="form-label small fw-bold") }}
+                    {{ form.logo(class="form-control") }}
+                    {% if form.logo.errors %}
+                        {% for error in form.logo.errors %}
+                            <span class="text-danger small">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                    {% if currency and currency.logo_url %}
+                        <div class="mt-2">
+                            <small class="text-muted d-block mb-1">Current Logo:</small>
+                            <img src="{{ url_for('static', filename=currency.logo_url) }}" alt="Logo" height="40" class="rounded border">
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="mb-4">
                     <div class="form-check">

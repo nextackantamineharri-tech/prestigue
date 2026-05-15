@@ -4,6 +4,7 @@ from app import db
 from app.models.user import User
 from app.models.investment import InvestmentPlan, UserInvestment
 from app.models.finance import Currency, Deposit, Withdrawal
+from app.models.notification import Notification
 from app.forms.investment import InvestForm
 from app.forms.finance import DepositForm, WithdrawalForm
 import os
@@ -140,6 +141,7 @@ def withdraw():
             user_id=current_user.id,
             currency_id=form.currency_id.data,
             amount=amount,
+            network=form.network.data,
             wallet_address=form.wallet_address.data
         )
         db.session.add(withdrawal)
@@ -149,3 +151,16 @@ def withdraw():
         return redirect(url_for('dashboard.history'))
         
     return render_template('dashboard/withdraw.html', title='Withdraw Funds', currencies=currencies, form=form)
+
+@dashboard_bp.route('/notifications')
+@login_required
+def notifications():
+    notifications = Notification.query.filter_by(user_id=current_user.id).order_by(Notification.created_at.desc()).all()
+    return render_template('dashboard/notifications.html', title='Notifications', notifications=notifications)
+
+@dashboard_bp.route('/notifications/read-all')
+@login_required
+def mark_notifications_read():
+    Notification.query.filter_by(user_id=current_user.id, is_read=False).update({Notification.is_read: True})
+    db.session.commit()
+    return redirect(url_for('dashboard.notifications'))

@@ -6,7 +6,9 @@ class Currency(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False) # Bitcoin, Ethereum, etc.
     symbol = db.Column(db.String(10), nullable=False) # BTC, ETH
+    network = db.Column(db.String(50)) # e.g. ERC20, TRC20, BEP20
     wallet_address = db.Column(db.String(255), nullable=False)
+    logo_url = db.Column(db.String(255))
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -44,6 +46,7 @@ class Withdrawal(db.Model):
     
     amount = db.Column(db.Numeric(20, 2), nullable=False)
     wallet_address = db.Column(db.String(255), nullable=False)
+    network = db.Column(db.String(50))
     
     # Status: pending, approved, paid, rejected
     status = db.Column(db.String(20), default='pending')

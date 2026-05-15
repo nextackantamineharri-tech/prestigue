@@ -30,7 +30,7 @@
                 </div>
 
                 <div class="row mb-4">
-                    <h6 class="fw-bold mb-3">ROI & Duration</h6>
+                    <h6 class="fw-bold mb-3">ROI, Duration & Payout</h6>
                     <div class="col-md-4 mb-3">
                         {{ form.roi_percentage.label(class="form-label small fw-bold") }}
                         {{ form.roi_percentage(class="form-control", placeholder="5.5") }}
@@ -41,8 +41,12 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         {{ form.profit_type.label(class="form-label small fw-bold") }}
-                        {{ form.profit_type(class="form-control") }}
-                        <div class="form-text extra-small">Enter 'daily' or 'fixed'</div>
+                        {{ form.profit_type(class="form-select") }}
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        {{ form.payout_frequency.label(class="form-label small fw-bold") }}
+                        {{ form.payout_frequency(class="form-select") }}
+                        <div class="form-text extra-small">Determines how often profit is credited to the user's account.</div>
                     </div>
                 </div>
 

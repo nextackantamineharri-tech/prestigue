@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, redirect, url_for
+from flask_login import current_user
 from app.models.user import SystemSettings
 
 main_bp = Blueprint('main', __name__)
@@ -9,6 +10,10 @@ def inject_settings():
 
 @main_bp.route('/')
 def index():
+    if current_user.is_authenticated:
+        if current_user.is_admin:
+            return redirect(url_for('admin.dashboard'))
+        return redirect(url_for('dashboard.index'))
     return render_template('main/index.html')
 
 @main_bp.route('/about')

@@ -5,150 +5,263 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - {{ settings.site_name }}</title>
     
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Bootstrap 5 CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     
     <style>
         :root {
-            --primary: {{ settings.primary_color }};
-            --secondary: {{ settings.secondary_color }};
             --sidebar-width: 260px;
+            --top-bar-height: 64px;
+            --color-admin-bg: #06080F;
         }
         
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f4f7f6;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            font-family: 'DM Sans', sans-serif;
+            overflow-x: hidden;
         }
         
+        /* Sidebar Redesign */
         #sidebar {
             width: var(--sidebar-width);
             height: 100vh;
             position: fixed;
             left: 0;
             top: 0;
-            background: #1e293b;
-            color: #fff;
+            background: var(--color-admin-bg);
+            border-right: 1px solid rgba(201, 168, 76, 0.1);
+            z-index: 1050;
+            display: flex;
+            flex-direction: column;
             transition: all 0.3s;
-            z-index: 1000;
         }
         
-        .sidebar-header {
-            padding: 20px;
-            background: #0f172a;
+        .sidebar-brand-label {
+            padding: 24px 28px 4px;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            color: var(--color-primary);
             font-weight: 700;
-            font-size: 1.2rem;
+            text-transform: uppercase;
+        }
+        
+        .sidebar-subbrand {
+            padding: 0 28px 24px;
+            font-size: 0.6rem;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+        }
+        
+        .nav-section-label {
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            color: rgba(255, 255, 255, 0.25);
+            text-transform: uppercase;
+            padding: 24px 28px 8px;
+            font-weight: 700;
         }
         
         .nav-link {
-            padding: 12px 20px;
-            color: #94a3b8;
+            padding: 10px 28px;
+            color: #5A6A88;
             font-weight: 500;
             display: flex;
             align-items: center;
-            transition: 0.2s;
+            gap: 12px;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
         }
         
         .nav-link i {
-            margin-right: 12px;
-            width: 20px;
+            width: 18px;
             text-align: center;
+            opacity: 0.7;
         }
         
-        .nav-link:hover, .nav-link.active {
-            color: #fff;
-            background: rgba(255,255,255,0.05);
+        .nav-link:hover {
+            color: var(--color-primary);
+            background: rgba(201, 168, 76, 0.05);
         }
         
         .nav-link.active {
-            border-left: 4px solid var(--primary);
-            background: rgba(255,255,255,0.1);
+            color: var(--color-primary);
+            background: rgba(201, 168, 76, 0.08);
+            border-left: 2px solid var(--color-primary);
         }
         
+        /* Top Bar */
+        .admin-top-bar {
+            height: var(--top-bar-height);
+            background: var(--color-admin-bg);
+            border-bottom: 1px solid rgba(201, 168, 76, 0.1);
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: var(--sidebar-width);
+            z-index: 1040;
+        }
+        
+        .admin-pill {
+            background: rgba(201, 168, 76, 0.1);
+            color: var(--color-primary);
+            font-size: 0.65rem;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+        
+        /* Content Area */
         #content {
             margin-left: var(--sidebar-width);
-            padding: 30px;
+            margin-top: var(--top-bar-height);
+            padding: 32px;
+            min-height: calc(100vh - var(--top-bar-height));
         }
         
-        .card {
-            border: none;
+        /* Tables Redesign */
+        .table-dark-custom {
+            background: var(--color-surface);
             border-radius: 12px;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            overflow: hidden;
+            border: 1px solid var(--color-border);
         }
         
-        .admin-navbar {
-            background: #fff;
-            padding: 15px 30px;
-            margin-bottom: 30px;
-            border-radius: 12px;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .table-dark-custom thead th {
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--color-text-muted);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--color-border);
+            font-weight: 700;
         }
+        
+        .table-dark-custom tbody td {
+            padding: 16px 24px;
+            color: var(--color-text);
+            border-bottom: 1px solid var(--color-border);
+            vertical-align: middle;
+            font-size: 0.9rem;
+        }
+        
+        .table-dark-custom tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .table-dark-custom tbody tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        
+        .status-pill {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            background: rgba(255, 255, 255, 0.05);
+            display: inline-block;
+        }
+        
+        .status-pill.success { color: var(--color-success); background: rgba(0, 200, 150, 0.1); }
+        .status-pill.warning { color: var(--color-warning); background: rgba(255, 176, 32, 0.1); }
+        .status-pill.danger { color: var(--color-danger); background: rgba(255, 77, 106, 0.1); }
     </style>
     {% block head %}{% endblock %}
 </head>
 <body>
+    <div id="page-loader"><div class="loader-ring"></div></div>
+    
+    <!-- Admin Sidebar -->
     <div id="sidebar">
-        <div class="sidebar-header">
-            {{ settings.site_name }}
+        <div class="sidebar-brand-area">
+            <div class="sidebar-brand-label">PRESTIGE ADMIN</div>
+            <div class="sidebar-subbrand">CONTROL PANEL</div>
         </div>
-        <nav class="mt-3">
+        
+        <div class="gold-divider mx-4 mb-2" style="height: 1px; opacity: 0.1;"></div>
+        
+        <div class="nav flex-column overflow-auto">
             <a href="{{ url_for('admin.dashboard') }}" class="nav-link {{ 'active' if request.endpoint == 'admin.dashboard' }}">
-                <i class="fas fa-chart-pie"></i> Dashboard
+                <i class="fas fa-terminal"></i> Dashboard
             </a>
+            
+            <div class="nav-section-label">Users</div>
             <a href="{{ url_for('admin.users') }}" class="nav-link {{ 'active' if 'user' in (request.endpoint or '') }}">
-                <i class="fas fa-users"></i> Users
-            </a>
-            <a href="{{ url_for('admin.plans') }}" class="nav-link {{ 'active' if 'plan' in (request.endpoint or '') }}">
-                <i class="fas fa-coins"></i> Investment Plans
-            </a>
-            <a href="{{ url_for('admin.currencies') }}" class="nav-link {{ 'active' if 'currenc' in (request.endpoint or '') }}">
-                <i class="fab fa-bitcoin"></i> Currencies
-            </a>
-            <a href="{{ url_for('admin.deposits') }}" class="nav-link {{ 'active' if 'deposit' in (request.endpoint or '') }}">
-                <i class="fas fa-wallet"></i> Deposits
-            </a>
-            <a href="{{ url_for('admin.withdrawals') }}" class="nav-link {{ 'active' if 'withdrawal' in (request.endpoint or '') }}">
-                <i class="fas fa-money-bill-transfer"></i> Withdrawals
+                <i class="fas fa-user-group"></i> All Clients
             </a>
             <a href="{{ url_for('admin.kyc_list') }}" class="nav-link {{ 'active' if 'kyc' in (request.endpoint or '') }}">
-                <i class="fas fa-id-card"></i> KYC
+                <i class="fas fa-id-card-clip"></i> ID Protocols
             </a>
+            
+            <div class="nav-section-label">Finance</div>
+            <a href="{{ url_for('admin.plans') }}" class="nav-link {{ 'active' if 'plan' in (request.endpoint or '') }}">
+                <i class="fas fa-layer-group"></i> Investment Plans
+            </a>
+            <a href="{{ url_for('admin.currencies') }}" class="nav-link {{ 'active' if 'currenc' in (request.endpoint or '') }}">
+                <i class="fas fa-coins"></i> Asset Config
+            </a>
+            <a href="{{ url_for('admin.deposits') }}" class="nav-link {{ 'active' if 'deposit' in (request.endpoint or '') }}">
+                <i class="fas fa-arrow-down-long"></i> Inflow Ledger
+            </a>
+            <a href="{{ url_for('admin.withdrawals') }}" class="nav-link {{ 'active' if 'withdrawal' in (request.endpoint or '') }}">
+                <i class="fas fa-arrow-up-long"></i> Outflow Ledger
+            </a>
+            
+            <div class="nav-section-label">System</div>
             <a href="{{ url_for('admin.settings') }}" class="nav-link {{ 'active' if request.endpoint == 'admin.settings' }}">
-                <i class="fas fa-cog"></i> Settings
+                <i class="fas fa-sliders"></i> Global Settings
             </a>
-            <hr class="mx-3 opacity-25">
             <a href="{{ url_for('main.index') }}" class="nav-link">
-                <i class="fas fa-external-link-alt"></i> View Site
+                <i class="fas fa-eye"></i> Production Site
             </a>
-            <a href="{{ url_for('auth.logout') }}" class="nav-link text-danger">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </a>
-        </nav>
+            
+            <div class="mt-auto p-4">
+                <a href="{{ url_for('auth.logout') }}" class="nav-link text-danger p-0">
+                    <i class="fas fa-power-off"></i> Terminate Session
+                </a>
+            </div>
+        </div>
     </div>
 
-    <div id="content">
-        <div class="admin-navbar">
-            <h5 class="mb-0 fw-bold">{% block page_title %}Dashboard{% endblock %}</h5>
-            <div class="d-flex align-items-center">
-                <span class="me-3 small text-muted">Welcome, {{ current_user.username }}</span>
-                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
-                    <i class="fas fa-user-shield"></i>
+    <!-- Admin Top Bar -->
+    <div class="admin-top-bar">
+        <h5 class="mb-0 fw-bold" style="font-family: 'Playfair Display', serif;">{% block page_title %}Dashboard{% endblock %}</h5>
+        
+        <div class="d-flex align-items-center gap-4">
+            <span class="admin-pill">ADMINISTRATOR</span>
+            <div class="d-flex align-items-center gap-2 border-start border-white border-opacity-10 ps-4">
+                <div class="text-end d-none d-sm-block">
+                    <p class="small fw-bold mb-0">{{ current_user.username }}</p>
+                </div>
+                <div class="bg-white bg-opacity-5 rounded-circle d-flex align-items-center justify-content-center border border-white border-opacity-10" style="width: 38px; height: 38px;">
+                    <i class="fas fa-user-shield text-primary small"></i>
                 </div>
             </div>
         </div>
+    </div>
 
+    <!-- Main Content -->
+    <div id="content">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show mb-4" role="alert">
+                        <i class="fas fa-info-circle me-2"></i> {{ message }}
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
                     </div>
                 {% endfor %}
             {% endif %}
@@ -158,6 +271,21 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .extra-small { font-size: 0.7rem; }
+    </style>
+    <!-- Page Loader JS -->
+    <script>
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('page-loader');
+            if (loader) {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.visibility = 'hidden';
+                }, 500);
+            }
+        });
+    </script>
     {% block scripts %}{% endblock %}
 </body>
 </html>

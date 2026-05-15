@@ -67,8 +67,13 @@ def create_app(config_class=Config):
     @app.context_processor
     def inject_globals():
         from app.models.user import SystemSettings
+        from app.models.notification import Notification
+        from flask_login import current_user
         settings = SystemSettings.get_settings()
-        return dict(settings=settings, now=datetime.utcnow())
+        unread_count = 0
+        if current_user.is_authenticated:
+            unread_count = Notification.query.filter_by(user_id=current_user.id, is_read=False).count()
+        return dict(settings=settings, now=datetime.utcnow(), unread_count=unread_count)
 
     # Error handlers
     @app.errorhandler(403)

@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+    body { background-color: var(--color-bg); overflow-x: hidden; }
+    .auth-container { min-height: 100vh; }
+    .auth-left {
+        background: linear-gradient(145deg, #050C1A 0%, #0A1830 60%, #0F2040 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    .auth-right {
+        background-color: var(--color-surface);
+        padding: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .auth-form-wrapper { width: 100%; max-width: 460px; }
+    
+    .otp-input {
+        background: transparent !important;
+        border: none !important;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.1) !important;
+        color: var(--color-primary) !important;
+        border-radius: 0 !important;
+        padding: 10px !important;
+        font-size: 2.5rem !important;
+        letter-spacing: 0.5em !important;
+        text-align: center !important;
+        width: 100% !important;
+        font-family: 'DM Sans', sans-serif !important;
+        transition: all 0.3s ease;
+    }
+    .otp-input:focus {
+        border-bottom-color: var(--color-primary) !important;
+        box-shadow: none !important;
+        outline: none !important;
+    }
+    .form-label {
+        color: #6B7A9A;
+        font-size: 0.82rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+    .btn-auth-submit {
+        width: 100%;
+        background: var(--gold-gradient) !important;
+        color: #050C1A !important;
+        font-weight: 600;
+        height: 52px;
+        font-size: 1rem;
+        border-radius: 10px;
+        border: none;
+        transition: all 0.3s ease;
+    }
+    .btn-auth-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(201, 168, 76, 0.3);
+        opacity: 0.95;
+    }
+    .auth-link { color: #C9A84C; text-decoration: none; font-weight: 500; transition: color 0.2s; }
+    .auth-link:hover { color: #F5D078; }
+    
+    .geometric-svg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 120%;
+        height: 120%;
+        opacity: 0.07;
+        pointer-events: none;
+    }
+    
+    .trust-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <div class="row g-0 auth-container">
+        <!-- Left Panel -->
+        <div class="col-lg-6 d-none d-lg-flex auth-left align-items-center justify-content-center text-center px-5">
+            <svg class="geometric-svg" viewBox="0 0 100 100">
+                <path d="M50 5 L95 25 L95 75 L50 95 L5 75 L5 25 Z" fill="none" stroke="#C9A84C" stroke-width="0.1" />
+                <circle cx="50" cy="50" r="10" fill="none" stroke="#C9A84C" stroke-width="0.1" />
+                <path d="M50 5 L50 95 M5 50 L95 50" stroke="#C9A84C" stroke-width="0.05" />
+            </svg>
+            
+            <div class="position-relative z-1">
+                <h1 class="display-4 fw-bold text-primary mb-2" style="font-family: 'Playfair Display', serif;">Identity Verification</h1>
+                <p class="text-white opacity-50 mb-5" style="letter-spacing: 0.2em; font-size: 0.8rem; text-transform: uppercase;">Secure Account Access Protocol</p>
+                
+                <div class="d-flex justify-content-center gap-4 mb-5">
+                    <div class="trust-badge"><i class="fas fa-shield-alt"></i> Multi-Factor</div>
+                    <div class="trust-badge"><i class="fas fa-envelope"></i> Email Verified</div>
+                    <div class="trust-badge"><i class="fas fa-user-lock"></i> Client Auth</div>
+                </div>
+                
+                <p class="small text-white opacity-25 mt-5">Prestige Finance Global Security Protocol</p>
+            </div>
+        </div>
+        
+        <!-- Right Panel -->
+        <div class="col-12 col-lg-6 auth-right">
+            <div class="auth-form-wrapper text-center">
+                <div class="mb-5">
+                    <h2 class="fw-bold mb-2 text-white" style="font-family: 'Playfair Display', serif; font-size: 2rem;">Verify Identity</h2>
+                    <p class="text-muted small">Enter the 6-digit code sent to your email</p>
+                    <div class="gold-divider mx-auto" style="width: 40px; margin: 16px 0;"></div>
+                </div>
+                
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-5">
+                        <label class="form-label d-block mb-4">6-Digit Access Code</label>
+                        {{ form.code(class="otp-input", placeholder="000000", maxlength="6", autocomplete="one-time-code") }}
+                        {% for error in form.code.errors %}
+                            <span class="text-danger extra-small mt-3 d-block"><i class="fas fa-exclamation-circle me-1"></i> {{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    
+                    <button type="submit" class="btn-auth-submit">Authorize Session</button>
+                </form>
+                
+                <div class="text-center mt-5">
+                    <p class="small text-muted">Didn't receive the code? <a href="{{ url_for('auth.resend_otp') }}" class="auth-link">Request New Code</a></p>
+                    <a href="{{ url_for('auth.login') }}" class="small text-muted text-decoration-none mt-3 d-block opacity-75">Back to Client Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

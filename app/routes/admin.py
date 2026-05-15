@@ -15,6 +15,9 @@ from app.services.notification_service import (
 from datetime import datetime, timedelta
 from sqlalchemy import func
 from decimal import Decimal
+import os
+from werkzeug.utils import secure_filename
+from flask import current_app
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -152,6 +155,7 @@ def add_plan():
             roi_percentage=float(form.roi_percentage.data),
             duration_days=int(form.duration_days.data),
             profit_type=form.profit_type.data,
+            payout_frequency=form.payout_frequency.data,
             return_capital=form.return_capital.data,
             is_active=form.is_active.data,
             is_featured=form.is_featured.data
@@ -169,9 +173,9 @@ def edit_plan(id):
     if form.validate_on_submit():
         form.populate_obj(plan)
         # Ensure numeric fields are correctly typed
-        plan.min_amount = float(form.min_amount.data)
-        plan.max_amount = float(form.max_amount.data)
-        plan.roi_percentage = float(form.roi_percentage.data)
+        plan.min_amount = Decimal(form.min_amount.data)
+        plan.max_amount = Decimal(form.max_amount.data)
+        plan.roi_percentage = Decimal(form.roi_percentage.data)
         plan.duration_days = int(form.duration_days.data)
         db.session.commit()
         flash('Investment plan updated successfully!', 'success')
@@ -188,10 +192,25 @@ def currencies():
 def add_currency():
     form = CurrencyForm()
     if form.validate_on_submit():
+        logo_url = None
+        if form.logo.data:
+            filename = secure_filename(form.logo.data.filename)
+            # Create directory if it doesn't exist
+            upload_dir = os.path.join(current_app.root_path, 'static', 'uploads', 'currencies')
+            if not os.path.exists(upload_dir):
+                os.makedirs(upload_dir)
+            
+            # Save file
+            file_path = os.path.join(upload_dir, filename)
+            form.logo.data.save(file_path)
+            logo_url = f'uploads/currencies/{filename}'
+
         currency = Currency(
             name=form.name.data,
             symbol=form.symbol.data,
+            network=form.network.data,
             wallet_address=form.wallet_address.data,
+            logo_url=logo_url,
             is_active=form.is_active.data
         )
         db.session.add(currency)
@@ -205,11 +224,21 @@ def edit_currency(id):
     currency = Currency.query.get_or_404(id)
     form = CurrencyForm(obj=currency)
     if form.validate_on_submit():
+        if form.logo.data:
+            filename = secure_filename(form.logo.data.filename)
+            upload_dir = os.path.join(current_app.root_path, 'static', 'uploads', 'currencies')
+            if not os.path.exists(upload_dir):
+                os.makedirs(upload_dir)
+            
+            file_path = os.path.join(upload_dir, filename)
+            form.logo.data.save(file_path)
+            currency.logo_url = f'uploads/currencies/{filename}'
+
         form.populate_obj(currency)
         db.session.commit()
         flash('Currency updated successfully!', 'success')
         return redirect(url_for('admin.currencies'))
-    return render_template('admin/currencies/add_edit.html', title='Edit Currency', form=form)
+    return render_template('admin/currencies/add_edit.html', title='Edit Currency', form=form, currency=currency)
 
 # Deposit Management
 @admin_bp.route('/deposits')

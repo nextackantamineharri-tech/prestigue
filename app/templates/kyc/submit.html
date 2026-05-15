@@ -2,112 +2,118 @@
 
 {% block content %}
 <div class="row justify-content-center">
-  <div class="col-lg-7">
+  <div class="col-lg-8">
 
     {% if kyc and kyc.status == 'verified' %}
     <!-- Verified State -->
-    <div class="card border-0 shadow-sm p-5 text-center">
-      <div class="mb-3"><i class="fas fa-shield-check fa-4x text-success"></i></div>
-      <h4 class="fw-bold">Identity Verified</h4>
-      <p class="text-muted">Your account is fully verified. You have full access to all platform features.</p>
-      <a href="{{ url_for('dashboard.index') }}" class="btn btn-success rounded-pill px-5 mt-2">Go to Dashboard</a>
+    <div class="glass-card p-5 text-center border-0 animate-up">
+      <div class="mb-4">
+        <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 100px; height: 100px;">
+            <i class="fas fa-shield-check fa-4x text-success"></i>
+        </div>
+      </div>
+      <h2 class="fw-bold text-white mb-3" style="font-family: 'Playfair Display', serif;">Identity Fully Verified</h2>
+      <p class="text-muted mx-auto mb-4" style="max-width: 500px;">Your institutional profile is fully authenticated. You now have unrestricted access to all high-liquidity investment protocols and withdrawal channels.</p>
+      <a href="{{ url_for('dashboard.index') }}" class="btn btn-gold rounded-pill px-5">Return to Terminal</a>
     </div>
 
     {% elif kyc and kyc.status == 'pending' %}
     <!-- Pending State -->
-    <div class="card border-0 shadow-sm p-5 text-center">
-      <div class="mb-3"><i class="fas fa-hourglass-half fa-4x text-warning"></i></div>
-      <h4 class="fw-bold">Under Review</h4>
-      <p class="text-muted">Your documents have been submitted and are being reviewed by our compliance team. This usually takes 24–48 hours.</p>
-      <a href="{{ url_for('kyc.status') }}" class="btn btn-outline-warning rounded-pill px-5 mt-2">Check Status</a>
+    <div class="glass-card p-5 text-center border-0 animate-up">
+      <div class="mb-4">
+        <div class="bg-warning bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 100px; height: 100px;">
+            <i class="fas fa-hourglass-half fa-3x text-warning"></i>
+        </div>
+      </div>
+      <h2 class="fw-bold text-white mb-3" style="font-family: 'Playfair Display', serif;">Verification in Progress</h2>
+      <p class="text-muted mx-auto mb-4" style="max-width: 500px;">Our compliance officers are currently auditing your submitted documentation. This institutional verification process typically completes within 24–48 business hours.</p>
+      <div class="d-flex justify-content-center gap-3">
+        <a href="{{ url_for('dashboard.index') }}" class="btn btn-outline-gold rounded-pill px-5">Back to Terminal</a>
+      </div>
     </div>
 
     {% else %}
     <!-- Submission Form -->
-    <div class="card border-0 shadow-sm p-4">
-      <div class="mb-4">
-        <h4 class="fw-bold mb-1">Identity Verification</h4>
-        <p class="text-muted small">Upload the required documents to unlock full platform access. All documents are stored securely and encrypted.</p>
+    <div class="animate-up">
+      <div class="mb-5 text-center">
+        <h1 class="section-heading" style="font-family: 'Playfair Display', serif;">Client Authentication</h1>
+        <div class="gold-divider mx-auto mb-3"></div>
+        <p class="text-muted mx-auto" style="max-width: 600px;">Securely transmit your identification credentials to unlock institutional investment tiers. All data is protected via AES-256 military-grade encryption.</p>
       </div>
 
       {% if kyc and kyc.status == 'rejected' %}
-      <div class="alert alert-danger border-0 rounded-4 small mb-4">
-        <i class="fas fa-times-circle me-2"></i>
-        <strong>Previous submission rejected:</strong> {{ kyc.admin_note or 'Please re-submit clearer documents.' }}
+      <div class="glass-card p-4 border-start border-3 border-danger mb-5 bg-danger bg-opacity-5">
+        <div class="d-flex gap-3">
+            <i class="fas fa-circle-exclamation text-danger mt-1"></i>
+            <div>
+                <h6 class="fw-bold text-white mb-1">Previous Submission Rejected</h6>
+                <p class="small text-muted mb-0">Officer Note: {{ kyc.admin_note or 'The uploaded documents were not sufficiently clear. Please provide high-resolution captures.' }}</p>
+            </div>
+        </div>
       </div>
       {% endif %}
 
       <form method="POST" action="" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
 
-        <!-- ID Type -->
-        <div class="mb-4">
-          {{ form.id_type.label(class="form-label small fw-bold") }}
-          {{ form.id_type(class="form-select") }}
-        </div>
-
-        <!-- Document Uploads -->
-        <div class="row g-3 mb-4">
-          <div class="col-12">
-            <label class="form-label small fw-bold d-flex align-items-center gap-2">
-              {{ form.id_image.label.text }}
-              <span class="badge bg-primary bg-opacity-10 text-primary extra-small" data-bs-toggle="tooltip" title="Ensure all corners are visible and text is legible">
-                <i class="fas fa-info-circle"></i> Tips
-              </span>
-            </label>
-            <div class="upload-zone rounded-4 border border-dashed p-4 text-center position-relative">
-              <i class="fas fa-id-card fa-2x text-muted mb-2"></i>
-              <p class="small text-muted mb-1">Click to upload your ID document</p>
-              <p class="extra-small text-muted">JPG, PNG, or PDF — Max 5MB</p>
-              {{ form.id_image(class="upload-input", id="id_image") }}
-              <p class="extra-small text-success mt-2 file-name" id="id_image_name"></p>
+        <div class="glass-card p-4 p-md-5 mb-4">
+            <!-- ID Type Selection -->
+            <div class="mb-5 pb-4 border-bottom border-white border-opacity-5">
+                <label class="form-label text-uppercase fw-bold letter-spacing-widest small mb-3">Select Identification Document</label>
+                {{ form.id_type(class="form-select form-select-lg") }}
             </div>
-            {% for e in form.id_image.errors %}<span class="text-danger small">{{ e }}</span>{% endfor %}
-          </div>
 
-          <div class="col-md-6">
-            <label class="form-label small fw-bold d-flex align-items-center gap-2">
-              {{ form.selfie_image.label.text }}
-              <span class="badge bg-primary bg-opacity-10 text-primary extra-small" data-bs-toggle="tooltip" title="Hold your ID next to your face. Ensure your face is clearly visible.">
-                <i class="fas fa-info-circle"></i> Tips
-              </span>
-            </label>
-            <div class="upload-zone rounded-4 border border-dashed p-4 text-center position-relative">
-              <i class="fas fa-camera fa-2x text-muted mb-2"></i>
-              <p class="small text-muted mb-1">Click to upload your selfie</p>
-              <p class="extra-small text-muted">JPG or PNG only</p>
-              {{ form.selfie_image(class="upload-input", id="selfie_image") }}
-              <p class="extra-small text-success mt-2 file-name" id="selfie_image_name"></p>
+            <!-- Upload Zones Grid -->
+            <div class="row g-4 mb-5">
+                <!-- ID DOCUMENT -->
+                <div class="col-12">
+                    <label class="form-label small fw-bold text-muted text-uppercase mb-3">1. Primary Government ID (Front)</label>
+                    <div class="upload-terminal text-center p-5 position-relative" onclick="document.getElementById('id_image').click()">
+                        <i class="fas fa-id-card fa-3x text-primary opacity-25 mb-3"></i>
+                        <h6 class="fw-bold text-white mb-2">Click to Upload Document</h6>
+                        <p class="extra-small text-muted mb-0">Passport, Driver's License, or National ID</p>
+                        {{ form.id_image(class="d-none", id="id_image") }}
+                        <div id="id_image_name" class="mt-3 extra-small text-success fw-bold"></div>
+                    </div>
+                    {% for e in form.id_image.errors %}<span class="text-danger extra-small d-block mt-2">{{ e }}</span>{% endfor %}
+                </div>
+
+                <!-- SELFIE -->
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold text-muted text-uppercase mb-3">2. Identity Selfie</label>
+                    <div class="upload-terminal text-center p-4 position-relative" onclick="document.getElementById('selfie_image').click()">
+                        <i class="fas fa-camera fa-2x text-primary opacity-25 mb-3"></i>
+                        <h6 class="fw-bold text-white mb-1">Upload Photo</h6>
+                        <p class="extra-small text-muted mb-0">Hold ID next to face</p>
+                        {{ form.selfie_image(class="d-none", id="selfie_image") }}
+                        <div id="selfie_image_name" class="mt-2 extra-small text-success fw-bold"></div>
+                    </div>
+                    {% for e in form.selfie_image.errors %}<span class="text-danger extra-small d-block mt-2">{{ e }}</span>{% endfor %}
+                </div>
+
+                <!-- ADDRESS -->
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold text-muted text-uppercase mb-3">3. Proof of Residence</label>
+                    <div class="upload-terminal text-center p-4 position-relative" onclick="document.getElementById('address_image').click()">
+                        <i class="fas fa-file-invoice fa-2x text-primary opacity-25 mb-3"></i>
+                        <h6 class="fw-bold text-white mb-1">Upload Proof</h6>
+                        <p class="extra-small text-muted mb-0">Utility bill or Bank statement</p>
+                        {{ form.address_image(class="d-none", id="address_image") }}
+                        <div id="address_image_name" class="mt-2 extra-small text-success fw-bold"></div>
+                    </div>
+                    {% for e in form.address_image.errors %}<span class="text-danger extra-small d-block mt-2">{{ e }}</span>{% endfor %}
+                </div>
             </div>
-            {% for e in form.selfie_image.errors %}<span class="text-danger small">{{ e }}</span>{% endfor %}
-          </div>
 
-          <div class="col-md-6">
-            <label class="form-label small fw-bold d-flex align-items-center gap-2">
-              {{ form.address_image.label.text }}
-              <span class="badge bg-primary bg-opacity-10 text-primary extra-small" data-bs-toggle="tooltip" title="Must show your full name and current address. Dated within 3 months.">
-                <i class="fas fa-info-circle"></i> Tips
-              </span>
-            </label>
-            <div class="upload-zone rounded-4 border border-dashed p-4 text-center position-relative">
-              <i class="fas fa-file-alt fa-2x text-muted mb-2"></i>
-              <p class="small text-muted mb-1">Click to upload proof of address</p>
-              <p class="extra-small text-muted">JPG, PNG, or PDF</p>
-              {{ form.address_image(class="upload-input", id="address_image") }}
-              <p class="extra-small text-success mt-2 file-name" id="address_image_name"></p>
+            <!-- Notice -->
+            <div class="p-3 bg-white bg-opacity-5 rounded-4 border border-white border-opacity-5 d-flex gap-3 mb-5">
+                <i class="fas fa-user-lock text-primary mt-1"></i>
+                <p class="extra-small text-muted mb-0">I hereby certify that all documents provided are authentic and belong to the account holder. I understand that fraudulent submissions will result in immediate termination of account liquidity.</p>
             </div>
-            {% for e in form.address_image.errors %}<span class="text-danger small">{{ e }}</span>{% endfor %}
-          </div>
-        </div>
 
-        <!-- Security Notice -->
-        <div class="alert alert-light border-0 bg-light rounded-4 small mb-4">
-          <i class="fas fa-lock text-primary me-2"></i>
-          Your documents are encrypted with AES-256 and are only accessible to our verified compliance officers.
-        </div>
-
-        <div class="d-grid">
-          {{ form.submit(class="btn btn-primary btn-lg rounded-pill", data_bs_toggle="tooltip", title="Submit all documents for verification") }}
+            <div class="d-grid">
+                {{ form.submit(class="btn btn-gold btn-lg py-3") }}
+            </div>
         </div>
       </form>
     </div>
@@ -117,24 +123,29 @@
 </div>
 
 <style>
-  .upload-zone { cursor: pointer; transition: background 0.2s; background: #f8fafc; }
-  .upload-zone:hover { background: #eff6ff; border-color: var(--primary) !important; }
-  .upload-input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-  .border-dashed { border-style: dashed !important; }
-  .extra-small { font-size: 0.7rem; }
+    .upload-terminal {
+        background: rgba(255, 255, 255, 0.02);
+        border: 2px dashed rgba(201, 168, 76, 0.2);
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .upload-terminal:hover {
+        background: rgba(201, 168, 76, 0.05);
+        border-color: var(--color-primary);
+    }
+    .letter-spacing-widest { letter-spacing: 0.15em; }
+    .extra-small { font-size: 0.75rem; }
 </style>
 
 {% block scripts %}
 <script>
-  // Show selected file name
   ['id_image', 'selfie_image', 'address_image'].forEach(id => {
     document.getElementById(id).addEventListener('change', function() {
       const label = document.getElementById(id + '_name');
-      label.textContent = this.files[0] ? '✓ ' + this.files[0].name : '';
+      label.textContent = this.files[0] ? '✓ Selected: ' + this.files[0].name : '';
     });
   });
-  // Tooltips
-  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
 </script>
 {% endblock %}
 {% endblock %}

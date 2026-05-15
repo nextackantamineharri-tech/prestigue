@@ -6,6 +6,7 @@ from flask_login import UserMixin
 from app.models.investment import InvestmentPlan, UserInvestment, ProfitLog # Register models
 from app.models.finance import Currency, Deposit, Withdrawal # Register models
 from app.models.kyc import KYC # Register models
+from app.models.notification import Notification # Register models
 
 @login_manager.user_loader
 def load_user(user_id):

@@ -1,8 +1,8 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, session
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session, current_app
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db, bcrypt, limiter
 from app.models.user import User, OTP, LoginHistory
-from app.forms.auth import RegistrationForm, LoginForm, OTPForm, ForgotPasswordForm, ResetPasswordForm, WithdrawalPinForm
+from app.forms.auth import RegistrationForm, LoginForm, OTPForm, ForgotPasswordForm, ResetPasswordForm, WithdrawalPinForm, ChangePasswordForm
 from app.services.notification_service import notify_registration, notify_otp
 from app.utils.security import check_login_lockout
 from datetime import datetime, timedelta
@@ -12,7 +12,9 @@ auth_bp = Blueprint('auth', __name__)
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
+        if current_user.is_admin:
+            return redirect(url_for('admin.dashboard'))
+        return redirect(url_for('dashboard.index'))
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User(
@@ -41,7 +43,9 @@ def register():
 @limiter.limit("10 per minute")
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
+        if current_user.is_admin:
+            return redirect(url_for('admin.dashboard'))
+        return redirect(url_for('dashboard.index'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -55,24 +59,29 @@ def login():
             if not user.is_active:
                 flash('Your account has been suspended. Please contact support.', 'danger')
                 return redirect(url_for('auth.login'))
-            # Generate OTP instead of logging in immediately
-            otp_code = OTP.generate_code()
-            otp = OTP(
-                user_id=user.id,
-                code=otp_code,
-                expires_at=datetime.utcnow() + timedelta(minutes=10)
-            )
-            db.session.add(otp)
-            db.session.commit()
-            
-            notify_otp(user, otp_code)
-            
-            # Store user ID in session for OTP verification
-            session['temp_user_id'] = user.id
-            session['remember_me'] = form.remember.data
-            
-            flash('A verification code has been sent to your email.', 'info')
-            return redirect(url_for('auth.verify_otp'))
+            # Generate OTP instead of logging in immediately (unless admin)
+            if not user.is_admin:
+                otp_code = OTP.generate_code()
+                otp = OTP(
+                    user_id=user.id,
+                    code=otp_code,
+                    expires_at=datetime.utcnow() + timedelta(minutes=10)
+                )
+                db.session.add(otp)
+                db.session.commit()
+                
+                notify_otp(user, otp_code)
+                
+                # Store user ID in session for OTP verification
+                session['temp_user_id'] = user.id
+                session['remember_me'] = form.remember.data
+                
+                flash('A verification code has been sent to your email.', 'info')
+                return redirect(url_for('auth.verify_otp'))
+            else:
+                login_user(user, remember=form.remember.data)
+                flash('Login successful!', 'success')
+                return redirect(url_for('admin.dashboard'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('auth/login.html', title='Login', form=form)
@@ -112,7 +121,9 @@ def verify_otp():
             session.pop('remember_me', None)
             
             flash('Login successful!', 'success')
-            return redirect(url_for('main.index'))
+            if user.is_admin:
+                return redirect(url_for('admin.dashboard'))
+            return redirect(url_for('dashboard.index'))
         else:
             # Log failed attempt
             history = LoginHistory(
@@ -130,7 +141,9 @@ def verify_otp():
 @auth_bp.route('/resend-otp')
 def resend_otp():
     user_id = session.get('temp_user_id')
+    current_app.logger.info(f"DEBUG: Resend OTP for user_id: {user_id}")
     if not user_id:
+        current_app.logger.info("DEBUG: No user_id in session, redirecting to login")
         return redirect(url_for('auth.login'))
         
     user = User.query.get(user_id)
@@ -143,6 +156,7 @@ def resend_otp():
     db.session.add(otp)
     db.session.commit()
     
+    current_app.logger.info(f"DEBUG: Triggering notify_otp for {user.email}")
     notify_otp(user, otp_code)
     flash('A new code has been sent to your email.', 'info')
     return redirect(url_for('auth.verify_otp'))
@@ -166,9 +180,30 @@ def forgot_password():
 @login_required
 def profile():
     pin_form = WithdrawalPinForm()
-    if pin_form.validate_on_submit():
-        current_user.set_withdrawal_pin(pin_form.pin.data)
-        db.session.commit()
-        flash('Withdrawal PIN has been updated successfully.', 'success')
-        return redirect(url_for('auth.profile'))
-    return render_template('auth/profile.html', title='Profile', pin_form=pin_form)
+    password_form = ChangePasswordForm()
+    
+    # Handle PIN Change
+    if 'submit_pin' in request.form or (pin_form.validate_on_submit() and not password_form.is_submitted()):
+        if pin_form.validate():
+            current_user.set_withdrawal_pin(pin_form.pin.data)
+            db.session.commit()
+            flash('Withdrawal PIN has been updated successfully.', 'success')
+            return redirect(url_for('auth.profile'))
+            
+    # Handle Password Change
+    if 'submit_password' in request.form or (password_form.validate_on_submit() and not pin_form.is_submitted()):
+        if password_form.validate():
+            if current_user.check_password(password_form.current_password.data):
+                current_user.set_password(password_form.new_password.data)
+                db.session.commit()
+                flash('Your password has been updated successfully.', 'success')
+                return redirect(url_for('auth.profile'))
+            else:
+                flash('Invalid current password.', 'danger')
+    
+    return render_template('auth/profile.html', title='Profile', pin_form=pin_form, password_form=password_form)
+
+@auth_bp.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('main.index'))

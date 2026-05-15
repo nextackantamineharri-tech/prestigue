@@ -1,22 +1,28 @@
 {% extends "dashboard/dashboard_base.html" %}
 
 {% block content %}
+<!-- ROW 1 — TOP STAT CARDS -->
 <div class="row g-4 mb-4">
-    <!-- Balance Card -->
+    <!-- Available Balance -->
     <div class="col-12 col-md-6 col-lg-4">
-        <div class="stat-card bg-primary text-white">
-            <div class="d-flex justify-content-between align-items-start mb-3">
-                <div>
-                    <p class="small opacity-75 mb-1">Available Balance</p>
-                    <h2 class="fw-bold mb-0">${{ "{:,.2f}".format(stats.account_balance) }}</h2>
+        <div class="stat-card position-relative overflow-hidden" style="background: linear-gradient(135deg, #C9A84C 0%, #F5D078 50%, #A8863A 100%); color: #050C1A; border: none;">
+            <!-- Subtle pattern overlay -->
+            <div class="position-absolute top-0 start-0 w-100 h-100 opacity-5" style="background-image: radial-gradient(#000 0.5px, transparent 0.5px); background-size: 10px 10px;"></div>
+            
+            <div class="position-relative z-1">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <p class="extra-small fw-bold text-uppercase letter-spacing-widest opacity-75 mb-1">Available Portfolio Balance</p>
+                        <h2 class="display-5 fw-bold mb-0" style="font-family: 'Playfair Display', serif;">${{ "{:,.2f}".format(stats.account_balance) }}</h2>
+                    </div>
+                    <div class="bg-dark bg-opacity-10 rounded-circle p-2">
+                        <i class="fas fa-vault"></i>
+                    </div>
                 </div>
-                <div class="bg-white bg-opacity-25 rounded-circle p-2">
-                    <i class="fas fa-wallet"></i>
+                <div class="d-flex gap-2 mt-4">
+                    <a href="{{ url_for('dashboard.deposit') }}" class="btn btn-sm px-3 fw-bold rounded-pill" style="background: #050C1A; color: #C9A84C; border: none;">Deposit</a>
+                    <a href="{{ url_for('dashboard.withdraw') }}" class="btn btn-sm px-3 fw-bold rounded-pill" style="background: transparent; color: #050C1A; border: 1.5px solid #050C1A;">Withdraw</a>
                 </div>
-            </div>
-            <div class="d-flex gap-2">
-                <button class="btn btn-white btn-sm bg-white text-primary rounded-pill px-3">Deposit</button>
-                <button class="btn btn-outline-light btn-sm rounded-pill px-3">Withdraw</button>
             </div>
         </div>
     </div>
@@ -24,35 +30,88 @@
     <!-- Active Investment -->
     <div class="col-12 col-md-6 col-lg-4">
         <div class="stat-card">
-            <div class="stat-icon bg-info bg-opacity-10 text-info">
-                <i class="fas fa-chart-line"></i>
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <p class="extra-small text-muted text-uppercase letter-spacing-widest mb-1">Active Investments</p>
+                    <h2 class="display-6 fw-bold mb-0" style="font-family: 'Playfair Display', serif;">${{ "{:,.2f}".format(stats.active_investments) }}</h2>
+                </div>
+                <div class="rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: rgba(26,110,255,0.15); color: #1A6EFF;">
+                    <i class="fas fa-chart-line"></i>
+                </div>
             </div>
-            <div class="stat-label">Active Investments</div>
-            <div class="stat-value">${{ "{:,.2f}".format(stats.active_investments) }}</div>
-            <div class="small text-success"><i class="fas fa-arrow-up me-1"></i>0.00% growth</div>
+            <div class="small text-success fw-medium">
+                <i class="fas fa-arrow-up-right me-1"></i> Market-Optimized deployment
+            </div>
         </div>
     </div>
 
     <!-- Total Profit -->
     <div class="col-12 col-md-6 col-lg-4">
         <div class="stat-card">
-            <div class="stat-icon bg-success bg-opacity-10 text-success">
-                <i class="fas fa-coins"></i>
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <p class="extra-small text-muted text-uppercase letter-spacing-widest mb-1">Total Profit Earned</p>
+                    <h2 class="display-6 fw-bold mb-0" style="font-family: 'Playfair Display', serif;">${{ "{:,.2f}".format(stats.total_profit) }}</h2>
+                </div>
+                <div class="rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: rgba(0,200,150,0.15); color: #00C896;">
+                    <i class="fas fa-coins"></i>
+                </div>
             </div>
-            <div class="stat-label">Total Profit</div>
-            <div class="stat-value">${{ "{:,.2f}".format(stats.total_profit) }}</div>
-            <div class="small text-muted">Automatically updated</div>
+            <span class="extra-small py-1 px-2 rounded" style="background: rgba(0,200,150,0.1); color: #00C896; font-weight: 700;">AUTOMATICALLY UPDATED</span>
         </div>
     </div>
 </div>
 
-<div class="row g-4">
+<!-- ROW 2 — ADDITIONAL STAT CARDS -->
+<div class="row g-4 mb-4">
+    <!-- Pending Withdrawals -->
+    <div class="col-12 col-md-4">
+        <div class="stat-card py-3 px-4 d-flex align-items-center">
+            <div class="rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background: rgba(255,176,32,0.15); color: #FFB020; flex-shrink: 0;">
+                <i class="fas fa-clock-rotate-left"></i>
+            </div>
+            <div>
+                <p class="extra-small text-muted text-uppercase mb-0">Pending Outflow</p>
+                <h5 class="fw-bold mb-0">${{ "{:,.2f}".format(stats.pending_withdrawals if stats.pending_withdrawals else 0) }}</h5>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Total Withdrawn -->
+    <div class="col-12 col-md-4">
+        <div class="stat-card py-3 px-4 d-flex align-items-center">
+            <div class="rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background: rgba(168,103,255,0.15); color: #A867FF; flex-shrink: 0;">
+                <i class="fas fa-receipt"></i>
+            </div>
+            <div>
+                <p class="extra-small text-muted text-uppercase mb-0">Total Withdrawn</p>
+                <h5 class="fw-bold mb-0">${{ "{:,.2f}".format(stats.total_withdrawn if stats.total_withdrawn else 0) }}</h5>
+            </div>
+        </div>
+    </div>
+
+    <!-- Referral Earnings -->
+    <div class="col-12 col-md-4">
+        <div class="stat-card py-3 px-4 d-flex align-items-center">
+            <div class="rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background: rgba(255,77,106,0.15); color: #FF4D6A; flex-shrink: 0;">
+                <i class="fas fa-users-viewfinder"></i>
+            </div>
+            <div>
+                <p class="extra-small text-muted text-uppercase mb-0">Referral Earnings</p>
+                <h5 class="fw-bold mb-0">${{ "{:,.2f}".format(stats.referral_earnings if stats.referral_earnings else 0) }}</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ROW 3 — CHART + ACTIVITY -->
+<div class="row g-4 mb-4">
     <!-- Chart Section -->
     <div class="col-lg-8">
-        <div class="stat-card">
+        <div class="glass-card p-4 h-100">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h6 class="fw-bold mb-0">Investment Overview</h6>
-                <select class="form-select form-select-sm w-auto border-0 bg-light">
+                <h5 class="fw-bold mb-0" style="font-family: 'Playfair Display', serif;">Investment Overview</h5>
+                <select class="form-select form-select-sm w-auto border-0 bg-dark bg-opacity-50 text-white extra-small px-3">
                     <option>Last 7 Days</option>
                     <option>Last 30 Days</option>
                 </select>
@@ -63,74 +122,166 @@
         </div>
     </div>
 
-    <!-- Recent Transactions -->
+    <!-- Recent Activity -->
     <div class="col-lg-4">
-        <div class="stat-card">
-            <h6 class="fw-bold mb-4">Recent Activity</h6>
+        <div class="glass-card p-4 h-100">
+            <h5 class="fw-bold mb-4" style="font-family: 'Playfair Display', serif;">Recent Ledger</h5>
             {% if not transactions %}
-                <div class="text-center py-4">
-                    <img src="https://cdn-icons-png.flaticon.com/512/6598/6598519.png" width="64" class="opacity-25 mb-3" alt="No data">
-                    <p class="text-muted small">No transactions found</p>
+                <div class="text-center py-5">
+                    <div class="bg-white bg-opacity-5 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
+                        <i class="fas fa-folder-open opacity-25"></i>
+                    </div>
+                    <p class="text-muted small">No recent ledger entries found</p>
                 </div>
             {% else %}
-                <div class="list-group list-group-flush">
+                <div class="list-group list-group-flush bg-transparent">
                     {% for tx in transactions %}
-                        <div class="list-group-item px-0 border-0 mb-2">
+                        <div class="list-group-item bg-transparent px-0 border-bottom border-white border-opacity-5 py-3">
                             <div class="d-flex align-items-center">
-                                <div class="bg-light rounded-circle p-2 me-3">
-                                    <i class="fas fa-{{ 'arrow-down text-success' if tx.type == 'deposit' else 'arrow-up text-danger' }}"></i>
+                                <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 38px; height: 38px; background: {{ 'rgba(0,200,150,0.1)' if tx.type == 'deposit' else 'rgba(255,77,106,0.1)' }}; color: {{ '#00C896' if tx.type == 'deposit' else '#FF4D6A' }};">
+                                    <i class="fas fa-{{ 'arrow-down' if tx.type == 'deposit' else 'arrow-up' }} small"></i>
                                 </div>
                                 <div class="flex-grow-1">
                                     <p class="small fw-bold mb-0 text-capitalize">{{ tx.type }}</p>
                                     <p class="extra-small text-muted mb-0">{{ tx.created_at.strftime('%b %d, %H:%M') }}</p>
                                 </div>
                                 <div class="text-end">
-                                    <p class="small fw-bold mb-0">${{ "{:,.2f}".format(tx.amount) }}</p>
-                                    <p class="extra-small text-{{ 'success' if tx.status == 'approved' else 'warning' }} mb-0">{{ tx.status }}</p>
+                                    <p class="small fw-bold mb-0 text-white">${{ "{:,.2f}".format(tx.amount) }}</p>
+                                    <span class="badge rounded-pill extra-small px-2 py-1 {{ 'bg-success bg-opacity-10 text-success' if tx.status == 'approved' else ('bg-warning bg-opacity-10 text-warning' if tx.status == 'pending' else 'bg-danger bg-opacity-10 text-danger') }}">
+                                        {{ tx.status }}
+                                    </span>
                                 </div>
                             </div>
                         </div>
                     {% endfor %}
                 </div>
+                <div class="d-grid mt-4">
+                    <a href="{{ url_for('dashboard.history') }}" class="btn btn-outline-gold btn-sm">View Comprehensive Ledger</a>
+                </div>
             {% endif %}
-            <div class="d-grid mt-3">
-                <a href="#" class="btn btn-light btn-sm rounded-pill">View All Transactions</a>
-            </div>
         </div>
     </div>
 </div>
+
+<!-- ROW 4 — QUICK ACTIONS BANNER -->
+<div class="glass-card p-4">
+    <div class="row g-3 text-center">
+        <div class="col-6 col-md-3">
+            <a href="{{ url_for('dashboard.deposit') }}" class="quick-action-link">
+                <div class="quick-action-btn">
+                    <i class="fas fa-plus-circle mb-2"></i>
+                    <span>New Deposit</span>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a href="{{ url_for('dashboard.invest') }}" class="quick-action-link">
+                <div class="quick-action-btn">
+                    <i class="fas fa-rocket mb-2"></i>
+                    <span>New Investment</span>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a href="{{ url_for('dashboard.withdraw') }}" class="quick-action-link">
+                <div class="quick-action-btn">
+                    <i class="fas fa-paper-plane mb-2"></i>
+                    <span>Withdraw Funds</span>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a href="{{ url_for('kyc.status') }}" class="quick-action-link">
+                <div class="quick-action-btn">
+                    <i class="fas fa-id-card-clip mb-2"></i>
+                    <span>KYC Status</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .quick-action-link { text-decoration: none; }
+    .quick-action-btn {
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        color: var(--color-text-muted);
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .quick-action-btn:hover {
+        background: rgba(201, 168, 76, 0.05);
+        border-color: rgba(201, 168, 76, 0.3);
+        color: var(--color-primary);
+        transform: translateY(-5px);
+    }
+    .quick-action-btn i { font-size: 1.5rem; }
+    .quick-action-btn span { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    
+    .letter-spacing-widest { letter-spacing: 0.1em; }
+</style>
+
 {% endblock %}
 
 {% block scripts %}
 <script>
     const ctx = document.getElementById('investmentChart').getContext('2d');
+    
+    // Create gradient
+    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(201, 168, 76, 0.2)');
+    gradient.addColorStop(1, 'rgba(201, 168, 76, 0)');
+
     new Chart(ctx, {
         type: 'line',
         data: {
             labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
             datasets: [{
-                label: 'Profit ($)',
+                label: 'Profit Distribution',
                 data: [0, 0, 0, 0, 0, 0, 0],
-                borderColor: '{{ settings.primary_color }}',
-                backgroundColor: 'rgba(26, 35, 126, 0.1)',
+                borderColor: '#C9A84C',
+                backgroundColor: gradient,
                 fill: true,
-                tension: 0.4
+                tension: 0.4,
+                borderWidth: 3,
+                pointBackgroundColor: '#C9A84C',
+                pointBorderColor: 'rgba(255,255,255,0.1)',
+                pointHoverBackgroundColor: '#fff',
+                pointRadius: 4,
+                pointHoverRadius: 6
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: { display: false }
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#0B1628',
+                    titleFont: { family: 'DM Sans', size: 13 },
+                    bodyFont: { family: 'DM Sans', size: 12 },
+                    padding: 12,
+                    borderColor: 'rgba(201, 168, 76, 0.2)',
+                    borderWidth: 1
+                }
             },
             scales: {
-                y: { beginAtZero: true, grid: { display: false } },
-                x: { grid: { display: false } }
+                y: { 
+                    beginAtZero: true, 
+                    grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false },
+                    ticks: { color: '#5A6A88', font: { size: 11 } }
+                },
+                x: { 
+                    grid: { display: false },
+                    ticks: { color: '#5A6A88', font: { size: 11 } }
+                }
             }
         }
     });
 </script>
-<style>
-    .extra-small { font-size: 0.75rem; }
-</style>
 {% endblock %}

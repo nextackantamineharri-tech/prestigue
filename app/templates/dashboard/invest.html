@@ -1,88 +1,146 @@
 {% extends "dashboard/dashboard_base.html" %}
 
 {% block content %}
-<div class="row justify-content-center mb-5">
+<div class="row justify-content-center mb-5 animate-up">
     <div class="col-lg-8 text-center">
-        <h2 class="fw-bold">Investment Plans</h2>
-        <p class="text-muted">Choose a plan that fits your goals. Our automated system handles the rest.</p>
+        <h1 class="section-heading" style="font-family: 'Playfair Display', serif;">Choose Your Investment Plan</h1>
+        <div class="gold-divider mx-auto mb-3"></div>
+        <p class="text-muted">Select a managed portfolio that aligns with your financial objectives. All trades are executed by our institutional algorithms.</p>
     </div>
 </div>
 
-<div class="row g-4">
+<div class="row g-4 animate-up" style="animation-delay: 0.1s;">
     {% for plan in plans %}
     <div class="col-md-6 col-lg-4">
-        <div class="stat-card border {{ 'border-primary' if plan.is_featured else '' }} h-100 position-relative">
+        <div class="glass-card p-4 h-100 position-relative border-0 {{ 'border border-primary border-opacity-50 shadow-lg' if plan.is_featured else '' }}" style="transition: transform 0.3s ease;">
             {% if plan.is_featured %}
-                <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-primary px-3">
-                    Most Popular
+                <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-primary text-dark px-4 py-2 extra-small fw-bold letter-spacing-widest">
+                    MOST POPULAR
                 </span>
             {% endif %}
             
-            <div class="text-center mb-4">
-                <h4 class="fw-bold mb-1">{{ plan.name }}</h4>
-                <div class="display-5 fw-bold text-primary">{{ plan.roi_percentage }}%</div>
-                <p class="text-muted small">ROI after {{ plan.duration_days }} days</p>
+            <div class="text-center mb-5 mt-3">
+                <h3 class="fw-bold mb-3 text-primary" style="font-family: 'Playfair Display', serif;">{{ plan.name }}</h3>
+                <div class="display-4 fw-bold text-gradient">{{ plan.roi_percentage }}% ROI</div>
+                <div class="mt-3">
+                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-20 px-3 py-2 rounded-pill extra-small">
+                        <i class="fas fa-clock me-2"></i>{{ plan.duration_days }} Days Duration
+                    </span>
+                </div>
             </div>
             
-            <ul class="list-unstyled mb-4">
-                <li class="d-flex justify-content-between mb-2 small">
-                    <span class="text-muted">Minimum Deposit:</span>
-                    <span class="fw-bold">${{ "{:,.0f}".format(plan.min_amount) }}</span>
-                </li>
-                <li class="d-flex justify-content-between mb-2 small">
-                    <span class="text-muted">Maximum Deposit:</span>
-                    <span class="fw-bold">${{ "{:,.0f}".format(plan.max_amount) }}</span>
-                </li>
-                <li class="d-flex justify-content-between mb-2 small">
-                    <span class="text-muted">Profit Type:</span>
-                    <span class="fw-bold text-capitalize text-success">{{ plan.profit_type }}</span>
-                </li>
-                <li class="d-flex justify-content-between mb-2 small">
-                    <span class="text-muted">Capital Return:</span>
-                    <span class="fw-bold">{{ 'Yes' if plan.return_capital else 'No' }}</span>
-                </li>
-            </ul>
+            <div class="p-4 rounded-4 bg-white bg-opacity-5 mb-5">
+                <div class="d-flex justify-content-between mb-3 border-bottom border-white border-opacity-5 pb-2">
+                    <span class="extra-small text-muted text-uppercase fw-bold"><i class="fas fa-hand-holding-dollar me-2 text-primary"></i>Min Deposit</span>
+                    <span class="small fw-bold text-white">${{ "{:,.0f}".format(plan.min_amount) }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3 border-bottom border-white border-opacity-5 pb-2">
+                    <span class="extra-small text-muted text-uppercase fw-bold"><i class="fas fa-vault me-2 text-primary"></i>Max Deposit</span>
+                    <span class="small fw-bold text-white">${{ "{:,.0f}".format(plan.max_amount) }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3 border-bottom border-white border-opacity-5 pb-2">
+                    <span class="extra-small text-muted text-uppercase fw-bold"><i class="fas fa-chart-pie me-2 text-primary"></i>Profit Type</span>
+                    <span class="small fw-bold text-success text-capitalize">{{ plan.profit_type }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3 border-bottom border-white border-opacity-5 pb-2">
+                    <span class="extra-small text-muted text-uppercase fw-bold"><i class="fas fa-calendar-check me-2 text-primary"></i>Payout</span>
+                    <span class="small fw-bold text-white text-capitalize">{{ plan.payout_frequency }}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span class="extra-small text-muted text-uppercase fw-bold"><i class="fas fa-rotate-left me-2 text-primary"></i>Capital Return</span>
+                    <span class="small fw-bold text-white">{{ 'Guaranteed' if plan.return_capital else 'Principal Burn' }}</span>
+                </div>
+            </div>
             
             <div class="d-grid">
-                <button type="button" class="btn {{ 'btn-primary' if plan.is_featured else 'btn-outline-primary' }} rounded-pill" 
+                <button type="button" class="btn btn-gold btn-lg" 
                         data-bs-toggle="modal" data-bs-target="#investModal{{ plan.id }}">
-                    Invest Now
+                    Initialize Investment
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Investment Modal -->
+    <!-- Investment Modal Redesign -->
     <div class="modal fade" id="investModal{{ plan.id }}" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 rounded-4 shadow">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title fw-bold">Invest in {{ plan.name }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="modal-content glass-card border-0 shadow-2xl">
+                <div class="modal-header border-bottom border-white border-opacity-10 p-4">
+                    <h5 class="modal-title fw-bold text-white" style="font-family: 'Playfair Display', serif;">Invest in {{ plan.name }}</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body p-4">
-                    <div class="alert alert-info border-0 small mb-4">
-                        Available Balance: <strong>${{ "{:,.2f}".format(current_user.account_balance) }}</strong>
+                <div class="modal-body p-4 p-md-5">
+                    <div class="p-3 bg-white bg-opacity-5 rounded-4 mb-4 d-flex justify-content-between align-items-center border border-white border-opacity-5">
+                        <span class="extra-small text-muted text-uppercase fw-bold">Available Liquidity</span>
+                        <span class="fw-bold text-success">${{ "{:,.2f}".format(current_user.account_balance) }}</span>
                     </div>
+                    
                     <form method="POST" action="">
                         {{ form.hidden_tag() }}
                         <input type="hidden" name="plan_id" value="{{ plan.id }}">
+                        
                         <div class="mb-4">
-                            {{ form.amount.label(class="form-label small fw-bold") }}
-                            <div class="input-group">
-                                <span class="input-group-text bg-white border-end-0">$</span>
+                            <label class="form-label">Capital Amount (USD)</label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-dark bg-opacity-50 border-end-0 text-primary">$</span>
                                 {{ form.amount(class="form-control border-start-0", placeholder="0.00", min=plan.min_amount, max=plan.max_amount) }}
                             </div>
-                            <div class="form-text extra-small">Range: ${{ "{:,.0f}".format(plan.min_amount) }} - ${{ "{:,.0f}".format(plan.max_amount) }}</div>
+                            <div class="form-text extra-small opacity-50 mt-2">
+                                Acceptable range: ${{ "{:,.0f}".format(plan.min_amount) }} — ${{ "{:,.0f}".format(plan.max_amount) }}
+                            </div>
                         </div>
-                        <div class="d-grid">
-                            {{ form.submit(class="btn btn-primary btn-lg rounded-pill") }}
+                        
+                        <div class="d-grid mt-5">
+                            <button type="submit" class="btn btn-gold btn-lg py-3" onclick="return checkBalance(this, {{ current_user.account_balance }}, {{ plan.min_amount }}, {{ plan.max_amount }})">
+                                Confirm Asset Allocation
+                            </button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+    {% else %}
+    <div class="col-12 text-center py-5">
+        <div class="bg-white bg-opacity-5 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 100px; height: 100px;">
+            <i class="fas fa-folder-open text-primary opacity-25 fa-3x"></i>
+        </div>
+        <h4 class="fw-bold">No Plans Available</h4>
+        <p class="text-muted">Our analysts are currently updating the investment strategies. Please check back later.</p>
+    </div>
     {% endfor %}
 </div>
+
+<style>
+    .letter-spacing-widest { letter-spacing: 0.15em; }
+    .extra-small { font-size: 0.75rem; }
+    .shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function checkBalance(btn, balance, min, max) {
+    const form = btn.closest('form');
+    const amountInput = form.querySelector('input[name="amount"]');
+    const amount = parseFloat(amountInput.value);
+    
+    if (isNaN(amount)) {
+        alert("Please enter a valid amount.");
+        return false;
+    }
+    
+    if (amount < min || amount > max) {
+        alert(`Amount must be between $${min} and $${max}`);
+        return false;
+    }
+    
+    if (amount > balance) {
+        alert("Insufficient liquidity. Please fund your account balance before proceeding.");
+        return false;
+    }
+    
+    return true;
+}
+</script>
 {% endblock %}

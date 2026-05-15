@@ -12,6 +12,8 @@ class InvestmentPlan(db.Model):
     
     # Types: 'daily' or 'fixed'
     profit_type = db.Column(db.String(20), default='daily') 
+    # Frequency: 'daily', 'weekly', 'monthly', 'fixed'
+    payout_frequency = db.Column(db.String(20), default='daily')
     
     return_capital = db.Column(db.Boolean, default=True)
     is_active = db.Column(db.Boolean, default=True)

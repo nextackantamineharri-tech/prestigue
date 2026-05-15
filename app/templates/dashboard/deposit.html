@@ -2,92 +2,280 @@
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-lg-6">
-        <div class="card shadow-lg border-0 p-4">
-            <h4 class="fw-bold mb-4">Fund Your Wallet</h4>
-            
-            <form method="POST" action="" enctype="multipart/form-data">
-                {{ form.hidden_tag() }}
-                
-                <div class="mb-4">
-                    {{ form.currency_id.label(class="form-label small fw-bold") }}
-                    {{ form.currency_id(class="form-select form-select-lg", id="currencySelector") }}
-                </div>
-
-                <!-- Wallet Address Display -->
-                <div id="walletDisplay" class="bg-light rounded-4 p-4 mb-4 text-center">
-                    <p class="small text-muted mb-2">Send your payment to the address below:</p>
-                    <div class="d-flex align-items-center justify-content-center bg-white p-3 rounded-pill shadow-sm mb-3">
-                        <code id="walletAddress" class="fw-bold text-primary fs-6 overflow-hidden">Select a coin</code>
-                        <button type="button" class="btn btn-link text-primary ms-2 p-0" id="copyBtn" data-bs-toggle="tooltip" title="Copy to clipboard">
-                            <i class="far fa-copy"></i>
-                        </button>
-                    </div>
-                    <p class="extra-small text-danger fw-bold"><i class="fas fa-exclamation-triangle me-1"></i> Send only <span id="coinSymbol">...</span> to this address.</p>
-                </div>
-
-                <div class="mb-4">
-                    {{ form.amount.label(class="form-label small fw-bold") }}
-                    <div class="input-group">
-                        <span class="input-group-text bg-white border-end-0">$</span>
-                        {{ form.amount(class="form-control form-control-lg border-start-0", placeholder="Min: $10.00") }}
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    {{ form.proof_image.label(class="form-label small fw-bold") }}
-                    {{ form.proof_image(class="form-control") }}
-                    <div class="form-text extra-small">Upload a screenshot of your payment confirmation.</div>
-                </div>
-
-                <div class="d-grid">
-                    {{ form.submit(class="btn btn-primary btn-lg rounded-pill", data_bs_toggle="tooltip", title="Submit for verification") }}
-                </div>
-            </form>
+    <div class="col-lg-8">
+        <!-- Step Indicator -->
+        <div class="d-flex justify-content-between mb-5 px-4 position-relative">
+            <div class="position-absolute top-50 start-0 w-100 border-top border-white border-opacity-10 z-0" style="margin-top: -10px;"></div>
+            <div class="step-item text-center z-1 active" id="step1-indicator">
+                <div class="step-number mx-auto mb-2">1</div>
+                <span class="extra-small fw-bold text-uppercase opacity-75">Select Asset</span>
+            </div>
+            <div class="step-item text-center z-1" id="step2-indicator">
+                <div class="step-number mx-auto mb-2">2</div>
+                <span class="extra-small fw-bold text-uppercase opacity-75">Transfer</span>
+            </div>
+            <div class="step-item text-center z-1" id="step3-indicator">
+                <div class="step-number mx-auto mb-2">3</div>
+                <span class="extra-small fw-bold text-uppercase opacity-75">Verify</span>
+            </div>
         </div>
+
+        <form method="POST" action="" enctype="multipart/form-data" id="depositForm">
+            {{ form.hidden_tag() }}
+            
+            <!-- STEP 1: Select Coin -->
+            <div id="step1" class="animate-up">
+                <h4 class="fw-bold mb-4" style="font-family: 'Playfair Display', serif;">Select Liquidity Asset</h4>
+                <div class="row g-3 mb-4">
+                    {% for c in currencies %}
+                    <div class="col-6 col-md-3">
+                        <div class="coin-card text-center p-4 h-100 cursor-pointer" data-id="{{ c.id }}" data-symbol="{{ c.symbol }}" data-address="{{ c.wallet_address }}" data-network="{{ c.network or 'Mainnet' }}">
+                            <div class="coin-icon-wrapper mb-3 mx-auto">
+                                {% if c.logo_url %}
+                                <img src="{{ url_for('static', filename=c.logo_url) }}" alt="{{ c.name }}" class="w-100">
+                                {% else %}
+                                <i class="fab fa-bitcoin fa-2x text-primary"></i>
+                                {% endif %}
+                            </div>
+                            <h6 class="fw-bold mb-1 text-white">{{ c.symbol }}</h6>
+                            <p class="extra-small text-muted mb-0">{{ c.name }}</p>
+                            <div class="selection-check"><i class="fas fa-check"></i></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <!-- Hidden Select for existing form logic -->
+                <div class="d-none">
+                    {{ form.currency_id(id="currencySelector") }}
+                </div>
+                <div class="d-grid">
+                    <button type="button" class="btn btn-gold btn-lg next-step" data-next="2">Proceed to Transfer</button>
+                </div>
+            </div>
+
+            <!-- STEP 2: View Address -->
+            <div id="step2" class="d-none animate-up">
+                <h4 class="fw-bold mb-4" style="font-family: 'Playfair Display', serif;">Execute Transfer</h4>
+                <div class="glass-card p-5 text-center mb-4">
+                    <p class="text-muted small mb-4">Transfer your chosen asset to the secure institutional wallet below:</p>
+                    
+                    <div class="bg-dark bg-opacity-50 p-4 rounded-4 border border-white border-opacity-10 mb-4 position-relative">
+                        <code id="walletAddress" class="text-primary fw-bold fs-5 d-block mb-2 word-break-all">Select a coin</code>
+                        <span id="networkBadge" class="badge bg-primary bg-opacity-10 text-primary mb-3">Network: ...</span>
+                        <div class="mt-3">
+                            <button type="button" class="btn btn-outline-gold btn-sm px-4" id="copyBtn">
+                                <i class="far fa-copy me-2"></i> Copy Address
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="alert bg-danger bg-opacity-5 border-0 d-flex align-items-start gap-3 text-start">
+                        <i class="fas fa-triangle-exclamation text-danger mt-1"></i>
+                        <div>
+                            <p class="small text-danger fw-bold mb-1">Critical Security Notice</p>
+                            <p class="extra-small text-muted mb-0">Ensure you only send <span class="selected-coin-symbol">...</span> via the specified network. Cross-chain transfers may result in permanent capital loss.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Amount (USD Equivalent)</label>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-dark bg-opacity-50 border-end-0 text-primary">$</span>
+                        {{ form.amount(class="form-control border-start-0", placeholder="Min: $10.00") }}
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-6">
+                        <button type="button" class="btn btn-outline-gold btn-lg w-100 prev-step" data-prev="1">Back</button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn btn-gold btn-lg w-100 next-step" data-next="3">Ready to Verify</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 3: Upload Proof -->
+            <div id="step3" class="d-none animate-up">
+                <h4 class="fw-bold mb-4" style="font-family: 'Playfair Display', serif;">Verification Protocol</h4>
+                <p class="text-muted small mb-4">Upload a high-fidelity image of your transaction confirmation to initiate the manual verification audit.</p>
+                
+                <div class="mb-5">
+                    <div class="upload-zone p-5 text-center cursor-pointer" id="uploadZone">
+                        {{ form.proof_image(class="d-none", id="proofInput") }}
+                        <div id="uploadContent">
+                            <i class="fas fa-cloud-arrow-up fa-3x text-primary mb-3 opacity-50"></i>
+                            <h6 class="fw-bold text-white mb-2">Drop Transaction Proof</h6>
+                            <p class="extra-small text-muted mb-0">Drag and drop or click to browse (JPG, PNG, PDF)</p>
+                        </div>
+                        <div id="filePreview" class="d-none">
+                            <i class="fas fa-file-invoice text-success fa-3x mb-3"></i>
+                            <h6 id="fileName" class="fw-bold text-white mb-0 small"></h6>
+                            <p class="extra-small text-muted mt-2">File ready for submission</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-6">
+                        <button type="button" class="btn btn-outline-gold btn-lg w-100 prev-step" data-prev="2">Back</button>
+                    </div>
+                    <div class="col-6">
+                        <button type="submit" class="btn btn-gold btn-lg w-100">Submit for Audit</button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
+
+<style>
+    .step-number {
+        width: 40px;
+        height: 40px;
+        background: #0B1628;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.3);
+        font-weight: 700;
+        transition: all 0.3s ease;
+    }
+    .step-item.active .step-number {
+        background: var(--color-primary);
+        color: #050C1A;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 20px rgba(201, 168, 76, 0.3);
+    }
+    .step-item.active span { color: var(--color-primary); }
+    
+    .coin-card {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 16px;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    .coin-card:hover { transform: translateY(-5px); border-color: rgba(201, 168, 76, 0.2); }
+    .coin-card.selected { border-color: var(--color-primary); background: rgba(201, 168, 76, 0.05); }
+    .coin-icon-wrapper { width: 48px; height: 48px; }
+    .selection-check {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 20px;
+        height: 20px;
+        background: var(--color-primary);
+        border-radius: 50%;
+        color: #050C1A;
+        font-size: 0.6rem;
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+    .coin-card.selected .selection-check { display: flex; }
+    
+    .upload-zone {
+        border: 2px dashed rgba(201, 168, 76, 0.3);
+        background: rgba(201, 168, 76, 0.02);
+        border-radius: 20px;
+        transition: all 0.3s ease;
+    }
+    .upload-zone:hover { border-color: var(--color-primary); background: rgba(201, 168, 76, 0.05); }
+    
+    .word-break-all { word-break: break-all; }
+</style>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    const currencies = {
-        {% for c in currencies %}
-        "{{ c.id }}": { "address": "{{ c.wallet_address }}", "symbol": "{{ c.symbol }}" },
-        {% endfor %}
-    };
+    document.addEventListener('DOMContentLoaded', function() {
+        const coinCards = document.querySelectorAll('.coin-card');
+        const currencySelector = document.getElementById('currencySelector');
+        const walletAddress = document.getElementById('walletAddress');
+        const networkBadge = document.getElementById('networkBadge');
+        const selectedCoinSymbols = document.querySelectorAll('.selected-coin-symbol');
+        const nextBtns = document.querySelectorAll('.next-step');
+        const prevBtns = document.querySelectorAll('.prev-step');
+        
+        // Coin Selection
+        coinCards.forEach(card => {
+            card.addEventListener('click', () => {
+                coinCards.forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                
+                const id = card.getAttribute('data-id');
+                const symbol = card.getAttribute('data-symbol');
+                const address = card.getAttribute('data-address');
+                const network = card.getAttribute('data-network');
+                
+                currencySelector.value = id;
+                walletAddress.innerText = address;
+                networkBadge.innerText = 'Network: ' + network;
+                selectedCoinSymbols.forEach(el => el.innerText = symbol);
+            });
+        });
 
-    const selector = document.getElementById('currencySelector');
-    const addressDisplay = document.getElementById('walletAddress');
-    const symbolDisplay = document.getElementById('coinSymbol');
-    const copyBtn = document.getElementById('copyBtn');
+        // Navigation
+        nextBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const next = btn.getAttribute('data-next');
+                if (next == '2' && !currencySelector.value) {
+                    alert('Please select an asset to continue.');
+                    return;
+                }
+                
+                document.querySelectorAll('[id^="step"]').forEach(s => s.classList.add('d-none'));
+                document.getElementById('step' + next).classList.remove('d-none');
+                
+                document.querySelectorAll('.step-item').forEach(i => i.classList.remove('active'));
+                document.getElementById('step' + next + '-indicator').classList.add('active');
+            });
+        });
 
-    function updateWallet() {
-        const selected = currencies[selector.value];
-        if (selected) {
-            addressDisplay.innerText = selected.address;
-            symbolDisplay.innerText = selected.symbol;
-        }
-    }
+        prevBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const prev = btn.getAttribute('data-prev');
+                document.querySelectorAll('[id^="step"]').forEach(s => s.classList.add('d-none'));
+                document.getElementById('step' + prev).classList.remove('d-none');
+                
+                document.querySelectorAll('.step-item').forEach(i => i.classList.remove('active'));
+                document.getElementById('step' + prev + '-indicator').classList.add('active');
+            });
+        });
 
-    selector.addEventListener('change', updateWallet);
-    updateWallet(); // Initial call
+        // Upload Zone
+        const uploadZone = document.getElementById('uploadZone');
+        const proofInput = document.getElementById('proofInput');
+        const uploadContent = document.getElementById('uploadContent');
+        const filePreview = document.getElementById('filePreview');
+        const fileName = document.getElementById('fileName');
 
-    copyBtn.addEventListener('click', () => {
-        navigator.clipboard.writeText(addressDisplay.innerText);
-        const icon = copyBtn.querySelector('i');
-        icon.classList.replace('far', 'fas');
-        icon.classList.add('text-success');
-        setTimeout(() => {
-            icon.classList.replace('fas', 'far');
-            icon.classList.remove('text-success');
-        }, 2000);
+        uploadZone.addEventListener('click', () => proofInput.click());
+        
+        proofInput.addEventListener('change', () => {
+            if (proofInput.files.length > 0) {
+                fileName.innerText = proofInput.files[0].name;
+                uploadContent.classList.add('d-none');
+                filePreview.classList.remove('d-none');
+            }
+        });
+
+        // Copy Address
+        document.getElementById('copyBtn').addEventListener('click', function() {
+            navigator.clipboard.writeText(walletAddress.innerText);
+            const btn = this;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check me-2"></i> Copied';
+            btn.classList.replace('btn-outline-gold', 'btn-success');
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.classList.replace('btn-success', 'btn-outline-gold');
+            }, 2000);
+        });
     });
-
-    // Initialize Tooltips
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new bootstrap.Tooltip(tooltipTriggerEl)
-    })
 </script>
 {% endblock %}

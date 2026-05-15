@@ -1,0 +1,45 @@
+{% extends "dashboard/dashboard_base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold mb-0">Your Notifications</h4>
+            {% if notifications %}
+            <a href="{{ url_for('dashboard.mark_notifications_read') }}" class="btn btn-light btn-sm rounded-pill px-3">
+                <i class="fas fa-check-double me-1"></i> Mark all as read
+            </a>
+            {% endif %}
+        </div>
+
+        {% if not notifications %}
+        <div class="text-center py-5">
+            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                <i class="fas fa-bell-slash fs-2 text-muted"></i>
+            </div>
+            <h5 class="fw-bold">No notifications yet</h5>
+            <p class="text-muted small">We'll notify you here when something important happens.</p>
+        </div>
+        {% else %}
+        <div class="notification-list">
+            {% for notif in notifications %}
+            <div class="card border-0 shadow-sm mb-3 position-relative {{ 'bg-light' if notif.is_read else 'bg-white' }}" style="border-left: 4px solid var(--{{ notif.type if notif.type != 'info' else 'primary' }}) !important;">
+                {% if not notif.is_read %}
+                <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle" style="margin-left: -2px; margin-top: -2px;">
+                    <span class="visually-hidden">New</span>
+                </span>
+                {% endif %}
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between">
+                        <h6 class="fw-bold mb-1 {{ 'text-muted' if notif.is_read else '' }}">{{ notif.title }}</h6>
+                        <small class="text-muted extra-small">{{ notif.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                    </div>
+                    <p class="mb-0 small {{ 'text-muted' if notif.is_read else '' }}">{{ notif.message }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

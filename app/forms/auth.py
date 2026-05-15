@@ -45,3 +45,9 @@ class WithdrawalPinForm(FlaskForm):
     pin = PasswordField('Transaction PIN (4-6 digits)', validators=[DataRequired(), Length(min=4, max=6)])
     confirm_pin = PasswordField('Confirm PIN', validators=[DataRequired(), EqualTo('pin')])
     submit = SubmitField('Save PIN')
+
+class ChangePasswordForm(FlaskForm):
+    current_password = PasswordField('Current Password', validators=[DataRequired()])
+    new_password = PasswordField('New Password', validators=[DataRequired(), Length(min=8)])
+    confirm_password = PasswordField('Confirm New Password', validators=[DataRequired(), EqualTo('new_password')])
+    submit = SubmitField('Change Password')

@@ -1,225 +1,201 @@
 {% extends "admin/admin_base.html" %}
 
-{% block page_title %}Admin Dashboard{% endblock %}
+{% block page_title %}Terminal Overview{% endblock %}
 
 {% block content %}
 
-<!-- KPI Row -->
-<div class="row g-3 mb-4">
-    {% set kpis = [
-        {'icon': 'fa-users', 'color': 'primary', 'label': 'Total Users', 'value': total_users, 'sub': verified_users|string + ' verified'},
-        {'icon': 'fa-wallet', 'color': 'success', 'label': 'Total Deposited', 'value': '${:,.2f}'.format(total_deposits), 'sub': pending_deposits|string + ' pending'},
-        {'icon': 'fa-money-bill-transfer', 'color': 'warning', 'label': 'Total Withdrawn', 'value': '${:,.2f}'.format(total_withdrawals), 'sub': pending_withdrawals|string + ' pending'},
-        {'icon': 'fa-chart-line', 'color': 'info', 'label': 'Total Profit Paid', 'value': '${:,.2f}'.format(total_profit), 'sub': active_investments|string + ' active plans'},
-    ] %}
-    {% for kpi in kpis %}
-    <div class="col-6 col-lg-3">
-        <div class="card border-0 shadow-sm p-3 h-100">
+<!-- ROW 1 — TOP KPI CARDS -->
+<div class="row g-4 mb-4">
+    <!-- Total Users -->
+    <div class="col-6 col-lg-3 animate-up">
+        <div class="stat-card" style="border-top: 3px solid #1A6EFF !important;">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    <p class="extra-small text-muted text-uppercase fw-bold mb-1">{{ kpi.label }}</p>
-                    <h4 class="fw-bold mb-0">{{ kpi.value }}</h4>
-                    <p class="extra-small text-muted mt-1">{{ kpi.sub }}</p>
+                    <p class="extra-small text-muted text-uppercase fw-bold mb-1">Total Users</p>
+                    <h2 class="display-6 fw-bold mb-0" style="font-family: 'Playfair Display', serif;">{{ total_users }}</h2>
+                    <p class="extra-small text-success mt-2 mb-0"><i class="fas fa-check-circle me-1"></i> {{ verified_users }} Verified</p>
                 </div>
-                <div class="bg-{{ kpi.color }} bg-opacity-10 text-{{ kpi.color }} rounded-circle d-flex align-items-center justify-content-center" style="width:44px;height:44px;flex-shrink:0;">
-                    <i class="fas {{ kpi.icon }}"></i>
+                <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width:48px;height:48px;flex-shrink:0;">
+                    <i class="fas fa-user-group"></i>
                 </div>
             </div>
         </div>
     </div>
-    {% endfor %}
+
+    <!-- Total Deposits -->
+    <div class="col-6 col-lg-3 animate-up" style="animation-delay: 0.1s;">
+        <div class="stat-card" style="border-top: 3px solid var(--color-primary) !important;">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <p class="extra-small text-muted text-uppercase fw-bold mb-1">Total Deposits</p>
+                    <h2 class="display-6 fw-bold mb-0" style="font-family: 'Playfair Display', serif;">${{ "{:,.2f}".format(total_deposits) }}</h2>
+                    <p class="extra-small text-muted mt-2 mb-0">Across all currencies</p>
+                </div>
+                <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width:48px;height:48px;flex-shrink:0;">
+                    <i class="fas fa-vault text-primary"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Actions -->
+    {% set pending_total = pending_deposits + pending_withdrawals + pending_kyc %}
+    <div class="col-6 col-lg-3 animate-up" style="animation-delay: 0.2s;">
+        <div class="stat-card" style="border-top: 3px solid var(--color-danger) !important;">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <p class="extra-small text-muted text-uppercase fw-bold mb-1">Pending Actions</p>
+                    <h2 class="display-6 fw-bold mb-0 text-danger" style="font-family: 'Playfair Display', serif;">{{ pending_total }}</h2>
+                    <p class="extra-small text-danger mt-2 mb-0">Requires immediate review</p>
+                </div>
+                <div class="bg-danger bg-opacity-10 text-danger rounded-circle d-flex align-items-center justify-content-center" style="width:48px;height:48px;flex-shrink:0;">
+                    <i class="fas fa-triangle-exclamation"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Revenue / Profit -->
+    <div class="col-6 col-lg-3 animate-up" style="animation-delay: 0.3s;">
+        <div class="stat-card" style="border-top: 3px solid var(--color-success) !important;">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <p class="extra-small text-muted text-uppercase fw-bold mb-1">Total Payouts</p>
+                    <h2 class="display-6 fw-bold mb-0" style="font-family: 'Playfair Display', serif;">${{ "{:,.2f}".format(total_profit) }}</h2>
+                    <p class="extra-small text-success mt-2 mb-0">Automated distributions</p>
+                </div>
+                <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center" style="width:48px;height:48px;flex-shrink:0;">
+                    <i class="fas fa-hand-holding-dollar"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- Pending Alerts Row -->
-<div class="row g-3 mb-4">
-    {% if pending_deposits %}
-    <div class="col-sm-4">
-        <a href="{{ url_for('admin.deposits') }}" class="text-decoration-none">
-            <div class="card border-0 shadow-sm p-3 border-start border-warning border-3 d-flex flex-row align-items-center gap-3" data-bs-toggle="tooltip" title="View pending deposit requests">
-                <i class="fas fa-exclamation-circle text-warning fa-lg"></i>
-                <div><strong>{{ pending_deposits }}</strong> pending <span class="text-muted small">deposits</span></div>
-            </div>
-        </a>
-    </div>
-    {% endif %}
-    {% if pending_withdrawals %}
-    <div class="col-sm-4">
-        <a href="{{ url_for('admin.withdrawals') }}" class="text-decoration-none">
-            <div class="card border-0 shadow-sm p-3 border-start border-danger border-3 d-flex flex-row align-items-center gap-3" data-bs-toggle="tooltip" title="View pending withdrawal requests">
-                <i class="fas fa-exclamation-circle text-danger fa-lg"></i>
-                <div><strong>{{ pending_withdrawals }}</strong> pending <span class="text-muted small">withdrawals</span></div>
-            </div>
-        </a>
-    </div>
-    {% endif %}
-    {% if pending_kyc %}
-    <div class="col-sm-4">
-        <a href="{{ url_for('admin.kyc_list') }}" class="text-decoration-none">
-            <div class="card border-0 shadow-sm p-3 border-start border-info border-3 d-flex flex-row align-items-center gap-3" data-bs-toggle="tooltip" title="Review KYC submissions">
-                <i class="fas fa-id-card text-info fa-lg"></i>
-                <div><strong>{{ pending_kyc }}</strong> pending <span class="text-muted small">KYC reviews</span></div>
-            </div>
-        </a>
-    </div>
-    {% endif %}
-</div>
-
-<!-- Charts Row -->
+<!-- ROW 2 — PENDING ACTION ALERTS -->
 <div class="row g-4 mb-4">
-    <div class="col-lg-8">
-        <div class="card border-0 shadow-sm p-4 h-100">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h6 class="fw-bold mb-0">Deposit Revenue (Last 7 Days)</h6>
+    <div class="col-lg-4">
+        <div class="glass-card p-4 border-start border-3 border-warning d-flex align-items-center justify-content-between">
+            <div>
+                <h6 class="fw-bold mb-1">Pending Deposits</h6>
+                <p class="display-6 fw-bold mb-0 text-warning">{{ pending_deposits }}</p>
             </div>
-            <canvas id="depositsChart" height="100"></canvas>
+            <a href="{{ url_for('admin.deposits') }}" class="btn btn-outline-gold btn-sm px-3">Review Now</a>
         </div>
     </div>
     <div class="col-lg-4">
-        <div class="card border-0 shadow-sm p-4 h-100">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h6 class="fw-bold mb-0">New Users (Last 7 Days)</h6>
+        <div class="glass-card p-4 border-start border-3 border-danger d-flex align-items-center justify-content-between">
+            <div>
+                <h6 class="fw-bold mb-1">Pending Withdrawals</h6>
+                <p class="display-6 fw-bold mb-0 text-danger">{{ pending_withdrawals }}</p>
             </div>
-            <canvas id="usersChart" height="200"></canvas>
+            <a href="{{ url_for('admin.withdrawals') }}" class="btn btn-outline-gold btn-sm px-3">Review Now</a>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="glass-card p-4 border-start border-3 border-primary d-flex align-items-center justify-content-between">
+            <div>
+                <h6 class="fw-bold mb-1">Pending KYC Reviews</h6>
+                <p class="display-6 fw-bold mb-0 text-primary">{{ pending_kyc }}</p>
+            </div>
+            <a href="{{ url_for('admin.kyc_list') }}" class="btn btn-outline-gold btn-sm px-3">Review Now</a>
         </div>
     </div>
 </div>
 
-<!-- Recent Activity Row -->
-<div class="row g-4">
-    <!-- Recent Users -->
-    <div class="col-lg-4">
-        <div class="card border-0 shadow-sm p-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h6 class="fw-bold mb-0">New Users</h6>
-                <a href="{{ url_for('admin.users') }}" class="btn btn-light btn-sm rounded-pill extra-small" data-bs-toggle="tooltip" title="View all users">See All</a>
+<!-- ROW 3 — DATA TABLES -->
+<div class="row g-4 mb-4">
+    <!-- Recent Users Table -->
+    <div class="col-lg-7">
+        <div class="table-dark-custom">
+            <div class="p-4 d-flex justify-content-between align-items-center">
+                <h6 class="fw-bold mb-0" style="font-family: 'Playfair Display', serif;">Recent Client Accessions</h6>
+                <a href="{{ url_for('admin.users') }}" class="extra-small auth-link text-uppercase fw-bold letter-spacing-widest">Full Directory</a>
             </div>
-            {% for u in recent_users %}
-            <div class="d-flex align-items-center gap-3 py-2 border-bottom border-light">
-                <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width:36px;height:36px;flex-shrink:0;">
-                    {{ u.first_name[0] }}
-                </div>
-                <div class="overflow-hidden">
-                    <div class="small fw-bold text-truncate">{{ u.first_name }} {{ u.last_name }}</div>
-                    <div class="extra-small text-muted text-truncate">{{ u.email }}</div>
-                </div>
-                <span class="ms-auto badge {{ 'bg-success' if u.is_verified else 'bg-warning text-dark' }} rounded-pill extra-small">{{ 'Verified' if u.is_verified else 'Unverified' }}</span>
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Client</th>
+                            <th>Status</th>
+                            <th>Registered</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in recent_users %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold small" style="width:32px;height:32px;">
+                                        {{ u.first_name[0] }}
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold text-white small">{{ u.first_name }} {{ u.last_name }}</div>
+                                        <div class="extra-small text-muted">{{ u.email }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="status-pill {{ 'success' if u.is_verified else 'warning' }}">
+                                    {{ 'Verified' if u.is_verified else 'Pending' }}
+                                </span>
+                            </td>
+                            <td class="extra-small text-muted">{{ u.created_at.strftime('%b %d, %Y') }}</td>
+                            <td class="text-end">
+                                <a href="{{ url_for('admin.user_details', user_id=u.id) }}" class="text-muted"><i class="fas fa-ellipsis-v"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            {% else %}
-            <p class="text-muted small text-center py-3">No users yet.</p>
-            {% endfor %}
         </div>
     </div>
 
-    <!-- Recent Deposits -->
-    <div class="col-lg-4">
-        <div class="card border-0 shadow-sm p-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h6 class="fw-bold mb-0">Recent Deposits</h6>
-                <a href="{{ url_for('admin.deposits') }}" class="btn btn-light btn-sm rounded-pill extra-small">See All</a>
+    <!-- Recent Deposits Table -->
+    <div class="col-lg-5">
+        <div class="table-dark-custom">
+            <div class="p-4 d-flex justify-content-between align-items-center">
+                <h6 class="fw-bold mb-0" style="font-family: 'Playfair Display', serif;">Latest Inflows</h6>
+                <a href="{{ url_for('admin.deposits') }}" class="extra-small auth-link text-uppercase fw-bold letter-spacing-widest">Global Ledger</a>
             </div>
-            {% for d in recent_deposits %}
-            <div class="d-flex align-items-center gap-3 py-2 border-bottom border-light">
-                <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center" style="width:36px;height:36px;flex-shrink:0;">
-                    <i class="fas fa-arrow-down small"></i>
-                </div>
-                <div>
-                    <div class="small fw-bold">${{ "{:,.2f}".format(d.amount) }}</div>
-                    <div class="extra-small text-muted">{{ d.user.email }}</div>
-                </div>
-                <span class="ms-auto badge rounded-pill extra-small {{ 'bg-warning text-dark' if d.status == 'pending' else ('bg-success' if d.status == 'approved' else 'bg-danger') }}">{{ d.status }}</span>
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for d in recent_deposits %}
+                        <tr>
+                            <td>
+                                <div class="fw-bold text-white small">${{ "{:,.2f}".format(d.amount) }}</div>
+                                <div class="extra-small text-muted">{{ d.user.username }}</div>
+                            </td>
+                            <td>
+                                <span class="status-pill {{ 'warning' if d.status == 'pending' else ('success' if d.status == 'approved' else 'danger') }}">
+                                    {{ d.status }}
+                                </span>
+                            </td>
+                            <td class="extra-small text-muted">{{ d.created_at.strftime('%H:%M') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            {% else %}
-            <p class="text-muted small text-center py-3">No deposits yet.</p>
-            {% endfor %}
-        </div>
-    </div>
-
-    <!-- Recent Withdrawals -->
-    <div class="col-lg-4">
-        <div class="card border-0 shadow-sm p-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h6 class="fw-bold mb-0">Recent Withdrawals</h6>
-                <a href="{{ url_for('admin.withdrawals') }}" class="btn btn-light btn-sm rounded-pill extra-small">See All</a>
-            </div>
-            {% for w in recent_withdrawals %}
-            <div class="d-flex align-items-center gap-3 py-2 border-bottom border-light">
-                <div class="bg-danger bg-opacity-10 text-danger rounded-circle d-flex align-items-center justify-content-center" style="width:36px;height:36px;flex-shrink:0;">
-                    <i class="fas fa-arrow-up small"></i>
-                </div>
-                <div>
-                    <div class="small fw-bold">${{ "{:,.2f}".format(w.amount) }}</div>
-                    <div class="extra-small text-muted">{{ w.user.email }}</div>
-                </div>
-                <span class="ms-auto badge rounded-pill extra-small {{ 'bg-warning text-dark' if w.status == 'pending' else ('bg-success' if w.status == 'paid' else ('bg-info' if w.status == 'approved' else 'bg-danger')) }}">{{ w.status }}</span>
-            </div>
-            {% else %}
-            <p class="text-muted small text-center py-3">No withdrawals yet.</p>
-            {% endfor %}
         </div>
     </div>
 </div>
 
-<style>
-    .extra-small { font-size: 0.7rem; }
-</style>
 {% endblock %}
 
 {% block scripts %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     // Initialize tooltips
     document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
-
-    // Shared chart config
-    const chartDefaults = {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: {
-            x: { grid: { display: false }, ticks: { font: { size: 11 } } },
-            y: { grid: { color: '#f1f5f9' }, ticks: { font: { size: 11 } } }
-        }
-    };
-
-    // Deposits Revenue Chart
-    fetch("{{ url_for('admin.deposits_chart_data') }}")
-        .then(r => r.json())
-        .then(d => {
-            new Chart(document.getElementById('depositsChart'), {
-                type: 'bar',
-                data: {
-                    labels: d.labels,
-                    datasets: [{
-                        data: d.data,
-                        backgroundColor: 'rgba(99,102,241,0.15)',
-                        borderColor: 'rgba(99,102,241,1)',
-                        borderWidth: 2,
-                        borderRadius: 6,
-                    }]
-                },
-                options: chartDefaults
-            });
-        });
-
-    // New Users Chart
-    fetch("{{ url_for('admin.users_chart_data') }}")
-        .then(r => r.json())
-        .then(d => {
-            new Chart(document.getElementById('usersChart'), {
-                type: 'line',
-                data: {
-                    labels: d.labels,
-                    datasets: [{
-                        data: d.data,
-                        borderColor: '#10b981',
-                        backgroundColor: 'rgba(16,185,129,0.1)',
-                        fill: true,
-                        tension: 0.4,
-                        pointBackgroundColor: '#10b981',
-                        pointRadius: 4,
-                    }]
-                },
-                options: chartDefaults
-            });
-        });
 </script>
 {% endblock %}

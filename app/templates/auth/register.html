@@ -1,71 +1,217 @@
 {% extends "base.html" %}
 
+{% block head %}
+<style>
+    body { background-color: var(--color-bg); overflow-x: hidden; }
+    .auth-container { min-height: 100vh; }
+    .auth-left {
+        background: linear-gradient(145deg, #050C1A 0%, #0A1830 60%, #0F2040 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    .auth-right {
+        background-color: var(--color-surface);
+        padding: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .auth-form-wrapper { width: 100%; max-width: 500px; }
+    
+    .form-control {
+        background: #0F1E35 !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        color: #E8EDF5 !important;
+        border-radius: 10px !important;
+        padding: 14px 16px !important;
+        font-size: 0.95rem !important;
+    }
+    .form-control:focus {
+        border-color: #C9A84C !important;
+        box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.12) !important;
+        outline: none !important;
+    }
+    .form-label {
+        color: #6B7A9A;
+        font-size: 0.82rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+    .btn-auth-submit {
+        width: 100%;
+        background: var(--gold-gradient) !important;
+        color: #050C1A !important;
+        font-weight: 600;
+        height: 52px;
+        font-size: 1rem;
+        border-radius: 10px;
+        border: none;
+        transition: all 0.3s ease;
+    }
+    .btn-auth-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(201, 168, 76, 0.3);
+        opacity: 0.95;
+    }
+    .auth-link { color: #C9A84C; text-decoration: none; font-weight: 500; transition: color 0.2s; }
+    .auth-link:hover { color: #F5D078; }
+    
+    .geometric-svg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 120%;
+        height: 120%;
+        opacity: 0.07;
+        pointer-events: none;
+    }
+    
+    .trust-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-7">
-            <div class="card shadow-lg p-4">
-                <div class="text-center mb-4">
-                    <h3 class="fw-bold">Create Account</h3>
-                    <p class="text-muted small">Start your investment journey today</p>
+<div class="container-fluid p-0">
+    <div class="row g-0 auth-container">
+        <!-- Left Panel -->
+        <div class="col-lg-6 d-none d-lg-flex auth-left align-items-center justify-content-center text-center px-5">
+            <svg class="geometric-svg" viewBox="0 0 100 100">
+                <path d="M50 10 L90 30 L90 70 L50 90 L10 70 L10 30 Z" fill="none" stroke="#C9A84C" stroke-width="0.1" />
+                <path d="M50 20 L80 35 L80 65 L50 80 L20 65 L20 35 Z" fill="none" stroke="#C9A84C" stroke-width="0.1" />
+                <path d="M50 30 L70 40 L70 60 L50 70 L30 60 L30 40 Z" fill="none" stroke="#C9A84C" stroke-width="0.1" />
+            </svg>
+            
+            <div class="position-relative z-1">
+                <h1 class="display-4 fw-bold text-primary mb-2" style="font-family: 'Playfair Display', serif;">Prestige Finance</h1>
+                <p class="text-white opacity-50 mb-5" style="letter-spacing: 0.2em; font-size: 0.8rem; text-transform: uppercase;">The Future of Private Banking</p>
+                
+                <div class="d-flex justify-content-center gap-4 mb-5">
+                    <div class="trust-badge"><i class="fas fa-shield-alt"></i> Secure</div>
+                    <div class="trust-badge"><i class="fas fa-lock"></i> Encrypted</div>
+                    <div class="trust-badge"><i class="fas fa-check-circle"></i> Verified</div>
                 </div>
+                
+                <p class="small text-white opacity-25 mt-5">Join 10,000+ investors worldwide</p>
+            </div>
+        </div>
+        
+        <!-- Right Panel -->
+        <div class="col-12 col-lg-6 auth-right">
+            <div class="auth-form-wrapper">
+                <div class="mb-5">
+                    <h2 class="fw-bold mb-2 text-white" style="font-family: 'Playfair Display', serif; font-size: 2rem;">Create Your Account</h2>
+                    <p class="text-muted small">Join thousands of global investors</p>
+                    <div class="gold-divider" style="width: 40px; margin: 16px 0;"></div>
+                </div>
+                
                 <form method="POST" action="">
                     {{ form.hidden_tag() }}
+                    
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            {{ form.first_name.label(class="form-label small fw-bold") }}
-                            {{ form.first_name(class="form-control", placeholder="First Name") }}
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label">First Name</label>
+                            {{ form.first_name(class="form-control", placeholder="Alexander") }}
                             {% for error in form.first_name.errors %}
-                                <span class="text-danger small">{{ error }}</span>
+                                <span class="text-danger extra-small mt-2 d-block">{{ error }}</span>
                             {% endfor %}
                         </div>
-                        <div class="col-md-6 mb-3">
-                            {{ form.last_name.label(class="form-label small fw-bold") }}
-                            {{ form.last_name(class="form-control", placeholder="Last Name") }}
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label">Last Name</label>
+                            {{ form.last_name(class="form-control", placeholder="Hamilton") }}
                             {% for error in form.last_name.errors %}
-                                <span class="text-danger small">{{ error }}</span>
+                                <span class="text-danger extra-small mt-2 d-block">{{ error }}</span>
                             {% endfor %}
                         </div>
                     </div>
-                    <div class="mb-3">
-                        {{ form.username.label(class="form-label small fw-bold") }}
-                        {{ form.username(class="form-control", placeholder="Choose a username") }}
+                    
+                    <div class="mb-4">
+                        <label class="form-label">Client Alias (Username)</label>
+                        {{ form.username(class="form-control", placeholder="Choose unique alias") }}
                         {% for error in form.username.errors %}
-                            <span class="text-danger small">{{ error }}</span>
+                            <span class="text-danger extra-small mt-2 d-block">{{ error }}</span>
                         {% endfor %}
                     </div>
-                    <div class="mb-3">
-                        {{ form.email.label(class="form-label small fw-bold") }}
-                        {{ form.email(class="form-control", placeholder="Email address") }}
+                    
+                    <div class="mb-4">
+                        <label class="form-label">Corporate Email</label>
+                        {{ form.email(class="form-control", placeholder="investor@client.com") }}
                         {% for error in form.email.errors %}
-                            <span class="text-danger small">{{ error }}</span>
+                            <span class="text-danger extra-small mt-2 d-block">{{ error }}</span>
                         {% endfor %}
                     </div>
+                    
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            {{ form.password.label(class="form-label small fw-bold") }}
-                            {{ form.password(class="form-control", placeholder="Password") }}
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label">Password</label>
+                            <div class="position-relative">
+                                {{ form.password(class="form-control pe-5", placeholder="••••••••", id="password-field") }}
+                                <button type="button" class="btn position-absolute top-50 end-0 translate-middle-y border-0 bg-transparent text-muted px-3" id="toggle-password">
+                                    <i class="fas fa-eye" id="eye-icon"></i>
+                                </button>
+                            </div>
                             {% for error in form.password.errors %}
-                                <span class="text-danger small">{{ error }}</span>
+                                <span class="text-danger extra-small mt-2 d-block">{{ error }}</span>
                             {% endfor %}
                         </div>
-                        <div class="col-md-6 mb-3">
-                            {{ form.confirm_password.label(class="form-label small fw-bold") }}
-                            {{ form.confirm_password(class="form-control", placeholder="Confirm Password") }}
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label">Verify Password</label>
+                            <div class="position-relative">
+                                {{ form.confirm_password(class="form-control pe-5", placeholder="••••••••", id="confirm-password-field") }}
+                                <button type="button" class="btn position-absolute top-50 end-0 translate-middle-y border-0 bg-transparent text-muted px-3" id="toggle-confirm-password">
+                                    <i class="fas fa-eye" id="confirm-eye-icon"></i>
+                                </button>
+                            </div>
                             {% for error in form.confirm_password.errors %}
-                                <span class="text-danger small">{{ error }}</span>
+                                <span class="text-danger extra-small mt-2 d-block">{{ error }}</span>
                             {% endfor %}
                         </div>
                     </div>
-                    <div class="d-grid gap-2 mt-3">
-                        {{ form.submit(class="btn btn-primary btn-lg rounded-pill") }}
-                    </div>
+                    
+                    <button type="submit" class="btn-auth-submit mt-3">Establish Partnership</button>
                 </form>
-                <div class="text-center mt-4">
-                    <p class="small text-muted">Already have an account? <a href="{{ url_for('auth.login') }}" class="text-decoration-none fw-bold">Login</a></p>
+                
+                <div class="text-center mt-5">
+                    <p class="small text-muted">Already have an account? <a href="{{ url_for('auth.login') }}" class="auth-link">Login to Vault</a></p>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .extra-small { font-size: 0.75rem; }
+</style>
+
+<script>
+function setupPasswordToggle(buttonId, fieldId, iconId) {
+    const btn = document.getElementById(buttonId);
+    if (!btn) return;
+    btn.addEventListener('click', function() {
+        const field = document.getElementById(fieldId);
+        const icon = document.getElementById(iconId);
+        
+        if (field.type === 'password') {
+            field.type = 'text';
+            icon.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            field.type = 'password';
+            icon.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+    });
+}
+
+setupPasswordToggle('toggle-password', 'password-field', 'eye-icon');
+setupPasswordToggle('toggle-confirm-password', 'confirm-password-field', 'confirm-eye-icon');
+</script>
 {% endblock %}
