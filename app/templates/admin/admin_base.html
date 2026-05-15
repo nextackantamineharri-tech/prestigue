@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - {{ settings.site_name }}</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: {{ settings.primary_color }};
+            --secondary: {{ settings.secondary_color }};
+            --sidebar-width: 260px;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7f6;
+        }
+        
+        #sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: #1e293b;
+            color: #fff;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            background: #0f172a;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .nav-link {
+            padding: 12px 20px;
+            color: #94a3b8;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: 0.2s;
+        }
+        
+        .nav-link i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: #fff;
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .nav-link.active {
+            border-left: 4px solid var(--primary);
+            background: rgba(255,255,255,0.1);
+        }
+        
+        #content {
+            margin-left: var(--sidebar-width);
+            padding: 30px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        
+        .admin-navbar {
+            background: #fff;
+            padding: 15px 30px;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div id="sidebar">
+        <div class="sidebar-header">
+            {{ settings.site_name }}
+        </div>
+        <nav class="mt-3">
+            <a href="{{ url_for('admin.dashboard') }}" class="nav-link {{ 'active' if request.endpoint == 'admin.dashboard' }}">
+                <i class="fas fa-chart-pie"></i> Dashboard
+            </a>
+            <a href="{{ url_for('admin.users') }}" class="nav-link {{ 'active' if 'user' in (request.endpoint or '') }}">
+                <i class="fas fa-users"></i> Users
+            </a>
+            <a href="{{ url_for('admin.plans') }}" class="nav-link {{ 'active' if 'plan' in (request.endpoint or '') }}">
+                <i class="fas fa-coins"></i> Investment Plans
+            </a>
+            <a href="{{ url_for('admin.currencies') }}" class="nav-link {{ 'active' if 'currenc' in (request.endpoint or '') }}">
+                <i class="fab fa-bitcoin"></i> Currencies
+            </a>
+            <a href="{{ url_for('admin.deposits') }}" class="nav-link {{ 'active' if 'deposit' in (request.endpoint or '') }}">
+                <i class="fas fa-wallet"></i> Deposits
+            </a>
+            <a href="{{ url_for('admin.withdrawals') }}" class="nav-link {{ 'active' if 'withdrawal' in (request.endpoint or '') }}">
+                <i class="fas fa-money-bill-transfer"></i> Withdrawals
+            </a>
+            <a href="{{ url_for('admin.kyc_list') }}" class="nav-link {{ 'active' if 'kyc' in (request.endpoint or '') }}">
+                <i class="fas fa-id-card"></i> KYC
+            </a>
+            <a href="{{ url_for('admin.settings') }}" class="nav-link {{ 'active' if request.endpoint == 'admin.settings' }}">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+            <hr class="mx-3 opacity-25">
+            <a href="{{ url_for('main.index') }}" class="nav-link">
+                <i class="fas fa-external-link-alt"></i> View Site
+            </a>
+            <a href="{{ url_for('auth.logout') }}" class="nav-link text-danger">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </nav>
+    </div>
+
+    <div id="content">
+        <div class="admin-navbar">
+            <h5 class="mb-0 fw-bold">{% block page_title %}Dashboard{% endblock %}</h5>
+            <div class="d-flex align-items-center">
+                <span class="me-3 small text-muted">Welcome, {{ current_user.username }}</span>
+                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+            </div>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

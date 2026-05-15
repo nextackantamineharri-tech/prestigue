@@ -1,0 +1,140 @@
+{% extends "dashboard/dashboard_base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+
+    {% if kyc and kyc.status == 'verified' %}
+    <!-- Verified State -->
+    <div class="card border-0 shadow-sm p-5 text-center">
+      <div class="mb-3"><i class="fas fa-shield-check fa-4x text-success"></i></div>
+      <h4 class="fw-bold">Identity Verified</h4>
+      <p class="text-muted">Your account is fully verified. You have full access to all platform features.</p>
+      <a href="{{ url_for('dashboard.index') }}" class="btn btn-success rounded-pill px-5 mt-2">Go to Dashboard</a>
+    </div>
+
+    {% elif kyc and kyc.status == 'pending' %}
+    <!-- Pending State -->
+    <div class="card border-0 shadow-sm p-5 text-center">
+      <div class="mb-3"><i class="fas fa-hourglass-half fa-4x text-warning"></i></div>
+      <h4 class="fw-bold">Under Review</h4>
+      <p class="text-muted">Your documents have been submitted and are being reviewed by our compliance team. This usually takes 24–48 hours.</p>
+      <a href="{{ url_for('kyc.status') }}" class="btn btn-outline-warning rounded-pill px-5 mt-2">Check Status</a>
+    </div>
+
+    {% else %}
+    <!-- Submission Form -->
+    <div class="card border-0 shadow-sm p-4">
+      <div class="mb-4">
+        <h4 class="fw-bold mb-1">Identity Verification</h4>
+        <p class="text-muted small">Upload the required documents to unlock full platform access. All documents are stored securely and encrypted.</p>
+      </div>
+
+      {% if kyc and kyc.status == 'rejected' %}
+      <div class="alert alert-danger border-0 rounded-4 small mb-4">
+        <i class="fas fa-times-circle me-2"></i>
+        <strong>Previous submission rejected:</strong> {{ kyc.admin_note or 'Please re-submit clearer documents.' }}
+      </div>
+      {% endif %}
+
+      <form method="POST" action="" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+
+        <!-- ID Type -->
+        <div class="mb-4">
+          {{ form.id_type.label(class="form-label small fw-bold") }}
+          {{ form.id_type(class="form-select") }}
+        </div>
+
+        <!-- Document Uploads -->
+        <div class="row g-3 mb-4">
+          <div class="col-12">
+            <label class="form-label small fw-bold d-flex align-items-center gap-2">
+              {{ form.id_image.label.text }}
+              <span class="badge bg-primary bg-opacity-10 text-primary extra-small" data-bs-toggle="tooltip" title="Ensure all corners are visible and text is legible">
+                <i class="fas fa-info-circle"></i> Tips
+              </span>
+            </label>
+            <div class="upload-zone rounded-4 border border-dashed p-4 text-center position-relative">
+              <i class="fas fa-id-card fa-2x text-muted mb-2"></i>
+              <p class="small text-muted mb-1">Click to upload your ID document</p>
+              <p class="extra-small text-muted">JPG, PNG, or PDF — Max 5MB</p>
+              {{ form.id_image(class="upload-input", id="id_image") }}
+              <p class="extra-small text-success mt-2 file-name" id="id_image_name"></p>
+            </div>
+            {% for e in form.id_image.errors %}<span class="text-danger small">{{ e }}</span>{% endfor %}
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small fw-bold d-flex align-items-center gap-2">
+              {{ form.selfie_image.label.text }}
+              <span class="badge bg-primary bg-opacity-10 text-primary extra-small" data-bs-toggle="tooltip" title="Hold your ID next to your face. Ensure your face is clearly visible.">
+                <i class="fas fa-info-circle"></i> Tips
+              </span>
+            </label>
+            <div class="upload-zone rounded-4 border border-dashed p-4 text-center position-relative">
+              <i class="fas fa-camera fa-2x text-muted mb-2"></i>
+              <p class="small text-muted mb-1">Click to upload your selfie</p>
+              <p class="extra-small text-muted">JPG or PNG only</p>
+              {{ form.selfie_image(class="upload-input", id="selfie_image") }}
+              <p class="extra-small text-success mt-2 file-name" id="selfie_image_name"></p>
+            </div>
+            {% for e in form.selfie_image.errors %}<span class="text-danger small">{{ e }}</span>{% endfor %}
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small fw-bold d-flex align-items-center gap-2">
+              {{ form.address_image.label.text }}
+              <span class="badge bg-primary bg-opacity-10 text-primary extra-small" data-bs-toggle="tooltip" title="Must show your full name and current address. Dated within 3 months.">
+                <i class="fas fa-info-circle"></i> Tips
+              </span>
+            </label>
+            <div class="upload-zone rounded-4 border border-dashed p-4 text-center position-relative">
+              <i class="fas fa-file-alt fa-2x text-muted mb-2"></i>
+              <p class="small text-muted mb-1">Click to upload proof of address</p>
+              <p class="extra-small text-muted">JPG, PNG, or PDF</p>
+              {{ form.address_image(class="upload-input", id="address_image") }}
+              <p class="extra-small text-success mt-2 file-name" id="address_image_name"></p>
+            </div>
+            {% for e in form.address_image.errors %}<span class="text-danger small">{{ e }}</span>{% endfor %}
+          </div>
+        </div>
+
+        <!-- Security Notice -->
+        <div class="alert alert-light border-0 bg-light rounded-4 small mb-4">
+          <i class="fas fa-lock text-primary me-2"></i>
+          Your documents are encrypted with AES-256 and are only accessible to our verified compliance officers.
+        </div>
+
+        <div class="d-grid">
+          {{ form.submit(class="btn btn-primary btn-lg rounded-pill", data_bs_toggle="tooltip", title="Submit all documents for verification") }}
+        </div>
+      </form>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+
+<style>
+  .upload-zone { cursor: pointer; transition: background 0.2s; background: #f8fafc; }
+  .upload-zone:hover { background: #eff6ff; border-color: var(--primary) !important; }
+  .upload-input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+  .border-dashed { border-style: dashed !important; }
+  .extra-small { font-size: 0.7rem; }
+</style>
+
+{% block scripts %}
+<script>
+  // Show selected file name
+  ['id_image', 'selfie_image', 'address_image'].forEach(id => {
+    document.getElementById(id).addEventListener('change', function() {
+      const label = document.getElementById(id + '_name');
+      label.textContent = this.files[0] ? '✓ ' + this.files[0].name : '';
+    });
+  });
+  // Tooltips
+  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
+</script>
+{% endblock %}
+{% endblock %}

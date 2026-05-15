@@ -1,0 +1,63 @@
+{% extends "admin/admin_base.html" %}
+
+{% block page_title %}Process Withdrawal #{{ withdrawal.id }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card shadow-sm p-4 mb-4">
+            <h6 class="fw-bold mb-4">Withdrawal Request Details</h6>
+            <div class="row mb-4">
+                <div class="col-sm-6 mb-3">
+                    <label class="small text-muted d-block">User</label>
+                    <span class="fw-bold">{{ withdrawal.user.first_name }} {{ withdrawal.user.last_name }}</span>
+                </div>
+                <div class="col-sm-6 mb-3">
+                    <label class="small text-muted d-block">Amount to Pay</label>
+                    <span class="fw-bold text-danger fs-5">${{ "{:,.2f}".format(withdrawal.amount) }}</span>
+                </div>
+                <div class="col-sm-6 mb-3">
+                    <label class="small text-muted d-block">Crypto Asset</label>
+                    <span class="fw-bold">{{ withdrawal.currency.name }} ({{ withdrawal.currency.symbol }})</span>
+                </div>
+                <div class="col-sm-6 mb-3">
+                    <label class="small text-muted d-block">Date Requested</label>
+                    <span class="fw-bold">{{ withdrawal.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                </div>
+                <div class="col-12 mt-2">
+                    <label class="small text-muted d-block">Destination Wallet Address</label>
+                    <div class="bg-light p-3 rounded mt-1">
+                        <code class="fw-bold text-dark">{{ withdrawal.wallet_address }}</code>
+                        <button class="btn btn-sm btn-link float-end py-0" onclick="navigator.clipboard.writeText('{{ withdrawal.wallet_address }}')">
+                            <i class="far fa-copy"></i> Copy
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <hr>
+            
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.admin_note.label(class="form-label small fw-bold") }}
+                    {{ form.admin_note(class="form-control", rows="3", placeholder="Note or rejection reason...") }}
+                </div>
+                
+                <div class="d-flex flex-wrap gap-2">
+                    {% if withdrawal.status == 'pending' %}
+                        {{ form.submit_approve(class="btn btn-info text-white rounded-pill px-4", data_bs_toggle="tooltip", title="Approve the request for payment") }}
+                    {% endif %}
+                    
+                    {% if withdrawal.status in ['pending', 'approved'] %}
+                        {{ form.submit_paid(class="btn btn-success rounded-pill px-4", data_bs_toggle="tooltip", title="Mark as successfully paid to user") }}
+                        {{ form.submit_reject(class="btn btn-danger rounded-pill px-4", data_bs_toggle="tooltip", title="Reject and return funds to user balance") }}
+                    {% endif %}
+                    
+                    <a href="{{ url_for('admin.withdrawals') }}" class="btn btn-light rounded-pill px-4">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

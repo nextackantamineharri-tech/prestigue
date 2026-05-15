@@ -1,0 +1,105 @@
+{% extends "admin/admin_base.html" %}
+
+{% block page_title %}System Settings{% endblock %}
+
+{% block content %}
+<form method="POST" action="">
+    {{ form.hidden_tag() }}
+    
+    <div class="row">
+        <!-- Site Information -->
+        <div class="col-lg-7 mb-4">
+            <div class="card p-4 h-100">
+                <h6 class="fw-bold mb-4"><i class="fas fa-info-circle me-2 text-primary"></i>General Information</h6>
+                <div class="row mb-3">
+                    <div class="col-md-12 mb-3">
+                        {{ form.site_name.label(class="form-label small fw-bold") }}
+                        {{ form.site_name(class="form-control") }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        {{ form.site_email.label(class="form-label small fw-bold") }}
+                        {{ form.site_email(class="form-control") }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        {{ form.site_phone.label(class="form-label small fw-bold") }}
+                        {{ form.site_phone(class="form-control") }}
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        {{ form.site_address.label(class="form-label small fw-bold") }}
+                        {{ form.site_address(class="form-control", rows="3") }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Branding -->
+        <div class="col-lg-5 mb-4">
+            <div class="card p-4 h-100">
+                <h6 class="fw-bold mb-4"><i class="fas fa-palette me-2 text-primary"></i>Branding & Colors</h6>
+                <div class="mb-3">
+                    {{ form.primary_color.label(class="form-label small fw-bold") }}
+                    <div class="d-flex gap-2">
+                        {{ form.primary_color(class="form-control", type="color") }}
+                        {{ form.primary_color(class="form-control") }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    {{ form.secondary_color.label(class="form-label small fw-bold") }}
+                    <div class="d-flex gap-2">
+                        {{ form.secondary_color(class="form-control", type="color") }}
+                        {{ form.secondary_color(class="form-control") }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    {{ form.accent_color.label(class="form-label small fw-bold") }}
+                    <div class="d-flex gap-2">
+                        {{ form.accent_color(class="form-control", type="color") }}
+                        {{ form.accent_color(class="form-control") }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    {{ form.logo_url.label(class="form-label small fw-bold") }}
+                    {{ form.logo_url(class="form-control", placeholder="https://...") }}
+                </div>
+            </div>
+        </div>
+
+        <!-- SEO & Social -->
+        <div class="col-lg-12 mb-4">
+            <div class="card p-4">
+                <h6 class="fw-bold mb-4"><i class="fas fa-search me-2 text-primary"></i>SEO & Social Presence</h6>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        {{ form.meta_title.label(class="form-label small fw-bold") }}
+                        {{ form.meta_title(class="form-control") }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        {{ form.meta_description.label(class="form-label small fw-bold") }}
+                        {{ form.meta_description(class="form-control", rows="1") }}
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        {{ form.facebook_url.label(class="form-label small fw-bold") }}
+                        {{ form.facebook_url(class="form-control") }}
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        {{ form.twitter_url.label(class="form-label small fw-bold") }}
+                        {{ form.twitter_url(class="form-control") }}
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        {{ form.telegram_url.label(class="form-label small fw-bold") }}
+                        {{ form.telegram_url(class="form-control") }}
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        {{ form.instagram_url.label(class="form-label small fw-bold") }}
+                        {{ form.instagram_url(class="form-control") }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-end">
+        {{ form.submit(class="btn btn-primary btn-lg px-5 rounded-pill") }}
+    </div>
+</form>
+{% endblock %}

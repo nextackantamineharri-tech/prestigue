@@ -1,0 +1,10 @@
+{% extends "emails/email_base.html" %}
+{% block email_body %}
+<p class="greeting">Hi {{ user.first_name }},</p>
+<p>Your withdrawal request has been <span class="status-badge badge-danger">Rejected</span>. Your funds have been returned to your account balance.</p>
+<div class="highlight-box">
+  <div class="label">Reason</div>
+  <div style="font-size:14px; color:#1e293b; margin-top:4px;">{{ withdrawal.admin_note or 'Unable to process this withdrawal at this time.' }}</div>
+</div>
+<p>Your funds are safe in your account. You can submit a new withdrawal request or contact support at <a href="mailto:{{ settings.site_email }}">{{ settings.site_email }}</a>.</p>
+{% endblock %}

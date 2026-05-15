@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card shadow-sm p-4 mb-4">
+                <div class="text-center">
+                    <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <span class="fs-2 fw-bold">{{ current_user.first_name[0] }}{{ current_user.last_name[0] }}</span>
+                    </div>
+                    <h4 class="fw-bold mb-0">{{ current_user.first_name }} {{ current_user.last_name }}</h4>
+                    <p class="text-muted small">@{{ current_user.username }}</p>
+                    <span class="badge bg-{{ 'success' if current_user.is_verified else 'warning' }} rounded-pill">
+                        {{ 'Verified' if current_user.is_verified else 'Unverified' }}
+                    </span>
+                </div>
+                <hr class="my-4">
+                <ul class="list-unstyled mb-0">
+                    <li class="d-flex justify-content-between mb-2">
+                        <span class="text-muted small">Email:</span>
+                        <span class="small fw-bold">{{ current_user.email }}</span>
+                    </li>
+                    <li class="d-flex justify-content-between mb-2">
+                        <span class="text-muted small">Joined:</span>
+                        <span class="small fw-bold">{{ current_user.created_at.strftime('%Y-%m-%d') }}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card shadow-sm p-4 mb-4">
+                <h5 class="fw-bold mb-4">Security Settings</h5>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="fw-bold small mb-3">Withdrawal PIN</h6>
+                        <p class="text-muted small mb-4">A 4-6 digit PIN is required for all withdrawal requests. Keep this PIN confidential.</p>
+                        
+                        <form method="POST" action="">
+                            {{ pin_form.hidden_tag() }}
+                            <div class="mb-3">
+                                {{ pin_form.pin.label(class="form-label small fw-bold") }}
+                                {{ pin_form.pin(class="form-control", placeholder="New PIN") }}
+                                {% for error in pin_form.pin.errors %}
+                                    <span class="text-danger small">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="mb-3">
+                                {{ pin_form.confirm_pin.label(class="form-label small fw-bold") }}
+                                {{ pin_form.confirm_pin(class="form-control", placeholder="Confirm PIN") }}
+                                {% for error in pin_form.confirm_pin.errors %}
+                                    <span class="text-danger small">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="d-grid">
+                                {{ pin_form.submit(class="btn btn-primary rounded-pill") }}
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-6 border-start ps-md-4 mt-4 mt-md-0">
+                        <h6 class="fw-bold small mb-3">Password Management</h6>
+                        <p class="text-muted small mb-4">Regularly updating your password enhances your account security.</p>
+                        <a href="{{ url_for('auth.forgot_password') }}" class="btn btn-outline-secondary btn-sm rounded-pill">Change Password</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card shadow-sm p-4">
+                <h5 class="fw-bold mb-4">Account Status</h5>
+                <div class="alert alert-info border-0 rounded-4 small">
+                    <div class="d-flex">
+                        <i class="fas fa-info-circle me-3 mt-1"></i>
+                        <div>
+                            <strong>Two-Factor Authentication (2FA)</strong> is mandatory for all logins. We send an OTP to your registered email every time you log in.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

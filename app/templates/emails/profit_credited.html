@@ -1,0 +1,10 @@
+{% extends "emails/email_base.html" %}
+{% block email_body %}
+<p class="greeting">Profit Credited 💰</p>
+<p>Hi <strong>{{ user.first_name }}</strong>, your daily profit for the <strong>{{ investment.plan.name }}</strong> plan has been credited to your wallet.</p>
+<div class="highlight-box">
+  <div class="label">Profit Amount</div>
+  <div class="value">+${{ "{:,.4f}".format(amount) }}</div>
+</div>
+<p>This profit has been added to your available balance. Log in to your dashboard to view the full details.</p>
+{% endblock %}

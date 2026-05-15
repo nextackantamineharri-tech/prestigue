@@ -1,0 +1,275 @@
+{% extends "admin/admin_base.html" %}
+{% block page_title %}User: {{ user.first_name }} {{ user.last_name }}{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+
+  <!-- LEFT: User Card + Actions -->
+  <div class="col-lg-4">
+
+    <!-- Profile Card -->
+    <div class="card border-0 shadow-sm p-4 mb-4 text-center">
+      <div class="bg-primary bg-opacity-10 text-primary rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center fw-bold fs-4"
+           style="width:72px;height:72px;">
+        {{ user.first_name[0] }}{{ user.last_name[0] }}
+      </div>
+      <h5 class="fw-bold mb-0">{{ user.first_name }} {{ user.last_name }}</h5>
+      <p class="text-muted small mb-2">{{ user.email }}</p>
+      <div class="d-flex justify-content-center gap-2 flex-wrap">
+        {% if user.is_verified %}
+          <span class="badge bg-success rounded-pill">KYC Verified</span>
+        {% else %}
+          <span class="badge bg-warning text-dark rounded-pill">Unverified</span>
+        {% endif %}
+        <span class="badge {{ 'bg-success' if user.is_active else 'bg-danger' }} rounded-pill">
+          {{ 'Active' if user.is_active else 'Suspended' }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Financial Stats -->
+    <div class="card border-0 shadow-sm p-4 mb-4">
+      <h6 class="fw-bold mb-3">Financial Summary</h6>
+      {% set stats = [
+        ('Account Balance', '${:,.2f}'.format(user.account_balance)),
+        ('Total Deposited', '${:,.2f}'.format(user.total_deposited)),
+        ('Total Withdrawn', '${:,.2f}'.format(user.total_withdrawn)),
+        ('Total Profit', '${:,.2f}'.format(user.total_profit)),
+        ('Member Since', user.created_at.strftime('%Y-%m-%d')),
+      ] %}
+      {% for label, value in stats %}
+      <div class="d-flex justify-content-between small py-2 border-bottom border-light">
+        <span class="text-muted">{{ label }}</span>
+        <span class="fw-bold">{{ value }}</span>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Referral Stats -->
+    <div class="card border-0 shadow-sm p-4 mb-4">
+      <h6 class="fw-bold mb-3">Referral Info</h6>
+      <div class="d-flex justify-content-between small py-2 border-bottom border-light">
+        <span class="text-muted">Referred By</span>
+        <span class="fw-bold">
+          {% if user.referred_by %}
+            <a href="{{ url_for('admin.view_user', id=user.referred_by.id) }}">{{ user.referred_by.email }}</a>
+          {% else %}
+            None
+          {% endif %}
+        </span>
+      </div>
+      <div class="d-flex justify-content-between small py-2 border-bottom border-light">
+        <span class="text-muted">Total Referrals</span>
+        <span class="fw-bold">{{ user.referred_users|length }}</span>
+      </div>
+      <div class="d-flex justify-content-between small py-2 border-bottom border-light">
+        <span class="text-muted">Bonus Earned</span>
+        <span class="fw-bold text-success">${{ "{:,.2f}".format(user.referral_bonus) }}</span>
+      </div>
+    </div>
+
+    <!-- Admin Actions -->
+    <div class="card border-0 shadow-sm p-4 mb-4">
+      <h6 class="fw-bold mb-3">Admin Actions</h6>
+      <form action="{{ url_for('admin.suspend_user', id=user.id) }}" method="POST" class="mb-2">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn w-100 rounded-pill {{ 'btn-warning' if user.is_active else 'btn-success' }}"
+                data-bs-toggle="tooltip" title="{{ 'Suspend this account' if user.is_active else 'Reactivate this account' }}"
+                onclick="return confirm('Are you sure?')">
+          <i class="fas {{ 'fa-ban' if user.is_active else 'fa-check-circle' }} me-2"></i>
+          {{ 'Suspend User' if user.is_active else 'Reactivate User' }}
+        </button>
+      </form>
+      <a href="{{ url_for('admin.kyc_list') }}" class="btn btn-light w-100 rounded-pill" data-bs-toggle="tooltip" title="Go to KYC queue">
+        <i class="fas fa-id-card me-2"></i> View KYC
+      </a>
+    </div>
+
+    <!-- Balance Adjustment -->
+    <div class="card border-0 shadow-sm p-4">
+      <h6 class="fw-bold mb-3">Adjust Balance</h6>
+      <form action="{{ url_for('admin.adjust_balance', id=user.id) }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="mb-2">
+          <label class="form-label small fw-bold">Amount ($)</label>
+          <input type="number" name="amount" class="form-control" step="0.01" min="0.01" required placeholder="0.00">
+        </div>
+        <div class="mb-3">
+          <label class="form-label small fw-bold">Action</label>
+          <select name="action" class="form-select">
+            <option value="add">➕ Add to Balance</option>
+            <option value="deduct">➖ Deduct from Balance</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 rounded-pill"
+                data-bs-toggle="tooltip" title="Manually adjust user account balance"
+                onclick="return confirm('Confirm balance adjustment?')">
+          Apply Adjustment
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: Tabs for Investments, Deposits, Withdrawals -->
+  <div class="col-lg-8">
+    <ul class="nav nav-pills mb-3 bg-white p-2 rounded-pill shadow-sm d-inline-flex gap-1" id="userTabs">
+      <li class="nav-item"><button class="nav-link active rounded-pill" data-bs-toggle="pill" data-bs-target="#tab-investments">Investments ({{ investments|length }})</button></li>
+      <li class="nav-item"><button class="nav-link rounded-pill" data-bs-toggle="pill" data-bs-target="#tab-deposits">Deposits ({{ deposits|length }})</button></li>
+      <li class="nav-item"><button class="nav-link rounded-pill" data-bs-toggle="pill" data-bs-target="#tab-withdrawals">Withdrawals ({{ withdrawals|length }})</button></li>
+      <li class="nav-item"><button class="nav-link rounded-pill" data-bs-toggle="pill" data-bs-target="#tab-referrals">Referrals ({{ user.referred_users|length }})</button></li>
+    </ul>
+
+    <div class="tab-content">
+      <!-- Investments Tab -->
+      <div class="tab-pane fade show active" id="tab-investments">
+        <div class="card border-0 shadow-sm overflow-hidden">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="bg-light">
+                <tr>
+                  <th class="px-4 py-3 text-muted small text-uppercase">Plan</th>
+                  <th class="py-3 text-muted small text-uppercase">Amount</th>
+                  <th class="py-3 text-muted small text-uppercase">Profit Earned</th>
+                  <th class="py-3 text-muted small text-uppercase">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for inv in investments %}
+                <tr>
+                  <td class="px-4 small fw-bold">{{ inv.plan.name }}</td>
+                  <td class="small">${{ "{:,.2f}".format(inv.amount) }}</td>
+                  <td class="small text-success">+${{ "{:,.2f}".format(inv.total_profit_earned) }}</td>
+                  <td><span class="badge rounded-pill {{ 'bg-primary' if inv.status=='active' else ('bg-success' if inv.status=='completed' else 'bg-secondary') }}">{{ inv.status }}</span></td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4" class="text-center py-4 text-muted small">No investments.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deposits Tab -->
+      <div class="tab-pane fade" id="tab-deposits">
+        <div class="card border-0 shadow-sm overflow-hidden">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="bg-light">
+                <tr>
+                  <th class="px-4 py-3 text-muted small text-uppercase">Amount</th>
+                  <th class="py-3 text-muted small text-uppercase">Coin</th>
+                  <th class="py-3 text-muted small text-uppercase">Date</th>
+                  <th class="py-3 text-muted small text-uppercase">Status</th>
+                  <th class="px-4 py-3 text-end text-muted small text-uppercase">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for d in deposits %}
+                <tr>
+                  <td class="px-4 fw-bold small">${{ "{:,.2f}".format(d.amount) }}</td>
+                  <td class="small">{{ d.currency.symbol }}</td>
+                  <td class="small text-muted">{{ d.created_at.strftime('%Y-%m-%d') }}</td>
+                  <td><span class="badge rounded-pill {{ 'bg-warning text-dark' if d.status=='pending' else ('bg-success' if d.status=='approved' else 'bg-danger') }}">{{ d.status }}</span></td>
+                  <td class="px-4 text-end">
+                    {% if d.status == 'pending' %}
+                    <a href="{{ url_for('admin.process_deposit', id=d.id) }}" class="btn btn-sm btn-primary rounded-pill px-3" data-bs-toggle="tooltip" title="Process deposit">Review</a>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="text-center py-4 text-muted small">No deposits.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Withdrawals Tab -->
+      <div class="tab-pane fade" id="tab-withdrawals">
+        <div class="card border-0 shadow-sm overflow-hidden">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="bg-light">
+                <tr>
+                  <th class="px-4 py-3 text-muted small text-uppercase">Amount</th>
+                  <th class="py-3 text-muted small text-uppercase">Coin</th>
+                  <th class="py-3 text-muted small text-uppercase">Date</th>
+                  <th class="py-3 text-muted small text-uppercase">Status</th>
+                  <th class="px-4 py-3 text-end text-muted small text-uppercase">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for w in withdrawals %}
+                <tr>
+                  <td class="px-4 fw-bold small text-danger">-${{ "{:,.2f}".format(w.amount) }}</td>
+                  <td class="small">{{ w.currency.symbol }}</td>
+                  <td class="small text-muted">{{ w.created_at.strftime('%Y-%m-%d') }}</td>
+                  <td><span class="badge rounded-pill {{ 'bg-warning text-dark' if w.status=='pending' else ('bg-success' if w.status=='paid' else ('bg-info' if w.status=='approved' else 'bg-danger')) }}">{{ w.status }}</span></td>
+                  <td class="px-4 text-end">
+                    {% if w.status in ['pending','approved'] %}
+                    <a href="{{ url_for('admin.process_withdrawal', id=w.id) }}" class="btn btn-sm btn-primary rounded-pill px-3" data-bs-toggle="tooltip" title="Process withdrawal">Review</a>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="text-center py-4 text-muted small">No withdrawals.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <!-- Referrals Tab -->
+      <div class="tab-pane fade" id="tab-referrals">
+        <div class="card border-0 shadow-sm overflow-hidden">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="bg-light">
+                <tr>
+                  <th class="px-4 py-3 text-muted small text-uppercase">User</th>
+                  <th class="py-3 text-muted small text-uppercase">Joined</th>
+                  <th class="py-3 text-muted small text-uppercase">KYC Status</th>
+                  <th class="px-4 py-3 text-end text-muted small text-uppercase">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for ref in user.referred_users %}
+                <tr>
+                  <td class="px-4">
+                    <div class="fw-bold small">{{ ref.first_name }} {{ ref.last_name }}</div>
+                    <div class="extra-small text-muted">{{ ref.email }}</div>
+                  </td>
+                  <td class="small text-muted">{{ ref.created_at.strftime('%Y-%m-%d') }}</td>
+                  <td>
+                    {% if ref.is_verified %}
+                      <span class="badge bg-success rounded-pill">Verified</span>
+                    {% else %}
+                      <span class="badge bg-warning text-dark rounded-pill">Pending</span>
+                    {% endif %}
+                  </td>
+                  <td class="px-4 text-end">
+                    <a href="{{ url_for('admin.view_user', id=ref.id) }}" class="btn btn-sm btn-light rounded-pill px-3">View</a>
+                  </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4" class="text-center py-4 text-muted small">No referrals yet.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% block scripts %}
+<script>document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));</script>
+{% endblock %}
+{% endblock %}

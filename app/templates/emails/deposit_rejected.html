@@ -1,0 +1,10 @@
+{% extends "emails/email_base.html" %}
+{% block email_body %}
+<p class="greeting">Hi {{ user.first_name }},</p>
+<p>Unfortunately, your deposit request could not be verified and has been <span class="status-badge badge-danger">Rejected</span>.</p>
+<div class="highlight-box">
+  <div class="label">Rejection Reason</div>
+  <div style="font-size:14px; color:#1e293b; margin-top:4px;">{{ deposit.admin_note or 'The payment proof submitted was unclear or could not be verified.' }}</div>
+</div>
+<p>You may submit a new deposit request with a clearer payment screenshot. For assistance, contact us at <a href="mailto:{{ settings.site_email }}">{{ settings.site_email }}</a>.</p>
+{% endblock %}

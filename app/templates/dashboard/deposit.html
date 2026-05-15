@@ -1,0 +1,93 @@
+{% extends "dashboard/dashboard_base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card shadow-lg border-0 p-4">
+            <h4 class="fw-bold mb-4">Fund Your Wallet</h4>
+            
+            <form method="POST" action="" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                
+                <div class="mb-4">
+                    {{ form.currency_id.label(class="form-label small fw-bold") }}
+                    {{ form.currency_id(class="form-select form-select-lg", id="currencySelector") }}
+                </div>
+
+                <!-- Wallet Address Display -->
+                <div id="walletDisplay" class="bg-light rounded-4 p-4 mb-4 text-center">
+                    <p class="small text-muted mb-2">Send your payment to the address below:</p>
+                    <div class="d-flex align-items-center justify-content-center bg-white p-3 rounded-pill shadow-sm mb-3">
+                        <code id="walletAddress" class="fw-bold text-primary fs-6 overflow-hidden">Select a coin</code>
+                        <button type="button" class="btn btn-link text-primary ms-2 p-0" id="copyBtn" data-bs-toggle="tooltip" title="Copy to clipboard">
+                            <i class="far fa-copy"></i>
+                        </button>
+                    </div>
+                    <p class="extra-small text-danger fw-bold"><i class="fas fa-exclamation-triangle me-1"></i> Send only <span id="coinSymbol">...</span> to this address.</p>
+                </div>
+
+                <div class="mb-4">
+                    {{ form.amount.label(class="form-label small fw-bold") }}
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0">$</span>
+                        {{ form.amount(class="form-control form-control-lg border-start-0", placeholder="Min: $10.00") }}
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    {{ form.proof_image.label(class="form-label small fw-bold") }}
+                    {{ form.proof_image(class="form-control") }}
+                    <div class="form-text extra-small">Upload a screenshot of your payment confirmation.</div>
+                </div>
+
+                <div class="d-grid">
+                    {{ form.submit(class="btn btn-primary btn-lg rounded-pill", data_bs_toggle="tooltip", title="Submit for verification") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const currencies = {
+        {% for c in currencies %}
+        "{{ c.id }}": { "address": "{{ c.wallet_address }}", "symbol": "{{ c.symbol }}" },
+        {% endfor %}
+    };
+
+    const selector = document.getElementById('currencySelector');
+    const addressDisplay = document.getElementById('walletAddress');
+    const symbolDisplay = document.getElementById('coinSymbol');
+    const copyBtn = document.getElementById('copyBtn');
+
+    function updateWallet() {
+        const selected = currencies[selector.value];
+        if (selected) {
+            addressDisplay.innerText = selected.address;
+            symbolDisplay.innerText = selected.symbol;
+        }
+    }
+
+    selector.addEventListener('change', updateWallet);
+    updateWallet(); // Initial call
+
+    copyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(addressDisplay.innerText);
+        const icon = copyBtn.querySelector('i');
+        icon.classList.replace('far', 'fas');
+        icon.classList.add('text-success');
+        setTimeout(() => {
+            icon.classList.replace('fas', 'far');
+            icon.classList.remove('text-success');
+        }, 2000);
+    });
+
+    // Initialize Tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
+{% endblock %}

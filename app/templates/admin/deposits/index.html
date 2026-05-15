@@ -1,0 +1,58 @@
+{% extends "admin/admin_base.html" %}
+
+{% block page_title %}Manage Deposits{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm border-0 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="bg-light">
+                <tr>
+                    <th class="px-4 py-3 text-muted small text-uppercase">User</th>
+                    <th class="py-3 text-muted small text-uppercase">Amount/Coin</th>
+                    <th class="py-3 text-muted small text-uppercase">Date</th>
+                    <th class="py-3 text-muted small text-uppercase">Status</th>
+                    <th class="px-4 py-3 text-end text-muted small text-uppercase">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for deposit in deposits %}
+                <tr>
+                    <td class="px-4">
+                        <div class="fw-bold small">{{ deposit.user.first_name }} {{ deposit.user.last_name }}</div>
+                        <div class="extra-small text-muted">{{ deposit.user.email }}</div>
+                    </td>
+                    <td>
+                        <div class="fw-bold">${{ "{:,.2f}".format(deposit.amount) }}</div>
+                        <div class="extra-small text-primary">{{ deposit.currency.symbol }}</div>
+                    </td>
+                    <td class="small text-muted">
+                        {{ deposit.created_at.strftime('%Y-%m-%d %H:%M') }}
+                    </td>
+                    <td>
+                        {% if deposit.status == 'pending' %}
+                            <span class="badge bg-warning text-dark rounded-pill">Pending</span>
+                        {% elif deposit.status == 'approved' %}
+                            <span class="badge bg-success rounded-pill">Approved</span>
+                        {% else %}
+                            <span class="badge bg-danger rounded-pill">Rejected</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-4 text-end">
+                        <a href="{{ url_for('admin.process_deposit', id=deposit.id) }}" class="btn btn-primary btn-sm rounded-pill px-3" data-bs-toggle="tooltip" title="View proof and approve/reject">
+                            Process
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center py-5">
+                        <p class="text-muted mb-0">No deposit requests found.</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

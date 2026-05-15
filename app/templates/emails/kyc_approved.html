@@ -1,0 +1,12 @@
+{% extends "emails/email_base.html" %}
+{% block email_body %}
+<p class="greeting">Identity Verified ✓</p>
+<p>Congratulations, <strong>{{ user.first_name }}</strong>! Your identity has been successfully verified. Your account now has full access to all platform features including withdrawals.</p>
+<div class="highlight-box">
+  <div class="label">Account Status</div>
+  <div class="value" style="font-size:18px;">
+    <span class="status-badge badge-success">Fully Verified</span>
+  </div>
+</div>
+<p>You can now make withdrawals, access premium features, and enjoy the full {{ settings.site_name }} experience.</p>
+{% endblock %}

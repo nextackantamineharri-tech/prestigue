@@ -1,0 +1,88 @@
+{% extends "dashboard/dashboard_base.html" %}
+
+{% block content %}
+<div class="row justify-content-center mb-5">
+    <div class="col-lg-8 text-center">
+        <h2 class="fw-bold">Investment Plans</h2>
+        <p class="text-muted">Choose a plan that fits your goals. Our automated system handles the rest.</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    {% for plan in plans %}
+    <div class="col-md-6 col-lg-4">
+        <div class="stat-card border {{ 'border-primary' if plan.is_featured else '' }} h-100 position-relative">
+            {% if plan.is_featured %}
+                <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-primary px-3">
+                    Most Popular
+                </span>
+            {% endif %}
+            
+            <div class="text-center mb-4">
+                <h4 class="fw-bold mb-1">{{ plan.name }}</h4>
+                <div class="display-5 fw-bold text-primary">{{ plan.roi_percentage }}%</div>
+                <p class="text-muted small">ROI after {{ plan.duration_days }} days</p>
+            </div>
+            
+            <ul class="list-unstyled mb-4">
+                <li class="d-flex justify-content-between mb-2 small">
+                    <span class="text-muted">Minimum Deposit:</span>
+                    <span class="fw-bold">${{ "{:,.0f}".format(plan.min_amount) }}</span>
+                </li>
+                <li class="d-flex justify-content-between mb-2 small">
+                    <span class="text-muted">Maximum Deposit:</span>
+                    <span class="fw-bold">${{ "{:,.0f}".format(plan.max_amount) }}</span>
+                </li>
+                <li class="d-flex justify-content-between mb-2 small">
+                    <span class="text-muted">Profit Type:</span>
+                    <span class="fw-bold text-capitalize text-success">{{ plan.profit_type }}</span>
+                </li>
+                <li class="d-flex justify-content-between mb-2 small">
+                    <span class="text-muted">Capital Return:</span>
+                    <span class="fw-bold">{{ 'Yes' if plan.return_capital else 'No' }}</span>
+                </li>
+            </ul>
+            
+            <div class="d-grid">
+                <button type="button" class="btn {{ 'btn-primary' if plan.is_featured else 'btn-outline-primary' }} rounded-pill" 
+                        data-bs-toggle="modal" data-bs-target="#investModal{{ plan.id }}">
+                    Invest Now
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Investment Modal -->
+    <div class="modal fade" id="investModal{{ plan.id }}" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Invest in {{ plan.name }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="alert alert-info border-0 small mb-4">
+                        Available Balance: <strong>${{ "{:,.2f}".format(current_user.account_balance) }}</strong>
+                    </div>
+                    <form method="POST" action="">
+                        {{ form.hidden_tag() }}
+                        <input type="hidden" name="plan_id" value="{{ plan.id }}">
+                        <div class="mb-4">
+                            {{ form.amount.label(class="form-label small fw-bold") }}
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0">$</span>
+                                {{ form.amount(class="form-control border-start-0", placeholder="0.00", min=plan.min_amount, max=plan.max_amount) }}
+                            </div>
+                            <div class="form-text extra-small">Range: ${{ "{:,.0f}".format(plan.min_amount) }} - ${{ "{:,.0f}".format(plan.max_amount) }}</div>
+                        </div>
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-primary btn-lg rounded-pill") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "admin/admin_base.html" %}
+
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card p-4 shadow-sm">
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.name.label(class="form-label small fw-bold") }}
+                    {{ form.name(class="form-control", placeholder="e.g. Bitcoin") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.symbol.label(class="form-label small fw-bold") }}
+                    {{ form.symbol(class="form-control", placeholder="e.g. BTC") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.wallet_address.label(class="form-label small fw-bold") }}
+                    {{ form.wallet_address(class="form-control", placeholder="Enter your wallet address") }}
+                </div>
+                <div class="mb-4">
+                    <div class="form-check">
+                        {{ form.is_active(class="form-check-input") }}
+                        {{ form.is_active.label(class="form-check-label small") }}
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <a href="{{ url_for('admin.currencies') }}" class="btn btn-light rounded-pill px-4">Cancel</a>
+                    {{ form.submit(class="btn btn-primary rounded-pill px-4") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

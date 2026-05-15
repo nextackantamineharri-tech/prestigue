@@ -1,0 +1,60 @@
+{% extends "admin/admin_base.html" %}
+
+{% block page_title %}Manage Withdrawals{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm border-0 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="bg-light">
+                <tr>
+                    <th class="px-4 py-3 text-muted small text-uppercase">User</th>
+                    <th class="py-3 text-muted small text-uppercase">Amount/Coin</th>
+                    <th class="py-3 text-muted small text-uppercase">Wallet Address</th>
+                    <th class="py-3 text-muted small text-uppercase">Status</th>
+                    <th class="px-4 py-3 text-end text-muted small text-uppercase">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for w in withdrawals %}
+                <tr>
+                    <td class="px-4">
+                        <div class="fw-bold small">{{ w.user.first_name }} {{ w.user.last_name }}</div>
+                        <div class="extra-small text-muted">{{ w.user.email }}</div>
+                    </td>
+                    <td>
+                        <div class="fw-bold">${{ "{:,.2f}".format(w.amount) }}</div>
+                        <div class="extra-small text-primary">{{ w.currency.symbol }}</div>
+                    </td>
+                    <td>
+                        <code class="extra-small">{{ w.wallet_address }}</code>
+                    </td>
+                    <td>
+                        {% if w.status == 'pending' %}
+                            <span class="badge bg-warning text-dark rounded-pill">Pending</span>
+                        {% elif w.status == 'approved' %}
+                            <span class="badge bg-info rounded-pill">Approved</span>
+                        {% elif w.status == 'paid' %}
+                            <span class="badge bg-success rounded-pill">Paid</span>
+                        {% else %}
+                            <span class="badge bg-danger rounded-pill">Rejected</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-4 text-end">
+                        <a href="{{ url_for('admin.process_withdrawal', id=w.id) }}" class="btn btn-primary btn-sm rounded-pill px-3" data-bs-toggle="tooltip" title="Review and process withdrawal">
+                            Process
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center py-5">
+                        <p class="text-muted mb-0">No withdrawal requests found.</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

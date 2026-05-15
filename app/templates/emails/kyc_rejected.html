@@ -1,0 +1,12 @@
+{% extends "emails/email_base.html" %}
+{% block email_body %}
+<p class="greeting">Hi {{ user.first_name }},</p>
+<p>Your KYC verification submission has been reviewed and requires attention.</p>
+<div class="highlight-box">
+  <div class="label">Status</div>
+  <div style="margin-top:6px;"><span class="status-badge badge-danger">Rejected</span></div>
+  <div style="font-size:14px; color:#1e293b; margin-top:10px;"><strong>Reason:</strong> {{ reason or 'The submitted documents were unclear or did not meet our requirements.' }}</div>
+</div>
+<p>Please log in and re-submit clearer documents. Ensure all four corners of your ID are visible and all text is legible.</p>
+<p>Contact us if you need help: <a href="mailto:{{ settings.site_email }}">{{ settings.site_email }}</a></p>
+{% endblock %}

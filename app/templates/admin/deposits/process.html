@@ -1,0 +1,55 @@
+{% extends "admin/admin_base.html" %}
+
+{% block page_title %}Process Deposit #{{ deposit.id }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card shadow-sm p-4 mb-4">
+            <h6 class="fw-bold mb-4">Deposit Details</h6>
+            <div class="row mb-3">
+                <div class="col-sm-6 mb-3">
+                    <label class="small text-muted d-block">User</label>
+                    <span class="fw-bold">{{ deposit.user.first_name }} {{ deposit.user.last_name }}</span>
+                </div>
+                <div class="col-sm-6 mb-3">
+                    <label class="small text-muted d-block">Amount Requested</label>
+                    <span class="fw-bold text-primary fs-5">${{ "{:,.2f}".format(deposit.amount) }}</span>
+                </div>
+                <div class="col-sm-6 mb-3">
+                    <label class="small text-muted d-block">Crypto Currency</label>
+                    <span class="fw-bold">{{ deposit.currency.name }} ({{ deposit.currency.symbol }})</span>
+                </div>
+                <div class="col-sm-6 mb-3">
+                    <label class="small text-muted d-block">Date Requested</label>
+                    <span class="fw-bold">{{ deposit.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                </div>
+            </div>
+            
+            <hr>
+            
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.admin_note.label(class="form-label small fw-bold") }}
+                    {{ form.admin_note(class="form-control", rows="3", placeholder="Enter reason if rejecting...") }}
+                </div>
+                
+                <div class="d-flex gap-2">
+                    {{ form.submit_approve(class="btn btn-success rounded-pill px-4", onclick="return confirm('Are you sure you want to approve and credit this deposit?')") }}
+                    {{ form.submit_reject(class="btn btn-danger rounded-pill px-4") }}
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="col-lg-6">
+        <div class="card shadow-sm p-4">
+            <h6 class="fw-bold mb-4">Payment Proof (Screenshot)</h6>
+            <div class="bg-light rounded p-2 text-center">
+                <img src="{{ url_for('static', filename='uploads/deposits/' + deposit.proof_image) }}" class="img-fluid rounded" alt="Payment Proof">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ settings.site_name }}</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f1f5f9; color: #1e293b; line-height: 1.6; }
+    .wrapper { max-width: 600px; margin: 30px auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+    .header { background: {{ settings.primary_color }}; padding: 32px; text-align: center; }
+    .header h1 { color: #ffffff; font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+    .header p { color: rgba(255,255,255,0.75); font-size: 13px; margin-top: 4px; }
+    .body { padding: 36px 40px; }
+    .greeting { font-size: 18px; font-weight: 600; margin-bottom: 16px; }
+    p { font-size: 14px; color: #475569; margin-bottom: 12px; }
+    .highlight-box { background: #f8fafc; border-left: 4px solid {{ settings.primary_color }}; border-radius: 8px; padding: 16px 20px; margin: 20px 0; }
+    .highlight-box .label { font-size: 11px; text-transform: uppercase; color: #94a3b8; margin-bottom: 4px; letter-spacing: 1px; }
+    .highlight-box .value { font-size: 24px; font-weight: 700; color: {{ settings.primary_color }}; }
+    .btn { display: inline-block; padding: 13px 32px; background: {{ settings.primary_color }}; color: #ffffff !important; text-decoration: none; border-radius: 50px; font-weight: 600; font-size: 14px; margin: 20px 0; }
+    .otp-box { font-size: 40px; font-weight: 800; letter-spacing: 12px; text-align: center; color: {{ settings.primary_color }}; background: #f8fafc; border-radius: 12px; padding: 24px; margin: 24px 0; }
+    .status-badge { display: inline-block; padding: 4px 14px; border-radius: 50px; font-size: 12px; font-weight: 600; }
+    .badge-success { background: #dcfce7; color: #16a34a; }
+    .badge-danger { background: #fee2e2; color: #dc2626; }
+    .badge-warning { background: #fef9c3; color: #ca8a04; }
+    .divider { border: none; border-top: 1px solid #e2e8f0; margin: 28px 0; }
+    .footer { background: #f8fafc; padding: 24px 40px; text-align: center; font-size: 12px; color: #94a3b8; }
+    .footer a { color: #94a3b8; text-decoration: none; }
+    @media (max-width: 600px) {
+      .body { padding: 24px 20px; }
+      .footer { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <h1>{{ settings.site_name }}</h1>
+      <p>Secure Crypto Investment Platform</p>
+    </div>
+    <div class="body">
+      {% block email_body %}{% endblock %}
+    </div>
+    <div class="footer">
+      <p>© {{ settings.site_name }} · {{ settings.site_email }}</p>
+      <p>{{ settings.site_address or '' }}</p>
+      <p style="margin-top:8px;font-size:11px;">This is an automated email. Please do not reply.</p>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero-section">
+    <div class="container text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h6 class="text-uppercase fw-bold text-primary mb-3">Professional Asset Management</h6>
+                <h1 class="display-3 fw-bold mb-4">Smart Crypto Investing for a <span class="text-gradient">Secure Future</span></h1>
+                <p class="lead text-muted mb-5">Experience a new era of investment. Our expert-managed portfolios are designed to deliver consistent returns while minimizing risk. Join thousands of investors worldwide.</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg rounded-pill px-5">Get Started Now</a>
+                    <a href="{{ url_for('main.about') }}" class="btn btn-outline-dark btn-lg rounded-pill px-5">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4 text-center">
+            <div class="col-md-4">
+                <div class="card p-4 h-100">
+                    <div class="text-primary mb-3"><i class="fas fa-shield-alt fa-3x"></i></div>
+                    <h5 class="fw-bold">Bank-Grade Security</h5>
+                    <p class="text-muted small">Your assets are protected by advanced encryption and cold storage solutions. Peace of mind is our priority.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-4 h-100">
+                    <div class="text-primary mb-3"><i class="fas fa-chart-line fa-3x"></i></div>
+                    <h5 class="fw-bold">Automated Profits</h5>
+                    <p class="text-muted small">Watch your wealth grow. Our automated system distributes profits daily according to your chosen plan.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-4 h-100">
+                    <div class="text-primary mb-3"><i class="fas fa-headset fa-3x"></i></div>
+                    <h5 class="fw-bold">24/7 Priority Support</h5>
+                    <p class="text-muted small">Our dedicated support team is always available to assist you with any questions or technical needs.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

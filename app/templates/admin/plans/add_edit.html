@@ -1,0 +1,82 @@
+{% extends "admin/admin_base.html" %}
+
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card p-4 shadow-sm">
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                
+                <div class="mb-4">
+                    <h6 class="fw-bold mb-3">Plan Details</h6>
+                    <div class="mb-3">
+                        {{ form.name.label(class="form-label small fw-bold") }}
+                        {{ form.name(class="form-control", placeholder="e.g. Starter Plan") }}
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <h6 class="fw-bold mb-3">Investment Limits</h6>
+                    <div class="col-md-6 mb-3">
+                        {{ form.min_amount.label(class="form-label small fw-bold") }}
+                        {{ form.min_amount(class="form-control", placeholder="0.00") }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        {{ form.max_amount.label(class="form-label small fw-bold") }}
+                        {{ form.max_amount(class="form-control", placeholder="1000.00") }}
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <h6 class="fw-bold mb-3">ROI & Duration</h6>
+                    <div class="col-md-4 mb-3">
+                        {{ form.roi_percentage.label(class="form-label small fw-bold") }}
+                        {{ form.roi_percentage(class="form-control", placeholder="5.5") }}
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        {{ form.duration_days.label(class="form-label small fw-bold") }}
+                        {{ form.duration_days(class="form-control", placeholder="30") }}
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        {{ form.profit_type.label(class="form-label small fw-bold") }}
+                        {{ form.profit_type(class="form-control") }}
+                        <div class="form-text extra-small">Enter 'daily' or 'fixed'</div>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <h6 class="fw-bold mb-3">Settings & Visibility</h6>
+                    <div class="col-md-4 mb-2">
+                        <div class="form-check">
+                            {{ form.return_capital(class="form-check-input") }}
+                            {{ form.return_capital.label(class="form-check-label small") }}
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <div class="form-check">
+                            {{ form.is_active(class="form-check-input") }}
+                            {{ form.is_active.label(class="form-check-label small") }}
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <div class="form-check">
+                            {{ form.is_featured(class="form-check-input") }}
+                            {{ form.is_featured.label(class="form-check-label small") }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{{ url_for('admin.plans') }}" class="btn btn-light rounded-pill px-4">Cancel</a>
+                    {{ form.submit(class="btn btn-primary rounded-pill px-5") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<style>
+    .extra-small { font-size: 0.7rem; }
+</style>
+{% endblock %}

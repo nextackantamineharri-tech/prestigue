@@ -1,0 +1,146 @@
+{% extends "dashboard/dashboard_base.html" %}
+
+{% block content %}
+<div class="mb-4 d-flex justify-content-between align-items-center">
+    <div>
+        <h4 class="fw-bold mb-0">Transaction History</h4>
+        <p class="text-muted small mb-0">Monitor your deposit and withdrawal history</p>
+    </div>
+    <div class="nav nav-pills small bg-white p-1 rounded-pill shadow-sm" id="transactionTabs" role="tablist">
+        <button class="nav-link active rounded-pill px-3 py-1" id="deposits-tab" data-bs-toggle="pill" data-bs-target="#deposits" type="button">Deposits</button>
+        <button class="nav-link rounded-pill px-3 py-1" id="withdrawals-tab" data-bs-toggle="pill" data-bs-target="#withdrawals" type="button">Withdrawals</button>
+    </div>
+</div>
+
+<div class="tab-content" id="transactionTabsContent">
+    <!-- Deposits Tab -->
+    <div class="tab-pane fade show active" id="deposits" role="tabpanel">
+        <div class="card shadow-sm border-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="px-4 py-3 text-muted small text-uppercase">Type</th>
+                            <th class="py-3 text-muted small text-uppercase">Amount</th>
+                            <th class="py-3 text-muted small text-uppercase">Currency</th>
+                            <th class="py-3 text-muted small text-uppercase">Date</th>
+                            <th class="py-3 text-muted small text-uppercase">Status</th>
+                            <th class="px-4 py-3 text-end text-muted small text-uppercase">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for d in deposits %}
+                        <tr>
+                            <td class="px-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-success bg-opacity-10 text-success rounded-circle p-2 me-2">
+                                        <i class="fas fa-arrow-down small"></i>
+                                    </div>
+                                    <span class="fw-bold small">Deposit</span>
+                                </div>
+                            </td>
+                            <td><span class="fw-bold">${{ "{:,.2f}".format(d.amount) }}</span></td>
+                            <td><span class="badge bg-light text-dark">{{ d.currency.symbol }}</span></td>
+                            <td class="small text-muted">{{ d.created_at.strftime('%b %d, %Y') }}</td>
+                            <td>
+                                {% if d.status == 'pending' %}
+                                    <span class="badge bg-warning text-dark rounded-pill px-3">Pending</span>
+                                {% elif d.status == 'approved' %}
+                                    <span class="badge bg-success rounded-pill px-3">Approved</span>
+                                {% else %}
+                                    <span class="badge bg-danger rounded-pill px-3">Rejected</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-4 text-end">
+                                {% if d.admin_note %}
+                                    <button class="btn btn-link btn-sm p-0 text-muted" data-bs-toggle="tooltip" title="{{ d.admin_note }}">
+                                        <i class="fas fa-info-circle"></i>
+                                    </button>
+                                {% else %}
+                                    <span class="text-muted small">-</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center py-5 text-muted">No deposits found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Withdrawals Tab -->
+    <div class="tab-pane fade" id="withdrawals" role="tabpanel">
+        <div class="card shadow-sm border-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="px-4 py-3 text-muted small text-uppercase">Type</th>
+                            <th class="py-3 text-muted small text-uppercase">Amount</th>
+                            <th class="py-3 text-muted small text-uppercase">Currency</th>
+                            <th class="py-3 text-muted small text-uppercase">Date</th>
+                            <th class="py-3 text-muted small text-uppercase">Status</th>
+                            <th class="px-4 py-3 text-end text-muted small text-uppercase">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for w in withdrawals %}
+                        <tr>
+                            <td class="px-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-danger bg-opacity-10 text-danger rounded-circle p-2 me-2">
+                                        <i class="fas fa-arrow-up small"></i>
+                                    </div>
+                                    <span class="fw-bold small">Withdraw</span>
+                                </div>
+                            </td>
+                            <td><span class="fw-bold text-danger">-${{ "{:,.2f}".format(w.amount) }}</span></td>
+                            <td><span class="badge bg-light text-dark">{{ w.currency.symbol }}</span></td>
+                            <td class="small text-muted">{{ w.created_at.strftime('%b %d, %Y') }}</td>
+                            <td>
+                                {% if w.status == 'pending' %}
+                                    <span class="badge bg-warning text-dark rounded-pill px-3">Pending</span>
+                                {% elif w.status == 'approved' %}
+                                    <span class="badge bg-info rounded-pill px-3">Approved</span>
+                                {% elif w.status == 'paid' %}
+                                    <span class="badge bg-success rounded-pill px-3">Paid</span>
+                                {% else %}
+                                    <span class="badge bg-danger rounded-pill px-3">Rejected</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-4 text-end">
+                                {% if w.admin_note %}
+                                    <button class="btn btn-link btn-sm p-0 text-muted" data-bs-toggle="tooltip" title="{{ w.admin_note }}">
+                                        <i class="fas fa-info-circle"></i>
+                                    </button>
+                                {% else %}
+                                    <span class="text-muted small">-</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center py-5 text-muted">No withdrawals found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+    // Initialize Tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
+{% endblock %}
+{% endblock %}

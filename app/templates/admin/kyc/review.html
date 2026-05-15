@@ -1,0 +1,116 @@
+{% extends "admin/admin_base.html" %}
+
+{% block page_title %}KYC Review — {{ kyc.user.email }}{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+
+  <!-- Left: Documents -->
+  <div class="col-lg-7">
+    <div class="card border-0 shadow-sm p-4 mb-4">
+      <h6 class="fw-bold mb-4"><i class="fas fa-file-image me-2 text-primary"></i>Submitted Documents</h6>
+      <div class="row g-3">
+        <div class="col-12">
+          <label class="form-label small fw-bold text-muted">Government ID ({{ kyc.id_type.replace('_',' ').title() }})</label>
+          <div class="bg-light rounded-3 p-2 text-center">
+            <img src="{{ url_for('static', filename='uploads/kyc/' + kyc.id_image) }}"
+                 class="img-fluid rounded-3" style="max-height: 300px; object-fit: contain;"
+                 alt="ID Document"
+                 onerror="this.src='https://via.placeholder.com/400x250?text=Document'">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label small fw-bold text-muted">Selfie with ID</label>
+          <div class="bg-light rounded-3 p-2 text-center">
+            <img src="{{ url_for('static', filename='uploads/kyc/' + kyc.selfie_image) }}"
+                 class="img-fluid rounded-3" style="max-height: 200px; object-fit: contain;"
+                 alt="Selfie">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label small fw-bold text-muted">Proof of Address</label>
+          <div class="bg-light rounded-3 p-2 text-center">
+            <img src="{{ url_for('static', filename='uploads/kyc/' + kyc.address_image) }}"
+                 class="img-fluid rounded-3" style="max-height: 200px; object-fit: contain;"
+                 alt="Address Proof">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: User Info + Decision -->
+  <div class="col-lg-5">
+
+    <!-- User Info Card -->
+    <div class="card border-0 shadow-sm p-4 mb-4">
+      <h6 class="fw-bold mb-3"><i class="fas fa-user me-2 text-primary"></i>User Details</h6>
+      <ul class="list-unstyled small mb-0">
+        <li class="d-flex justify-content-between mb-2">
+          <span class="text-muted">Name:</span>
+          <strong>{{ kyc.user.first_name }} {{ kyc.user.last_name }}</strong>
+        </li>
+        <li class="d-flex justify-content-between mb-2">
+          <span class="text-muted">Email:</span>
+          <strong>{{ kyc.user.email }}</strong>
+        </li>
+        <li class="d-flex justify-content-between mb-2">
+          <span class="text-muted">Submitted:</span>
+          <strong>{{ kyc.submitted_at.strftime('%Y-%m-%d') }}</strong>
+        </li>
+        <li class="d-flex justify-content-between mb-2">
+          <span class="text-muted">Current Status:</span>
+          {% if kyc.status == 'pending' %}
+            <span class="badge bg-warning text-dark">Pending</span>
+          {% elif kyc.status == 'verified' %}
+            <span class="badge bg-success">Verified</span>
+          {% else %}
+            <span class="badge bg-danger">Rejected</span>
+          {% endif %}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Decision Card -->
+    <div class="card border-0 shadow-sm p-4">
+      <h6 class="fw-bold mb-3"><i class="fas fa-gavel me-2 text-primary"></i>Make Decision</h6>
+      <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <div class="mb-4">
+          {{ form.admin_note.label(class="form-label small fw-bold") }}
+          {{ form.admin_note(class="form-control small", rows="3",
+             placeholder="Optional note for user. Required if rejecting.") }}
+        </div>
+        <div class="d-flex flex-column gap-2">
+          <button type="submit" name="submit_approve"
+            class="btn btn-success rounded-pill w-100"
+            data-bs-toggle="tooltip" title="Approve and mark user as verified"
+            {% if kyc.status == 'verified' %}disabled{% endif %}>
+            <i class="fas fa-check me-2"></i> Verify & Approve
+          </button>
+          <button type="submit" name="submit_reupload"
+            class="btn btn-warning text-dark rounded-pill w-100"
+            data-bs-toggle="tooltip" title="Ask user to re-submit clearer documents">
+            <i class="fas fa-redo me-2"></i> Request Re-upload
+          </button>
+          <button type="submit" name="submit_reject"
+            class="btn btn-danger rounded-pill w-100"
+            data-bs-toggle="tooltip" title="Reject this KYC submission">
+            <i class="fas fa-times me-2"></i> Reject
+          </button>
+          <a href="{{ url_for('admin.kyc_list') }}" class="btn btn-light rounded-pill w-100">
+            <i class="fas fa-arrow-left me-2"></i> Back to Queue
+          </a>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+{% block scripts %}
+<script>
+  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
+</script>
+{% endblock %}
+{% endblock %}

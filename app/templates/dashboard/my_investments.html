@@ -1,0 +1,69 @@
+{% extends "dashboard/dashboard_base.html" %}
+
+{% block content %}
+<div class="mb-4">
+    <h4 class="fw-bold">My Portfolios</h4>
+    <p class="text-muted small">Track your active and completed investments</p>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="bg-light">
+                <tr>
+                    <th class="px-4 py-3 text-muted small text-uppercase">Plan</th>
+                    <th class="py-3 text-muted small text-uppercase">Amount</th>
+                    <th class="py-3 text-muted small text-uppercase">Total Profit</th>
+                    <th class="py-3 text-muted small text-uppercase">Remaining</th>
+                    <th class="py-3 text-muted small text-uppercase">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for inv in investments %}
+                <tr>
+                    <td class="px-4">
+                        <div class="fw-bold">{{ inv.plan.name }}</div>
+                        <div class="extra-small text-muted">Started: {{ inv.start_date.strftime('%Y-%m-%d') }}</div>
+                    </td>
+                    <td><span class="fw-bold">${{ "{:,.2f}".format(inv.amount) }}</span></td>
+                    <td><span class="text-success fw-bold">+${{ "{:,.2f}".format(inv.total_profit_earned) }}</span></td>
+                    <td class="small">
+                        {% if inv.status == 'active' %}
+                            {% set total_seconds = (inv.end_date - inv.start_date).total_seconds() %}
+                            {% set remaining_seconds = (inv.end_date - now).total_seconds() if inv.end_date > now else 0 %}
+                            {% set progress = ((total_seconds - remaining_seconds) / total_seconds * 100)|int %}
+                            <div class="progress" style="height: 6px; width: 100px;">
+                                <div class="progress-bar" role="progressbar" style="width: {{ progress }}%"></div>
+                            </div>
+                            <div class="extra-small text-muted mt-1">{{ (remaining_seconds / 86400)|int }} days left</div>
+                        {% else %}
+                            <span class="text-muted">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if inv.status == 'active' %}
+                            <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill">Active</span>
+                        {% elif inv.status == 'completed' %}
+                            <span class="badge bg-success bg-opacity-10 text-success rounded-pill">Completed</span>
+                        {% else %}
+                            <span class="badge bg-secondary rounded-pill">{{ inv.status }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center py-5">
+                        <p class="text-muted mb-3">You don't have any active investments yet.</p>
+                        <a href="{{ url_for('dashboard.invest') }}" class="btn btn-primary rounded-pill px-4">Start Investing</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .extra-small { font-size: 0.7rem; }
+</style>
+{% endblock %}

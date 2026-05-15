@@ -1,0 +1,10 @@
+{% extends "emails/email_base.html" %}
+{% block email_body %}
+<p class="greeting">Great news, {{ user.first_name }}! 🎉</p>
+<p>Your deposit has been verified and <strong>credited to your wallet</strong>.</p>
+<div class="highlight-box">
+  <div class="label">Amount Credited</div>
+  <div class="value">${{ "{:,.2f}".format(deposit.amount) }}</div>
+</div>
+<p>Your account balance has been updated. You can now invest in any of our available plans.</p>
+{% endblock %}

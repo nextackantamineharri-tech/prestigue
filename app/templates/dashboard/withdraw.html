@@ -1,0 +1,57 @@
+{% extends "dashboard/dashboard_base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card shadow-lg border-0 p-4">
+            <h4 class="fw-bold mb-4">Withdraw Funds</h4>
+            
+            <div class="alert alert-info border-0 rounded-4 small mb-4">
+                <div class="d-flex">
+                    <i class="fas fa-info-circle me-3 mt-1"></i>
+                    <div>
+                        Available Balance: <strong>${{ "{:,.2f}".format(current_user.account_balance) }}</strong><br>
+                        <span class="extra-small">Minimum withdrawal is $10.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                
+                <div class="mb-3">
+                    {{ form.currency_id.label(class="form-label small fw-bold") }}
+                    {{ form.currency_id(class="form-select", id="currencySelector") }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.amount.label(class="form-label small fw-bold") }}
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0">$</span>
+                        {{ form.amount(class="form-control border-start-0", placeholder="0.00") }}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    {{ form.wallet_address.label(class="form-label small fw-bold") }}
+                    {{ form.wallet_address(class="form-control", placeholder="Enter your destination wallet address") }}
+                </div>
+
+                <div class="mb-4">
+                    {{ form.pin.label(class="form-label small fw-bold") }}
+                    {{ form.pin(class="form-control text-center fs-4 tracking-widest", placeholder="••••", maxlength="6", type="password") }}
+                    <div class="form-text extra-small text-center">Enter your 4-6 digit Transaction PIN to authorize this request.</div>
+                </div>
+
+                <div class="d-grid">
+                    {{ form.submit(class="btn btn-primary btn-lg rounded-pill", data_bs_toggle="tooltip", title="Submit withdrawal request for approval") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .tracking-widest { letter-spacing: 0.5em; }
+</style>
+{% endblock %}

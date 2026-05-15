@@ -1,0 +1,66 @@
+{% extends "admin/admin_base.html" %}
+
+{% block page_title %}KYC Verification Queue{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm border-0 overflow-hidden">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="bg-light">
+        <tr>
+          <th class="px-4 py-3 text-muted small text-uppercase">#</th>
+          <th class="py-3 text-muted small text-uppercase">User</th>
+          <th class="py-3 text-muted small text-uppercase">Document Type</th>
+          <th class="py-3 text-muted small text-uppercase">Submitted</th>
+          <th class="py-3 text-muted small text-uppercase">Status</th>
+          <th class="px-4 py-3 text-end text-muted small text-uppercase">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in records %}
+        <tr>
+          <td class="px-4 text-muted small">{{ r.id }}</td>
+          <td>
+            <div class="fw-bold small">{{ r.user.first_name }} {{ r.user.last_name }}</div>
+            <div class="extra-small text-muted">{{ r.user.email }}</div>
+          </td>
+          <td class="small text-capitalize">{{ r.id_type.replace('_', ' ') }}</td>
+          <td class="small text-muted">{{ r.submitted_at.strftime('%Y-%m-%d %H:%M') }}</td>
+          <td>
+            {% if r.status == 'pending' %}
+              <span class="badge bg-warning text-dark rounded-pill">Pending</span>
+            {% elif r.status == 'verified' %}
+              <span class="badge bg-success rounded-pill">Verified</span>
+            {% else %}
+              <span class="badge bg-danger rounded-pill">Rejected</span>
+            {% endif %}
+          </td>
+          <td class="px-4 text-end">
+            <a href="{{ url_for('admin.review_kyc', id=r.id) }}"
+               class="btn btn-primary btn-sm rounded-pill px-3"
+               data-bs-toggle="tooltip" title="View documents and make decision">
+              Review
+            </a>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6" class="text-center py-5 text-muted">
+            <i class="fas fa-inbox fa-2x d-block mb-2 opacity-25"></i>
+            No KYC submissions found.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>.extra-small { font-size: 0.7rem; }</style>
+
+{% block scripts %}
+<script>
+  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
+</script>
+{% endblock %}
+{% endblock %}

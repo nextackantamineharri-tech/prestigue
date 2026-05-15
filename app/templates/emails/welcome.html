@@ -1,0 +1,12 @@
+{% extends "emails/email_base.html" %}
+{% block email_body %}
+<p class="greeting">Welcome, {{ user.first_name }}! 🎉</p>
+<p>Your account has been successfully created on <strong>{{ settings.site_name }}</strong>. We're thrilled to have you on board.</p>
+<div class="highlight-box">
+  <div class="label">Your Account Email</div>
+  <div class="value" style="font-size:16px;">{{ user.email }}</div>
+</div>
+<p>To get started, complete your <strong>KYC verification</strong> to unlock withdrawals, then fund your wallet and choose an investment plan.</p>
+<hr class="divider">
+<p style="font-size:13px; color:#94a3b8;">If you did not create this account, please contact us immediately at <a href="mailto:{{ settings.site_email }}">{{ settings.site_email }}</a></p>
+{% endblock %}

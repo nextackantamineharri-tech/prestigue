@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - {{ settings.site_name }}</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: {{ settings.primary_color }};
+            --secondary: {{ settings.secondary_color }};
+            --bg-light: #f8fafc;
+            --sidebar-width: 280px;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: #1e293b;
+        }
+        
+        /* Sidebar for Desktop */
+        #sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: #fff;
+            border-right: 1px solid #e2e8f0;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-brand {
+            padding: 24px;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary);
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .nav-pills .nav-link {
+            padding: 12px 24px;
+            color: #64748b;
+            font-weight: 500;
+            border-radius: 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-pills .nav-link i {
+            margin-right: 12px;
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .nav-pills .nav-link:hover {
+            color: var(--primary);
+            background: #f1f5f9;
+        }
+        
+        .nav-pills .nav-link.active {
+            color: var(--primary);
+            background: #eff6ff;
+            border-right: 3px solid var(--primary);
+        }
+        
+        /* Main Content */
+        #main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            padding: 24px;
+        }
+        
+        .top-nav {
+            background: #fff;
+            padding: 12px 24px;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        /* Premium Cards */
+        .stat-card {
+            background: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 24px;
+            height: 100%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            color: #64748b;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 991.98px) {
+            #sidebar {
+                left: -100%;
+            }
+            #main-content {
+                margin-left: 0;
+                padding: 16px;
+                padding-bottom: 80px; /* Space for bottom nav */
+            }
+            .mobile-bottom-nav {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: #fff;
+                display: flex;
+                justify-content: space-around;
+                padding: 10px 0;
+                border-top: 1px solid #e2e8f0;
+                z-index: 1001;
+            }
+            .mobile-nav-item {
+                text-align: center;
+                color: #64748b;
+                text-decoration: none;
+                font-size: 0.75rem;
+            }
+            .mobile-nav-item.active {
+                color: var(--primary);
+            }
+            .mobile-nav-item i {
+                display: block;
+                font-size: 1.25rem;
+                margin-bottom: 2px;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .mobile-bottom-nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Desktop Sidebar -->
+    <div id="sidebar" class="d-none d-lg-block">
+        <div class="sidebar-brand">
+            {{ settings.site_name }}
+        </div>
+        <div class="nav flex-column nav-pills mt-4">
+            <a href="{{ url_for('dashboard.index') }}" class="nav-link {{ 'active' if request.endpoint == 'dashboard.index' }}">
+                <i class="fas fa-grid-2"></i> Dashboard
+            </a>
+            <a href="{{ url_for('dashboard.invest') }}" class="nav-link"><i class="fas fa-rocket"></i> Invest</a>
+            <a href="{{ url_for('dashboard.my_investments') }}" class="nav-link"><i class="fas fa-chart-bar"></i> My Investments</a>
+            <a href="{{ url_for('dashboard.deposit') }}" class="nav-link"><i class="fas fa-wallet"></i> Deposit</a>
+            <a href="{{ url_for('dashboard.withdraw') }}" class="nav-link"><i class="fas fa-money-bill-transfer"></i> Withdraw</a>
+            <a href="{{ url_for('dashboard.history') }}" class="nav-link"><i class="fas fa-history"></i> Transactions</a>
+            <a href="{{ url_for('kyc.status') }}" class="nav-link {{ 'active' if 'kyc' in request.endpoint }}">
+                <i class="fas fa-id-card"></i> KYC
+                {% if not current_user.is_verified %}
+                    <span class="badge bg-warning text-dark extra-small ms-auto">!</span>
+                {% endif %}
+            </a>
+            <a href="{{ url_for('dashboard.referrals') }}" class="nav-link {{ 'active' if request.endpoint == 'dashboard.referrals' }}" data-bs-toggle="tooltip" data-bs-placement="right" title="Earn bonuses by inviting friends">
+                <i class="fas fa-user-plus"></i> Referrals
+            </a>
+            <a href="{{ url_for('auth.profile') }}" class="nav-link {{ 'active' if request.endpoint == 'auth.profile' }}">
+                <i class="fas fa-user-circle"></i> Profile
+            </a>
+            <hr class="mx-4 opacity-50">
+            <a href="{{ url_for('auth.logout') }}" class="nav-link text-danger">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div id="main-content">
+        <div class="top-nav d-none d-lg-flex">
+            <h5 class="fw-bold mb-0">{{ title }}</h5>
+            <div class="d-flex align-items-center gap-3">
+                <div class="text-end d-none d-sm-block">
+                    <p class="small fw-bold mb-0">{{ current_user.first_name }} {{ current_user.last_name }}</p>
+                    <p class="small text-muted mb-0">{{ current_user.email }}</p>
+                </div>
+                <div class="bg-light rounded-circle p-2" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-bell text-muted"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Header -->
+        <div class="d-lg-none mb-4 d-flex justify-content-between align-items-center">
+            <h4 class="fw-bold mb-0">{{ title }}</h4>
+            <div class="bg-white rounded-circle p-2 shadow-sm">
+                <i class="fas fa-bell text-muted"></i>
+            </div>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <div class="mobile-bottom-nav">
+        <a href="{{ url_for('dashboard.index') }}" class="mobile-nav-item {{ 'active' if request.endpoint == 'dashboard.index' }}">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="#" class="mobile-nav-item">
+            <i class="fas fa-rocket"></i>
+            <span>Invest</span>
+        </a>
+        <a href="#" class="mobile-nav-item">
+            <i class="fas fa-wallet"></i>
+            <span>Wallet</span>
+        </a>
+        <a href="{{ url_for('auth.profile') }}" class="mobile-nav-item {{ 'active' if request.endpoint == 'auth.profile' }}">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
