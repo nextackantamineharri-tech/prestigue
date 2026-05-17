@@ -1,0 +1,13 @@
+{% extends "emails/email_base.html" %}
+{% block email_body %}
+<p class="greeting">New User Registered 👤</p>
+<p>A new investor account has been registered on the platform.</p>
+<div class="highlight-box">
+  <div class="label">User Details</div>
+  <div class="value" style="font-size:16px;">{{ user.first_name }} {{ user.last_name }}</div>
+  <div style="font-size:13px; color:#64748b; margin-top:4px;">Email: {{ user.email }}</div>
+  <div style="font-size:13px; color:#64748b;">Phone: {{ user.phone or 'N/A' }}</div>
+  <div style="font-size:13px; color:#64748b;">Country: {{ user.country or 'N/A' }}</div>
+</div>
+<p>You can review this user profile inside your Admin Panel.</p>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "emails/email_base.html" %}
+{% block email_body %}
+<p class="greeting">New External Transfer Request 🏦</p>
+<p>An investor has submitted a request for an external bank transfer/withdrawal.</p>
+<div class="highlight-box">
+  <div class="label">Transfer Details</div>
+  <div class="value">${{ "{:,.2f}".format(withdrawal.amount) }}</div>
+  <div style="font-size:13px; color:#64748b; margin-top:4px;">User: {{ user.first_name }} {{ user.last_name }} ({{ user.email }})</div>
+  <div style="font-size:13px; color:#64748b;">Destination Address/Bank: {{ withdrawal.wallet_address or 'N/A' }}</div>
+</div>
+<p>Please log in to the Admin Panel to process and audit this transfer request.</p>
+{% endblock %}

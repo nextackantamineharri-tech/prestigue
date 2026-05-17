@@ -1,0 +1,11 @@
+{% extends "emails/email_base.html" %}
+{% block email_body %}
+<p class="greeting">New KYC Submission 📄</p>
+<p>An investor has uploaded documents for identity verification.</p>
+<div class="highlight-box">
+  <div class="label">Investor Details</div>
+  <div class="value" style="font-size:16px;">{{ user.first_name }} {{ user.last_name }}</div>
+  <div style="font-size:13px; color:#64748b; margin-top:4px;">Email: {{ user.email }}</div>
+</div>
+<p>Please log in to the Admin Panel to review the submitted ID documents and confirm the verification decision.</p>
+{% endblock %}
