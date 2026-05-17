@@ -143,7 +143,7 @@
                             </td>
                             <td class="extra-small text-muted">{{ u.created_at.strftime('%b %d, %Y') }}</td>
                             <td class="text-end">
-                                <a href="{{ url_for('admin.user_details', user_id=u.id) }}" class="text-muted"><i class="fas fa-ellipsis-v"></i></a>
+                                <a href="{{ url_for('admin.view_user', id=u.id) }}" class="text-muted"><i class="fas fa-ellipsis-v"></i></a>
                             </td>
                         </tr>
                         {% endfor %}
