@@ -1,0 +1,379 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- SECTION 1 — HERO -->
+<section class="position-relative overflow-hidden text-center" style="padding: 100px 0 60px; background-color: var(--color-bg);">
+    <div class="container position-relative z-1 animate-up">
+        <h6 class="text-primary fw-bold mb-3" style="letter-spacing: 0.15em; font-size: 0.75rem;">LEGAL</h6>
+        <h1 class="section-heading mb-4">Privacy Policy</h1>
+        <div class="gold-divider mx-auto mb-4"></div>
+        
+        <div class="d-flex justify-content-center gap-3 mb-4 text-muted small">
+            <span>Effective Date: January 1, 2026</span>
+            <span class="text-primary">•</span>
+            <span>Last Updated: May 1, 2026</span>
+        </div>
+        
+        <p class="section-subheading mx-auto mb-0" style="max-width: 650px;">
+            Your privacy matters to us. This policy explains exactly what data we collect, how we use it, and your rights regarding your personal information.
+        </p>
+    </div>
+</section>
+
+<!-- SECTION 2 — TABLE OF CONTENTS -->
+<section style="padding: 40px 0; background-color: var(--color-surface); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
+    <div class="container animate-up">
+        <div class="glass-card p-5 mx-auto border-0 text-start" style="max-width: 700px; background: rgba(11, 22, 40, 0.4); border-radius: 16px;">
+            <h5 class="text-white fw-bold mb-4" style="font-family: 'Playfair Display', serif;"><i class="fas fa-list-ol text-primary me-3"></i>In This Document</h5>
+            
+            <div class="row g-2">
+                <div class="col-md-6">
+                    <ol class="list-unstyled mb-0 d-flex flex-column gap-2 small">
+                        <li><a href="#collect" class="toc-link text-decoration-none">1. Information We Collect</a></li>
+                        <li><a href="#use" class="toc-link text-decoration-none">2. How We Use Information</a></li>
+                        <li><a href="#kyc_handling" class="toc-link text-decoration-none">3. KYC Data Handling</a></li>
+                        <li><a href="#sharing" class="toc-link text-decoration-none">4. Data Sharing</a></li>
+                        <li><a href="#security" class="toc-link text-decoration-none">5. Data Security</a></li>
+                    </ol>
+                </div>
+                <div class="col-md-6">
+                    <ol class="list-unstyled mb-0 d-flex flex-column gap-2 small">
+                        <li><a href="#cookies" class="toc-link text-decoration-none">6. Cookies</a></li>
+                        <li><a href="#rights" class="toc-link text-decoration-none">7. Your Rights</a></li>
+                        <li><a href="#retention" class="toc-link text-decoration-none">8. Data Retention</a></li>
+                        <li><a href="#changes" class="toc-link text-decoration-none">9. Changes to this Policy</a></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 3 — POLICY BODY -->
+<section style="padding: 80px 0; background-color: var(--color-bg);">
+    <div class="container animate-up">
+        <div class="row g-5">
+            
+            <!-- Left Sticky Sidebar Navigation -->
+            <div class="col-lg-3 d-none d-lg-block">
+                <div class="sticky-top" style="top: 100px; z-index: 10;">
+                    <div class="glass-card p-4 border-0" style="background: rgba(11,22,40,0.6); border-radius: 16px;">
+                        <h6 class="text-white fw-bold mb-3 small text-uppercase" style="letter-spacing: 0.1em; font-family: 'Playfair Display', serif;">NAVIGATION</h6>
+                        <ul class="nav flex-column gap-2" id="legalSidebar">
+                            <li class="nav-item"><a href="#collect" class="nav-link legal-nav-link active small py-1">1. Information We Collect</a></li>
+                            <li class="nav-item"><a href="#use" class="nav-link legal-nav-link small py-1">2. How We Use Info</a></li>
+                            <li class="nav-item"><a href="#kyc_handling" class="nav-link legal-nav-link small py-1">3. KYC Handling</a></li>
+                            <li class="nav-item"><a href="#sharing" class="nav-link legal-nav-link small py-1">4. Data Sharing</a></li>
+                            <li class="nav-item"><a href="#security" class="nav-link legal-nav-link small py-1">5. Data Security</a></li>
+                            <li class="nav-item"><a href="#cookies" class="nav-link legal-nav-link small py-1">6. Cookies</a></li>
+                            <li class="nav-item"><a href="#rights" class="nav-link legal-nav-link small py-1">7. Your Rights</a></li>
+                            <li class="nav-item"><a href="#retention" class="nav-link legal-nav-link small py-1">8. Data Retention</a></li>
+                            <li class="nav-item"><a href="#changes" class="nav-link legal-nav-link small py-1">9. Policy Changes</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Content Sections -->
+            <div class="col-lg-9 text-start">
+                
+                <!-- Clause 1 -->
+                <div id="collect" class="clause-section mb-5">
+                    <h3 class="text-primary fw-bold mb-3" style="font-family: 'Playfair Display', serif;">1. Information We Collect</h3>
+                    <p class="text-muted lh-lg small mb-3">
+                        To maintain a premium, secure investment ecosystem, we collect data across several functional classifications:
+                    </p>
+                    <ul class="text-muted small lh-lg ps-3">
+                        <li class="mb-2"><strong>Registration data</strong>: Name, email address, username, and encrypted passwords.</li>
+                        <li class="mb-2"><strong>KYC verification data</strong>: Government-issued identity document, proof of residency statement, and facial selfies.</li>
+                        <li class="mb-2"><strong>Transaction data</strong>: Deposit ledgers, on-chain withdrawal details, and active investment plans.</li>
+                        <li class="mb-2"><strong>Device and usage data</strong>: IP addresses, session parameters, and browser footprints.</li>
+                        <li class="mb-2"><strong>Communication data</strong>: Correspondence with support staff or administrators.</li>
+                    </ul>
+                </div>
+
+                <!-- Clause 2 -->
+                <div id="use" class="clause-section mb-5">
+                    <h3 class="text-primary fw-bold mb-3" style="font-family: 'Playfair Display', serif;">2. How We Use Your Information</h3>
+                    <p class="text-muted lh-lg small mb-3">
+                        We process user data under secure private-banking mandates to deliver institutional efficiency:
+                    </p>
+                    <ul class="text-muted small lh-lg ps-3">
+                        <li class="mb-2">To verify your identity and maintain KYC/AML compliance records.</li>
+                        <li class="mb-2">To safely process deposit verification, manual withdrawals, and investment plan allocations.</li>
+                        <li class="mb-2">To dispatch essential transaction confirmation receipts and security codes.</li>
+                        <li class="mb-2">To identify, mitigate, or block fraudulent activities, breaches, or unauthorized access.</li>
+                        <li class="mb-2">To optimize web interface response times and general platform performance.</li>
+                    </ul>
+                </div>
+
+                <!-- Clause 3 -->
+                <div id="kyc_handling" class="clause-section mb-5">
+                    <h3 class="text-primary fw-bold mb-3" style="font-family: 'Playfair Display', serif;">3. KYC Data Handling</h3>
+                    <p class="text-muted lh-lg small">
+                        All KYC verification items are stored in highly encrypted cold-storage clusters. These files are processed solely by authorized security desks for identity auditing and are never shared with external entities except where mandated by Swiss AML laws. KYC files are retained strictly for the minimum statutory period.
+                    </p>
+                </div>
+
+                <!-- Clause 4 -->
+                <div id="sharing" class="clause-section mb-5">
+                    <h3 class="text-primary fw-bold mb-3" style="font-family: 'Playfair Display', serif;">4. Data Sharing</h3>
+                    <p class="text-muted lh-lg small">
+                        We strictly do not sell, lease, rent, or trade your personal profile data. We may share audited records only in specific scenarios: (a) regulatory authorities when legally mandated under jurisdictional directives, or (b) third-party secure node processors who maintain server infrastructure under strict data protection protocols.
+                    </p>
+                </div>
+
+                <!-- Clause 5 -->
+                <div id="security" class="clause-section mb-5">
+                    <h3 class="text-primary fw-bold mb-3" style="font-family: 'Playfair Display', serif;">5. Data Security</h3>
+                    <p class="text-muted lh-lg small">
+                        All incoming traffic is encrypted using 256-bit SSL/TLS tunnels, and database records remain encrypted at rest. User access controls are protected using secondary secure authentication routines, multi-signature admin verification, and regular infrastructure network security checks.
+                    </p>
+                </div>
+
+                <!-- Clause 6 -->
+                <div id="cookies" class="clause-section mb-5">
+                    <h3 class="text-primary fw-bold mb-3" style="font-family: 'Playfair Display', serif;">6. Cookies</h3>
+                    <p class="text-muted lh-lg small">
+                        We leverage strictly functional, essential session cookies to authenticate user sessions and prevent CSRF vulnerabilities. We do not use third-party marketing, analytics, or behavioral advertising cookies. You may disable cookies in your browser settings, though this may disrupt active login states.
+                    </p>
+                </div>
+
+                <!-- Clause 7 -->
+                <div id="rights" class="clause-section mb-5">
+                    <h3 class="text-primary fw-bold mb-3" style="font-family: 'Playfair Display', serif;">7. Your Rights</h3>
+                    <p class="text-muted lh-lg small">
+                        Under global data protections, you maintain comprehensive controls: you have the right to access your stored personal details, request immediate correction of inaccurate profile data, or request account erasure (subject to statutory AML hold policies).
+                    </p>
+                </div>
+
+                <!-- Clause 8 -->
+                <div id="retention" class="clause-section mb-5">
+                    <h3 class="text-primary fw-bold mb-3" style="font-family: 'Playfair Display', serif;">8. Data Retention</h3>
+                    <p class="text-muted lh-lg small">
+                        All legal registration and transactional ledgers are securely retained for the duration of your active platform lifecycle and for a statutory minimum of 5 years following account closure to satisfy Anti-Money Laundering (AML) mandates.
+                    </p>
+                </div>
+
+                <!-- Clause 9 -->
+                <div id="changes" class="clause-section mb-5">
+                    <h3 class="text-primary fw-bold mb-3" style="font-family: 'Playfair Display', serif;">9. Changes to this Policy</h3>
+                    <p class="text-muted lh-lg small">
+                        We reserve the right to refine this policy to reflect security advancements or regulatory changes. Significant updates will be dispatched via your registered email. Continued access to our investment panels constitutes compliance with refined policies.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 4 — YOUR RIGHTS SUMMARY (visual cards) -->
+<section style="padding: 80px 0; background-color: var(--color-surface); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
+    <div class="container text-center mb-5 animate-up">
+        <h2 class="section-heading" style="font-family: 'Playfair Display', serif;">Your Rights Under Data Protection</h2>
+        <div class="gold-divider mx-auto mb-4"></div>
+    </div>
+
+    <div class="container animate-up">
+        <div class="row g-4 justify-content-center">
+            
+            <!-- Right 1 -->
+            <div class="col-lg-3 col-sm-6">
+                <div class="glass-card p-4 h-100 border-0 text-center" style="background: rgba(11,22,40,0.4); border-radius: 16px;">
+                    <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 50px; height: 50px; border: 1px solid rgba(201,168,76,0.1);">
+                        <i class="fas fa-eye text-primary"></i>
+                    </div>
+                    <h6 class="text-white fw-bold mb-2 small" style="font-family: 'Playfair Display', serif;">Right to Access</h6>
+                    <p class="extra-small text-muted mb-3">You have the right to request access and view all personal profile records stored in our servers.</p>
+                    <a href="{{ url_for('main.contact') }}" class="extra-small text-primary text-decoration-none fw-bold">Request via Contact →</a>
+                </div>
+            </div>
+
+            <!-- Right 2 -->
+            <div class="col-lg-3 col-sm-6">
+                <div class="glass-card p-4 h-100 border-0 text-center" style="background: rgba(11,22,40,0.4); border-radius: 16px;">
+                    <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 50px; height: 50px; border: 1px solid rgba(201,168,76,0.1);">
+                        <i class="fas fa-pen text-primary"></i>
+                    </div>
+                    <h6 class="text-white fw-bold mb-2 small" style="font-family: 'Playfair Display', serif;">Right to Correct</h6>
+                    <p class="extra-small text-muted mb-3">Request immediate correction or updating of any inaccurate registration data.</p>
+                    <a href="{{ url_for('main.contact') }}" class="extra-small text-primary text-decoration-none fw-bold">Request via Contact →</a>
+                </div>
+            </div>
+
+            <!-- Right 3 -->
+            <div class="col-lg-3 col-sm-6">
+                <div class="glass-card p-4 h-100 border-0 text-center" style="background: rgba(11,22,40,0.4); border-radius: 16px;">
+                    <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 50px; height: 50px; border: 1px solid rgba(201,168,76,0.1);">
+                        <i class="fas fa-trash text-primary"></i>
+                    </div>
+                    <h6 class="text-white fw-bold mb-2 small" style="font-family: 'Playfair Display', serif;">Right to Delete</h6>
+                    <p class="extra-small text-muted mb-3">Request account erasure and personal file removal (subject to statutory AML parameters).</p>
+                    <a href="{{ url_for('main.contact') }}" class="extra-small text-primary text-decoration-none fw-bold">Request via Contact →</a>
+                </div>
+            </div>
+
+            <!-- Right 4 -->
+            <div class="col-lg-3 col-sm-6">
+                <div class="glass-card p-4 h-100 border-0 text-center" style="background: rgba(11,22,40,0.4); border-radius: 16px;">
+                    <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 50px; height: 50px; border: 1px solid rgba(201,168,76,0.1);">
+                        <i class="fas fa-hand text-primary"></i>
+                    </div>
+                    <h6 class="text-white fw-bold mb-2 small" style="font-family: 'Playfair Display', serif;">Right to Object</h6>
+                    <p class="extra-small text-muted mb-3">Restrict or object to personal data processing protocols under specific scenarios.</p>
+                    <a href="{{ url_for('main.contact') }}" class="extra-small text-primary text-decoration-none fw-bold">Request via Contact →</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 5 — DATA SECURITY VISUAL -->
+<section style="padding: 80px 0; background-color: var(--color-bg);">
+    <div class="container text-center animate-up">
+        <h2 class="section-heading mb-4" style="font-family: 'Playfair Display', serif;">Data Flow & Encryption Architecture</h2>
+        <div class="gold-divider mx-auto mb-4"></div>
+        
+        <!-- Security Assurance Pills -->
+        <div class="d-flex justify-content-center flex-wrap gap-2 mb-5">
+            <span class="badge rounded-pill bg-success bg-opacity-10 text-success border border-success py-2 px-3 small"><i class="fas fa-shield-halved me-2"></i>SSL Encrypted</span>
+            <span class="badge rounded-pill bg-info bg-opacity-10 text-info border border-info py-2 px-3 small"><i class="fas fa-scale-balanced me-2"></i>GDPR Compliant</span>
+            <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary border border-primary py-2 px-3 small"><i class="fas fa-handshake-slash me-2"></i>No Data Selling</span>
+        </div>
+
+        <!-- Data Flow Line -->
+        <div class="d-flex justify-content-center align-items-center flex-wrap gap-3 py-3 px-4 glass-card mx-auto" style="border-radius: 50px; background: rgba(11,22,40,0.4); border: 1px solid var(--color-border); max-width: 800px;">
+            <span class="small fw-bold text-white"><i class="fas fa-user text-primary me-2"></i>You</span>
+            <i class="fas fa-chevron-right text-muted extra-small"></i>
+            <span class="badge rounded-pill bg-success bg-opacity-10 text-success border border-success py-2 px-3 small"><i class="fas fa-lock me-2"></i>Encrypted Connection</span>
+            <i class="fas fa-chevron-right text-muted extra-small"></i>
+            <span class="small fw-bold text-white"><i class="fas fa-server text-primary me-2"></i>Our Servers</span>
+            <i class="fas fa-chevron-right text-muted extra-small"></i>
+            <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary border border-primary py-2 px-3 small"><i class="fas fa-database me-2"></i>Secure Storage</span>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 6 — CONTACT FOR PRIVACY -->
+<section style="padding: 60px 0; background-color: var(--color-surface); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
+    <div class="container animate-up text-center">
+        <div class="glass-card p-5 mx-auto border-0" style="max-width: 600px; background: rgba(11,22,40,0.6); border-radius: 16px;">
+            <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 64px; height: 64px; border: 1px solid rgba(201,168,76,0.2);">
+                <i class="fas fa-user-shield text-primary fa-lg"></i>
+            </div>
+            <h4 class="text-white fw-bold mb-2" style="font-family: 'Playfair Display', serif;">Privacy Concerns? Contact Us</h4>
+            <p class="text-primary small font-monospace mb-3">{{ settings.support_email if settings and settings.support_email else 'support@prestigefinanceglobal.com' }}</p>
+            <p class="text-muted small mb-4">We respond to all structural data request and privacy audits within 72 hours.</p>
+            <a href="{{ url_for('main.contact') }}" class="btn btn-gold px-4 py-2">Contact Security Desk</a>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 7 — RELATED DOCUMENTS -->
+<section style="padding: 60px 0; background-color: var(--color-bg);">
+    <div class="container animate-up text-center">
+        <div class="row g-4 justify-content-center">
+            
+            <!-- Link 1 -->
+            <div class="col-md-4">
+                <div class="glass-card p-4 border-0 h-100 d-flex flex-column justify-content-between text-start" style="background: rgba(11,22,40,0.4); border-radius: 12px;">
+                    <div>
+                        <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center mb-3" style="width: 44px; height: 44px; border: 1px solid rgba(201,168,76,0.1);">
+                            <i class="fas fa-file-contract text-primary"></i>
+                        </div>
+                        <h6 class="text-white fw-bold mb-2 small" style="font-family: 'Playfair Display', serif;">Terms of Service</h6>
+                        <p class="text-muted extra-small mb-3">Review account, eligibility rules, and binding quantitative legal conditions.</p>
+                    </div>
+                    <a href="{{ url_for('main.terms') }}" class="text-primary small text-decoration-none mt-auto">Read Document →</a>
+                </div>
+            </div>
+
+            <!-- Link 2 -->
+            <div class="col-md-4">
+                <div class="glass-card p-4 border-0 h-100 d-flex flex-column justify-content-between text-start" style="background: rgba(11,22,40,0.4); border-radius: 12px;">
+                    <div>
+                        <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center mb-3" style="width: 44px; height: 44px; border: 1px solid rgba(201,168,76,0.1);">
+                            <i class="fas fa-id-card text-primary"></i>
+                        </div>
+                        <h6 class="text-white fw-bold mb-2 small" style="font-family: 'Playfair Display', serif;">KYC Policy</h6>
+                        <p class="text-muted extra-small mb-3">Review requirements for governmental verification details and identity validations.</p>
+                    </div>
+                    <a href="{{ url_for('main.kyc_policy') }}" class="text-primary small text-decoration-none mt-auto">Read Document →</a>
+                </div>
+            </div>
+
+            <!-- Link 3 -->
+            <div class="col-md-4">
+                <div class="glass-card p-4 border-0 h-100 d-flex flex-column justify-content-between text-start" style="background: rgba(11,22,40,0.4); border-radius: 12px;">
+                    <div>
+                        <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center mb-3" style="width: 44px; height: 44px; border: 1px solid rgba(201,168,76,0.1);">
+                            <i class="fas fa-gavel text-primary"></i>
+                        </div>
+                        <h6 class="text-white fw-bold mb-2 small" style="font-family: 'Playfair Display', serif;">AML Policy</h6>
+                        <p class="text-muted extra-small mb-3">Understand exactly how anti-money laundering systems and audits safeguard the system.</p>
+                    </div>
+                    <a href="{{ url_for('main.aml_policy') }}" class="text-primary small text-decoration-none mt-auto">Read Document →</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- SCROLLSPY LOGIC -->
+<style>
+.toc-link {
+    color: var(--color-text-muted);
+    transition: all 0.3s ease;
+}
+.toc-link:hover {
+    color: var(--color-primary);
+    padding-left: 4px;
+}
+
+.legal-nav-link {
+    color: var(--color-text-muted);
+    border-left: 2px solid transparent;
+    padding-left: 12px;
+    transition: all 0.3s ease;
+}
+.legal-nav-link:hover {
+    color: var(--color-primary);
+}
+.legal-nav-link.active {
+    color: var(--color-primary) !important;
+    border-left-color: var(--color-primary) !important;
+    font-weight: 600;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const links = document.querySelectorAll('.legal-nav-link');
+    const sections = document.querySelectorAll('.clause-section');
+
+    function scrollSpy() {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (pageYOffset >= (sectionTop - 180)) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        links.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + current) {
+                link.classList.add('active');
+            }
+        });
+    }
+
+    window.addEventListener('scroll', scrollSpy);
+    scrollSpy(); // Initial call
+});
+</script>
+{% endblock %}

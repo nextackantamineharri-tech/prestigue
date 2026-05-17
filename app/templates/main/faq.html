@@ -1,0 +1,671 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- SECTION 1 — PAGE HERO -->
+<section class="position-relative overflow-hidden" style="padding: 120px 0 80px; background: radial-gradient(circle at center, rgba(26,110,255,0.04) 0%, transparent 70%), var(--color-bg);">
+    <div class="container position-relative z-1 text-center animate-up">
+        <h6 class="text-primary fw-bold mb-3" style="letter-spacing: 0.15em; font-size: 0.75rem;">SUPPORT CENTER</h6>
+        <h1 class="section-heading mb-4">Frequently Asked Questions</h1>
+        <div class="gold-divider mx-auto mb-4"></div>
+        <p class="section-subheading mx-auto mb-4" style="max-width: 600px;">
+            Everything you need to know about investing, deposits, withdrawals, and account management.
+        </p>
+
+        <!-- Search Bar -->
+        <div class="mx-auto position-relative" style="max-width: 500px;">
+            <div class="input-group" style="border-radius: 30px; overflow: hidden; border: 1px solid rgba(201,168,76,0.3); background: rgba(11,22,40,0.6);">
+                <span class="input-group-text border-0 bg-transparent text-primary ps-3">
+                    <i class="fas fa-search"></i>
+                </span>
+                <input type="text" id="faqSearch" onkeyup="filterFAQs()" class="form-control border-0 bg-transparent text-white py-3 ps-1" placeholder="Search questions..." style="box-shadow: none; font-size: 0.95rem;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 2 — FAQ CATEGORY TABS -->
+<section class="py-4" style="background-color: var(--color-bg); border-bottom: 1px solid var(--color-border);">
+    <div class="container d-flex justify-content-center flex-wrap gap-2 animate-up">
+        <button class="btn category-pill active px-4 py-2" data-category="general" onclick="switchCategory('general')">General</button>
+        <button class="btn category-pill px-4 py-2" data-category="deposits" onclick="switchCategory('deposits')">Deposits</button>
+        <button class="btn category-pill px-4 py-2" data-category="withdrawals" onclick="switchCategory('withdrawals')">Withdrawals</button>
+        <button class="btn category-pill px-4 py-2" data-category="investments" onclick="switchCategory('investments')">Investments</button>
+        <button class="btn category-pill px-4 py-2" data-category="security" onclick="switchCategory('security')">Security</button>
+    </div>
+</section>
+
+<!-- FAQ GROUPS CONTAINER -->
+<section style="padding: 80px 0; background-color: var(--color-bg);">
+    <div class="container animate-up" style="max-width: 900px;">
+        
+        <!-- SECTION 3 — GENERAL FAQ (shown by default) -->
+        <div class="faq-group" id="faq-general" style="display: block;">
+            <div class="accordion" id="accordionGeneral">
+                
+                <!-- Q1 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseG1" aria-expanded="false">
+                            What is Prestige Finance Global?
+                        </button>
+                    </h2>
+                    <div id="collapseG1" class="accordion-collapse collapse" data-bs-parent="#accordionGeneral">
+                        <div class="accordion-body">
+                            Prestige Finance Global is an admin-managed crypto investment platform. Investors deposit cryptocurrency, choose an investment plan, and receive automated profits based on the plan's ROI and duration. All portfolios are managed internally by our investment team.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseG2" aria-expanded="false">
+                            Is this a trading platform?
+                        </button>
+                    </h2>
+                    <div id="collapseG2" class="accordion-collapse collapse" data-bs-parent="#accordionGeneral">
+                        <div class="accordion-body">
+                            No. We are not a live trading platform. You do not buy or sell crypto through us. You invest your crypto with us and our team manages the assets to generate returns. Your profits are calculated based on fixed plan parameters.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q3 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseG3" aria-expanded="false">
+                            Who can invest with Prestige Finance Global?
+                        </button>
+                    </h2>
+                    <div id="collapseG3" class="accordion-collapse collapse" data-bs-parent="#accordionGeneral">
+                        <div class="accordion-body">
+                            Anyone over the age of 18 from any of our 150+ supported countries can create an account and invest. All users must complete KYC verification before investing.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q4 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseG4" aria-expanded="false">
+                            How do I create an account?
+                        </button>
+                    </h2>
+                    <div id="collapseG4" class="accordion-collapse collapse" data-bs-parent="#accordionGeneral">
+                        <div class="accordion-body">
+                            Click "Get Started" on the homepage, fill in your details, verify your email, complete OTP verification, and then proceed with KYC. The entire process takes less than 10 minutes.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q5 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseG5" aria-expanded="false">
+                            Is there a referral program?
+                        </button>
+                    </h2>
+                    <div id="collapseG5" class="accordion-collapse collapse" data-bs-parent="#accordionGeneral">
+                        <div class="accordion-body">
+                            Yes. Every investor receives a unique referral link. When someone registers and makes a deposit using your referral link, you earn a commission credited to your account. Check your dashboard under "Referrals" for details.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q6 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseG6" aria-expanded="false">
+                            How do I contact support?
+                        </button>
+                    </h2>
+                    <div id="collapseG6" class="accordion-collapse collapse" data-bs-parent="#accordionGeneral">
+                        <div class="accordion-body">
+                            You can reach us via the Contact page or by emailing our support team. We respond within 24 hours on business days.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q7 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseG7" aria-expanded="false">
+                            What currencies do you accept?
+                        </button>
+                    </h2>
+                    <div id="collapseG7" class="accordion-collapse collapse" data-bs-parent="#accordionGeneral">
+                        <div class="accordion-body">
+                            We accept Bitcoin (BTC), Ethereum (ETH), USDT, and BNB. More coins may be added at admin discretion.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q8 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseG8" aria-expanded="false">
+                            Is my personal data safe?
+                        </button>
+                    </h2>
+                    <div id="collapseG8" class="accordion-collapse collapse" data-bs-parent="#accordionGeneral">
+                        <div class="accordion-body">
+                            Yes. All data is encrypted and stored securely. We never sell or share your personal information. See our Privacy Policy for details.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SECTION 4 — DEPOSITS FAQ -->
+        <div class="faq-group" id="faq-deposits" style="display: none;">
+            <div class="accordion" id="accordionDeposits">
+                
+                <!-- Q1 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseD1" aria-expanded="false">
+                            How do I make a deposit?
+                        </button>
+                    </h2>
+                    <div id="collapseD1" class="accordion-collapse collapse" data-bs-parent="#accordionDeposits">
+                        <div class="accordion-body">
+                            Select a cryptocurrency from your dashboard. The system displays our secure payment address. Send the desired investment amount from your external wallet, upload the payment screenshot as proof, and our administrative desk will verify and credit your account within 24 hours.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseD2" aria-expanded="false">
+                            How long does deposit approval take?
+                        </button>
+                    </h2>
+                    <div id="collapseD2" class="accordion-collapse collapse" data-bs-parent="#accordionDeposits">
+                        <div class="accordion-body">
+                            Deposits are processed sequentially. Typically, our admin desk reviews and verifies on-chain ledger entries within 12 to 24 hours of submission.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q3 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseD3" aria-expanded="false">
+                            What happens if my deposit is rejected?
+                        </button>
+                    </h2>
+                    <div id="collapseD3" class="accordion-collapse collapse" data-bs-parent="#accordionDeposits">
+                        <div class="accordion-body">
+                            If a deposit contains incorrect payment proof or mismatched amounts, it is marked as rejected. An automatic email is dispatched outlining the exact rejection reason so you can correct and resubmit.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q4 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseD4" aria-expanded="false">
+                            Is there a minimum deposit amount?
+                        </button>
+                    </h2>
+                    <div id="collapseD4" class="accordion-collapse collapse" data-bs-parent="#accordionDeposits">
+                        <div class="accordion-body">
+                            Yes, the minimum deposit depends on your chosen investment plan. The Starter Plan minimum starts as low as $100, while the Elite Plan is tailored for larger capital requirements.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q5 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseD5" aria-expanded="false">
+                            Can I deposit multiple times?
+                        </button>
+                    </h2>
+                    <div id="collapseD5" class="accordion-collapse collapse" data-bs-parent="#accordionDeposits">
+                        <div class="accordion-body">
+                            Yes, you can fund your wallet multiple times and run several parallel investment plans depending on your tactical wealth requirements.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q6 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseD6" aria-expanded="false">
+                            What proof do I need to upload?
+                        </button>
+                    </h2>
+                    <div id="collapseD6" class="accordion-collapse collapse" data-bs-parent="#accordionDeposits">
+                        <div class="accordion-body">
+                            You must upload a clear screenshot of your wallet transfer showing the recipient address, transaction amount, and transaction hash (TXID).
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SECTION 5 — WITHDRAWALS FAQ -->
+        <div class="faq-group" id="faq-withdrawals" style="display: none;">
+            <div class="accordion" id="accordionWithdrawals">
+                
+                <!-- Q1 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseW1" aria-expanded="false">
+                            How do I request a withdrawal?
+                        </button>
+                    </h2>
+                    <div id="collapseW1" class="accordion-collapse collapse" data-bs-parent="#accordionWithdrawals">
+                        <div class="accordion-body">
+                            Navigate to the Withdrawals section in your user panel. Choose the coin, enter the amount, paste your personal secure payment address, enter your secondary Withdrawal PIN, and submit.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseW2" aria-expanded="false">
+                            What is a withdrawal PIN?
+                        </button>
+                    </h2>
+                    <div id="collapseW2" class="accordion-collapse collapse" data-bs-parent="#accordionWithdrawals">
+                        <div class="accordion-body">
+                            A withdrawal PIN is a secondary, secure 4-to-6 digit password created during your registration/setup profile. This acts as a separate protection wall for outgoing funds.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q3 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseW3" aria-expanded="false">
+                            How long do withdrawals take?
+                        </button>
+                    </h2>
+                    <div id="collapseW3" class="accordion-collapse collapse" data-bs-parent="#accordionWithdrawals">
+                        <div class="accordion-body">
+                            All withdrawal requests are reviewed manually by our risk team. Standard processing takes 24 to 48 hours to execute on-chain transfers.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q4 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseW4" aria-expanded="false">
+                            What happens if my withdrawal is rejected?
+                        </button>
+                    </h2>
+                    <div id="collapseW4" class="accordion-collapse collapse" data-bs-parent="#accordionWithdrawals">
+                        <div class="accordion-body">
+                            Withdrawals can be rejected due to wrong wallet formatting, insufficient balance, or a failed PIN verification. You will receive an immediate email stating the rejection reason.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q5 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseW5" aria-expanded="false">
+                            Is there a minimum withdrawal amount?
+                        </button>
+                    </h2>
+                    <div id="collapseW5" class="accordion-collapse collapse" data-bs-parent="#accordionWithdrawals">
+                        <div class="accordion-body">
+                            Yes. Minimum payout limits are configured in the system based on transaction gas costs for Bitcoin, Ethereum, and other networks.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q6 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseW6" aria-expanded="false">
+                            Can I withdraw my capital (principal)?
+                        </button>
+                    </h2>
+                    <div id="collapseW6" class="accordion-collapse collapse" data-bs-parent="#accordionWithdrawals">
+                        <div class="accordion-body">
+                            Yes, your capital principal is returned to your available balance upon plan maturity, after which you can withdraw it or reinvest.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SECTION 6 — INVESTMENTS FAQ -->
+        <div class="faq-group" id="faq-investments" style="display: none;">
+            <div class="accordion" id="accordionInvestments">
+                
+                <!-- Q1 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseI1" aria-expanded="false">
+                            How do investment plans work?
+                        </button>
+                    </h2>
+                    <div id="collapseI1" class="accordion-collapse collapse" data-bs-parent="#accordionInvestments">
+                        <div class="accordion-body">
+                            You allocate funds to a designated plan (Starter, Growth, Elite). The funds are managed by our institutional traders. Yield accrues on a Daily or At Maturity schedule depending on the plan rules.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseI2" aria-expanded="false">
+                            Can I invest in multiple plans simultaneously?
+                        </button>
+                    </h2>
+                    <div id="collapseI2" class="accordion-collapse collapse" data-bs-parent="#accordionInvestments">
+                        <div class="accordion-body">
+                            Absolutely. You can run multiple strategies concurrently to balance your short-term yields with long-term capital compounding.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q3 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseI3" aria-expanded="false">
+                            What happens when my plan expires?
+                        </button>
+                    </h2>
+                    <div id="collapseI3" class="accordion-collapse collapse" data-bs-parent="#accordionInvestments">
+                        <div class="accordion-body">
+                            At expiration, the plan completes. The principal investment along with any remaining yield is credited to your available balance.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q4 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseI4" aria-expanded="false">
+                            Are profits guaranteed?
+                        </button>
+                    </h2>
+                    <div id="collapseI4" class="accordion-collapse collapse" data-bs-parent="#accordionInvestments">
+                        <div class="accordion-body">
+                            Yes, our plans offer fixed-term ROI parameters. Risk protection features and capital guarantee parameters protect your initial investment principal.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q5 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseI5" aria-expanded="false">
+                            Can I cancel an active investment?
+                        </button>
+                    </h2>
+                    <div id="collapseI5" class="accordion-collapse collapse" data-bs-parent="#accordionInvestments">
+                        <div class="accordion-body">
+                            Active plans are committed to on-chain pool protocols for their duration and cannot be cancelled or retracted prior to expiration.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q6 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseI6" aria-expanded="false">
+                            How are daily profits calculated?
+                        </button>
+                    </h2>
+                    <div id="collapseI6" class="accordion-collapse collapse" data-bs-parent="#accordionInvestments">
+                        <div class="accordion-body">
+                            Daily yields are calculated based on your invested principal and the daily proportional percentage of the plan's ROI, credited every 24 hours.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SECTION 7 — SECURITY FAQ -->
+        <div class="faq-group" id="faq-security" style="display: none;">
+            <div class="accordion" id="accordionSecurity">
+                
+                <!-- Q1 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseS1" aria-expanded="false">
+                            What is KYC and why is it required?
+                        </button>
+                    </h2>
+                    <div id="collapseS1" class="accordion-collapse collapse" data-bs-parent="#accordionSecurity">
+                        <div class="accordion-body">
+                            KYC (Know Your Customer) requires verifying identity through legal documents. It safeguards the platform against illicit funding and ensures compliance with Swiss anti-money laundering regulations.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseS2" aria-expanded="false">
+                            What is OTP verification?
+                        </button>
+                    </h2>
+                    <div id="collapseS2" class="accordion-collapse collapse" data-bs-parent="#accordionSecurity">
+                        <div class="accordion-body">
+                            OTP (One-Time Password) is a secondary secure passcode dispatched to your email for authenticating high-value transactions or password changes.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q3 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseS3" aria-expanded="false">
+                            I forgot my withdrawal PIN. What do I do?
+                        </button>
+                    </h2>
+                    <div id="collapseS3" class="accordion-collapse collapse" data-bs-parent="#accordionSecurity">
+                        <div class="accordion-body">
+                            Contact our security desk. Resetting a withdrawal PIN requires submitting secondary identity confirmation to prevent fraudulent takeover.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q4 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseS4" aria-expanded="false">
+                            What should I do if I suspect unauthorized account access?
+                        </button>
+                    </h2>
+                    <div id="collapseS4" class="accordion-collapse collapse" data-bs-parent="#accordionSecurity">
+                        <div class="accordion-body">
+                            Freeze your account immediately via the security dashboard and contact our emergency response desk to lock all pending withdrawals.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q5 -->
+                <div class="accordion-item mb-2 border-0 bg-transparent">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseS5" aria-expanded="false">
+                            How does Prestige Finance protect my account?
+                        </button>
+                    </h2>
+                    <div id="collapseS5" class="accordion-collapse collapse" data-bs-parent="#accordionSecurity">
+                        <div class="accordion-body">
+                            We utilize 256-bit data encryption, secure cold-storage wallet protocols, multi-signature admin authorization, and 2FA logins.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- SECTION 8 — STILL HAVE QUESTIONS CTA -->
+<section style="padding: 60px 0; background-color: var(--color-surface); border-top: 1px solid var(--color-border);">
+    <div class="container animate-up" style="max-width: 900px;">
+        <div class="glass-card p-5 text-center" style="border-radius: 16px; border-top: 2px solid var(--color-primary); background: rgba(11,22,40,0.6);">
+            <h2 class="text-white fw-bold mb-3" style="font-family: 'Playfair Display', serif;">Didn't Find Your Answer?</h2>
+            <p class="text-muted small mx-auto mb-4" style="max-width: 600px;">
+                Our global support crew and quantitative account desks are on call 24 hours a day to assist you with secure transfers, high-yield protocols, and validation questions.
+            </p>
+            <div class="d-flex justify-content-center gap-3 flex-wrap mb-4">
+                <a href="{{ url_for('main.contact') }}" class="btn btn-gold px-4 py-2">Contact Support</a>
+                <a href="{{ url_for('main.how_it_works') }}" class="btn btn-outline-gold px-4 py-2">Read How It Works</a>
+            </div>
+            
+            <div class="border-top border-secondary border-opacity-25 pt-4">
+                <ul class="list-inline mb-0 text-muted extra-small">
+                    <li class="list-inline-item me-4"><i class="fas fa-envelope text-primary me-2"></i>support@prestigefinance.global</li>
+                    <li class="list-inline-item"><i class="fas fa-history text-primary me-2"></i>Average response time: &lt; 12 Hours</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CUSTOM CSS & TRANSITIONS -->
+<style>
+.category-pill {
+    background-color: var(--color-surface-2) !important;
+    color: var(--color-text-muted) !important;
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+.category-pill:hover {
+    color: var(--color-primary) !important;
+    border-color: rgba(201,168,76,0.3);
+}
+.category-pill.active {
+    background: linear-gradient(135deg, var(--color-primary), #a68434) !important;
+    color: var(--color-bg) !important;
+    border-color: transparent;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(201,168,76,0.3);
+}
+
+.accordion-item {
+    background-color: var(--color-surface) !important;
+    border: 1px solid var(--color-border) !important;
+    border-radius: 12px !important;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+.accordion-item:hover {
+    border-color: rgba(201,168,76,0.2) !important;
+}
+.accordion-button {
+    background-color: var(--color-surface) !important;
+    color: var(--color-text) !important;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 20px 24px;
+    box-shadow: none !important;
+    border: none !important;
+    transition: all 0.3s ease;
+}
+.accordion-button:not(.collapsed) {
+    color: var(--color-primary) !important;
+    background-color: var(--color-surface-2) !important;
+}
+.accordion-button::after {
+    filter: invert(72%) sepia(31%) saturate(543%) hue-rotate(5deg) brightness(85%) contrast(87%); /* gold arrow */
+}
+.accordion-body {
+    background-color: var(--color-surface) !important;
+    color: var(--color-text-muted) !important;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    padding: 20px 24px 24px;
+    border-top: 1px solid rgba(255,255,255,0.03);
+}
+</style>
+
+<!-- CLIENT JAVASCRIPT ENGINE -->
+<script>
+function switchCategory(category) {
+    // Revert search input
+    document.getElementById('faqSearch').value = '';
+    
+    // Toggle active category tabs
+    const pills = document.querySelectorAll('.category-pill');
+    pills.forEach(pill => {
+        if (pill.getAttribute('data-category') === category) {
+            pill.classList.add('active');
+        } else {
+            pill.classList.remove('active');
+        }
+    });
+
+    // Toggle active category blocks
+    const groups = document.querySelectorAll('.faq-group');
+    groups.forEach(group => {
+        if (group.id === 'faq-' + category) {
+            group.style.display = 'block';
+        } else {
+            group.style.display = 'none';
+        }
+    });
+
+    // Make all item blocks inside visible
+    const items = document.querySelectorAll('.accordion-item');
+    items.forEach(item => {
+        item.style.display = 'block';
+    });
+}
+
+function filterFAQs() {
+    const query = document.getElementById('faqSearch').value.toLowerCase().trim();
+    const activeTab = document.querySelector('.category-pill.active');
+    const activeCategory = activeTab ? activeTab.getAttribute('data-category') : 'general';
+    
+    const groups = document.querySelectorAll('.faq-group');
+    const items = document.querySelectorAll('.accordion-item');
+    
+    if (query.length > 0) {
+        // Show all groups so we can search globally across category groups
+        groups.forEach(group => {
+            group.style.display = 'block';
+        });
+
+        items.forEach(item => {
+            const btn = item.querySelector('.accordion-button');
+            const body = item.querySelector('.accordion-body');
+            const questionText = btn ? btn.textContent.toLowerCase() : '';
+            const answerText = body ? body.textContent.toLowerCase() : '';
+
+            if (questionText.includes(query) || answerText.includes(query)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    } else {
+        // Reset view: hide non-active category blocks and show all items in active block
+        groups.forEach(group => {
+            if (group.id === 'faq-' + activeCategory) {
+                group.style.display = 'block';
+            } else {
+                group.style.display = 'none';
+            }
+        });
+
+        items.forEach(item => {
+            item.style.display = 'block';
+        });
+    }
+}
+</script>
+{% endblock %}
