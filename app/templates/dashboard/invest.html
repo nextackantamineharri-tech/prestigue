@@ -12,7 +12,7 @@
 <div class="row g-4 animate-up" style="animation-delay: 0.1s;">
     {% for plan in plans %}
     <div class="col-md-6 col-lg-4">
-        <div class="glass-card p-4 h-100 position-relative border-0 {{ 'border border-primary border-opacity-50 shadow-lg' if plan.is_featured else '' }}" style="transition: transform 0.3s ease;">
+        <div class="glass-card p-4 h-100 position-relative border-0 {{ 'border border-primary border-opacity-50 shadow-lg' if plan.is_featured else '' }}">
             {% if plan.is_featured %}
                 <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-primary text-dark px-4 py-2 extra-small fw-bold letter-spacing-widest">
                     MOST POPULAR
@@ -60,46 +60,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Investment Modal Redesign -->
-    <div class="modal fade" id="investModal{{ plan.id }}" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content glass-card border-0 shadow-2xl">
-                <div class="modal-header border-bottom border-white border-opacity-10 p-4">
-                    <h5 class="modal-title fw-bold text-white" style="font-family: 'Playfair Display', serif;">Invest in {{ plan.name }}</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body p-4 p-md-5">
-                    <div class="p-3 bg-white bg-opacity-5 rounded-4 mb-4 d-flex justify-content-between align-items-center border border-white border-opacity-5">
-                        <span class="extra-small text-muted text-uppercase fw-bold">Available Liquidity</span>
-                        <span class="fw-bold text-success">${{ "{:,.2f}".format(current_user.account_balance) }}</span>
-                    </div>
-                    
-                    <form method="POST" action="">
-                        {{ form.hidden_tag() }}
-                        <input type="hidden" name="plan_id" value="{{ plan.id }}">
-                        
-                        <div class="mb-4">
-                            <label class="form-label">Capital Amount (USD)</label>
-                            <div class="input-group input-group-lg">
-                                <span class="input-group-text bg-dark bg-opacity-50 border-end-0 text-primary">$</span>
-                                {{ form.amount(class="form-control border-start-0", placeholder="0.00", min=plan.min_amount, max=plan.max_amount) }}
-                            </div>
-                            <div class="form-text extra-small opacity-50 mt-2">
-                                Acceptable range: ${{ "{:,.0f}".format(plan.min_amount) }} — ${{ "{:,.0f}".format(plan.max_amount) }}
-                            </div>
-                        </div>
-                        
-                        <div class="d-grid mt-5">
-                            <button type="submit" class="btn btn-gold btn-lg py-3" onclick="return checkBalance(this, {{ current_user.account_balance }}, {{ plan.min_amount }}, {{ plan.max_amount }})">
-                                Confirm Asset Allocation
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
     {% else %}
     <div class="col-12 text-center py-5">
         <div class="bg-white bg-opacity-5 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 100px; height: 100px;">
@@ -111,10 +71,82 @@
     {% endfor %}
 </div>
 
+<!-- Investment Modals (Outside Stacking Context for Mobile Support) -->
+{% for plan in plans %}
+<div class="modal fade" id="investModal{{ plan.id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content glass-card border-0 shadow-2xl">
+            <div class="modal-header border-bottom border-white border-opacity-10 p-4">
+                <h5 class="modal-title fw-bold text-white" style="font-family: 'Playfair Display', serif;">Invest in {{ plan.name }}</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4 p-md-5">
+                <div class="p-3 bg-white bg-opacity-5 rounded-4 mb-4 d-flex justify-content-between align-items-center border border-white border-opacity-5">
+                    <span class="extra-small text-muted text-uppercase fw-bold">Available Liquidity</span>
+                    <span class="fw-bold text-success">${{ "{:,.2f}".format(current_user.account_balance) }}</span>
+                </div>
+                
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    <input type="hidden" name="plan_id" value="{{ plan.id }}">
+                    
+                    <div class="mb-4">
+                        <label class="form-label">Capital Amount (USD)</label>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text bg-dark bg-opacity-50 border-end-0 text-primary">$</span>
+                            {{ form.amount(class="form-control border-start-0", placeholder="0.00", min=plan.min_amount, max=plan.max_amount) }}
+                        </div>
+                        <div class="form-text extra-small opacity-75 mt-2">
+                            Acceptable range: ${{ "{:,.0f}".format(plan.min_amount) }} — ${{ "{:,.0f}".format(plan.max_amount) }}
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid mt-5">
+                        <button type="submit" class="btn btn-gold btn-lg py-3" onclick="return checkBalance(this, {{ current_user.account_balance }}, {{ plan.min_amount }}, {{ plan.max_amount }})">
+                            Confirm Asset Allocation
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
 <style>
     .letter-spacing-widest { letter-spacing: 0.15em; }
     .extra-small { font-size: 0.75rem; }
     .shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+
+    /* Mobile modal fixes */
+    @media (max-width: 575.98px) {
+        .modal-dialog {
+            margin: 0.75rem;
+        }
+        .modal-body.p-4.p-md-5 {
+            padding: 1.25rem !important;
+        }
+        .modal .input-group-lg .form-control,
+        .modal .input-group-lg .input-group-text {
+            font-size: 1rem;
+            padding: 0.6rem 0.9rem;
+        }
+        .modal .btn-lg.py-3 {
+            padding-top: 0.75rem !important;
+            padding-bottom: 0.75rem !important;
+        }
+        .modal .d-grid.mt-5 {
+            margin-top: 1.5rem !important;
+        }
+    }
+
+    /* Plan card hover — no transform (avoids stacking context clipping modals) */
+    .glass-card {
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .glass-card:hover {
+        border-color: rgba(201, 168, 76, 0.3);
+    }
 </style>
 {% endblock %}
 

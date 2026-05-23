@@ -17,19 +17,47 @@ dashboard_bp = Blueprint('dashboard', __name__)
 @dashboard_bp.route('/')
 @login_required
 def index():
-    # Placeholder for recent transactions and statistics
-    # In future phases, these will pull from Transaction and Investment models
+    # Fetch active investments
+    active_invs = UserInvestment.query.filter_by(user_id=current_user.id, status='active').all()
+    active_investments = sum(inv.amount for inv in active_invs)
+
+    # Fetch pending withdrawals
+    pending_withs = Withdrawal.query.filter_by(user_id=current_user.id, status='pending').all()
+    pending_withdrawals = sum(w.amount for w in pending_withs)
+
     stats = {
         'total_deposits': current_user.total_deposited,
-        'active_investments': 0, # Placeholder
+        'active_investments': active_investments,
         'total_profit': current_user.total_profit,
-        'pending_withdrawals': 0, # Placeholder
+        'pending_withdrawals': pending_withdrawals,
         'total_withdrawn': current_user.total_withdrawn,
-        'referral_earnings': 0, # Placeholder
+        'referral_earnings': current_user.referral_bonus,
         'account_balance': current_user.account_balance,
     }
     
-    recent_transactions = [] # Placeholder
+    # Fetch recent transactions (deposits + withdrawals)
+    deposits = Deposit.query.filter_by(user_id=current_user.id).order_by(Deposit.created_at.desc()).limit(5).all()
+    withdrawals = Withdrawal.query.filter_by(user_id=current_user.id).order_by(Withdrawal.created_at.desc()).limit(5).all()
+    
+    txs = []
+    for d in deposits:
+        txs.append({
+            'type': 'deposit',
+            'amount': d.amount,
+            'created_at': d.created_at,
+            'status': d.status
+        })
+    for w in withdrawals:
+        txs.append({
+            'type': 'withdrawal',
+            'amount': w.amount,
+            'created_at': w.created_at,
+            'status': w.status
+        })
+    
+    # Sort by created_at desc and take top 5
+    txs.sort(key=lambda x: x['created_at'], reverse=True)
+    recent_transactions = txs[:5]
     
     return render_template('dashboard/index.html', title='Dashboard', stats=stats, transactions=recent_transactions)
 

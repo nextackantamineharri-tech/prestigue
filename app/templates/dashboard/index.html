@@ -147,7 +147,7 @@
                                 </div>
                                 <div class="text-end">
                                     <p class="small fw-bold mb-0 text-white">${{ "{:,.2f}".format(tx.amount) }}</p>
-                                    <span class="badge rounded-pill extra-small px-2 py-1 {{ 'bg-success bg-opacity-10 text-success' if tx.status == 'approved' else ('bg-warning bg-opacity-10 text-warning' if tx.status == 'pending' else 'bg-danger bg-opacity-10 text-danger') }}">
+                                    <span class="badge rounded-pill extra-small px-2 py-1 {{ 'bg-success bg-opacity-10 text-success' if tx.status in ['approved', 'paid'] else ('bg-warning bg-opacity-10 text-warning' if tx.status == 'pending' else 'bg-danger bg-opacity-10 text-danger') }}">
                                         {{ tx.status }}
                                     </span>
                                 </div>
