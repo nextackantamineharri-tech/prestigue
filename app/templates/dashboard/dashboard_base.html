@@ -276,6 +276,36 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
+        /* Custom Google Translate Premium Styling */
+        .goog-logo-link {
+            display: none !important;
+        }
+        .goog-te-gadget {
+            color: transparent !important;
+            font-size: 0 !important;
+        }
+        .goog-te-gadget .goog-te-combo {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border: 1px solid rgba(201, 168, 76, 0.4) !important;
+            color: #fff !important;
+            padding: 6px 12px !important;
+            border-radius: 20px !important;
+            outline: none !important;
+            font-family: 'DM Sans', sans-serif !important;
+            font-size: 0.8rem !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+        }
+        .goog-te-gadget .goog-te-combo:hover {
+            border-color: rgba(201, 168, 76, 1) !important;
+            background: rgba(201, 168, 76, 0.15) !important;
+        }
+        .goog-te-banner-frame.skiptranslate {
+            display: none !important;
+        }
+        body {
+            top: 0px !important;
+        }
     </style>
     {% block head %}{% endblock %}
 </head>
@@ -348,6 +378,7 @@
         </div>
         
         <div class="d-flex align-items-center gap-4">
+            <div id="google_translate_element" class="d-flex align-items-center me-2"></div>
             <a href="{{ url_for('dashboard.notifications') }}" class="notification-bell {{ 'has-unread' if unread_count > 0 }} text-decoration-none">
                 <i class="fas fa-bell"></i>
                 {% if unread_count > 0 %}
@@ -436,8 +467,31 @@
             }
         });
     </script>
-    <!-- Tidio Live Chat -->
-    <script src="//code.tidio.co/0gxacanmvnyeedjwbdnvlymnoqgxvpza.js" async></script>
+    <!-- Smartsupp Live Chat script -->
+    <script type="text/javascript">
+    var _smartsupp = _smartsupp || {};
+    _smartsupp.key = '70bb42d21f7cab0a65de1660b48cffe14d9bb518';
+    window.smartsupp||(function(d) {
+      var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[];
+      s=d.getElementsByTagName('script')[0];c=d.createElement('script');
+      c.type='text/javascript';c.charset='utf-8';c.async=true;
+      c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);
+    })(document);
+    </script>
+    <noscript>Powered by <a href="https://www.smartsupp.com" target="_blank">Smartsupp</a></noscript>
+    
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    
     {% block scripts %}{% endblock %}
 </body>
 </html>

@@ -67,33 +67,39 @@ def invest():
     plans = InvestmentPlan.query.filter_by(is_active=True).all()
     form = InvestForm()
     
-    if form.validate_on_submit():
-        plan = InvestmentPlan.query.get_or_404(form.plan_id.data)
-        amount = form.amount.data
-        
-        # Validation
-        if amount < plan.min_amount or amount > plan.max_amount:
-            flash(f'Amount must be between ${plan.min_amount} and ${plan.max_amount}', 'danger')
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            plan = InvestmentPlan.query.get_or_404(form.plan_id.data)
+            amount = form.amount.data
+            
+            # Validation
+            if amount < plan.min_amount or amount > plan.max_amount:
+                flash(f'Amount must be between ${plan.min_amount} and ${plan.max_amount}', 'danger')
+                return redirect(url_for('dashboard.invest'))
+                
+            if current_user.account_balance < amount:
+                flash('Insufficient account balance. Please deposit funds.', 'danger')
+                return redirect(url_for('dashboard.invest'))
+                
+            # Process Investment
+            current_user.account_balance -= amount
+            investment = UserInvestment(
+                user_id=current_user.id,
+                plan_id=plan.id,
+                amount=amount,
+                end_date=datetime.utcnow() + timedelta(days=plan.duration_days)
+            )
+            db.session.add(investment)
+            db.session.commit()
+            
+            flash(f'Successfully invested ${amount} in {plan.name}!', 'success')
+            return redirect(url_for('dashboard.index'))
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(f'{field.capitalize()}: {error}', 'danger')
             return redirect(url_for('dashboard.invest'))
             
-        if current_user.account_balance < amount:
-            flash('Insufficient account balance. Please deposit funds.', 'danger')
-            return redirect(url_for('dashboard.invest'))
-            
-        # Process Investment
-        current_user.account_balance -= amount
-        investment = UserInvestment(
-            user_id=current_user.id,
-            plan_id=plan.id,
-            amount=amount,
-            end_date=datetime.utcnow() + timedelta(days=plan.duration_days)
-        )
-        db.session.add(investment)
-        db.session.commit()
-        
-        flash(f'Successfully invested ${amount} in {plan.name}!', 'success')
-        return redirect(url_for('dashboard.index'))
-        
     return render_template('dashboard/invest.html', title='Investment Plans', plans=plans, form=form)
 
 @dashboard_bp.route('/my-investments')

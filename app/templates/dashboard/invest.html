@@ -32,11 +32,11 @@
             <div class="p-4 rounded-4 bg-white bg-opacity-5 mb-5">
                 <div class="d-flex justify-content-between mb-3 border-bottom border-white border-opacity-5 pb-2">
                     <span class="extra-small text-muted text-uppercase fw-bold"><i class="fas fa-hand-holding-dollar me-2 text-primary"></i>Min Deposit</span>
-                    <span class="small fw-bold text-white">${{ "{:,.0f}".format(plan.min_amount) }}</span>
+                    <span class="small fw-bold text-primary">${{ "{:,.0f}".format(plan.min_amount) }}</span>
                 </div>
                 <div class="d-flex justify-content-between mb-3 border-bottom border-white border-opacity-5 pb-2">
                     <span class="extra-small text-muted text-uppercase fw-bold"><i class="fas fa-vault me-2 text-primary"></i>Max Deposit</span>
-                    <span class="small fw-bold text-white">${{ "{:,.0f}".format(plan.max_amount) }}</span>
+                    <span class="small fw-bold text-primary">${{ "{:,.0f}".format(plan.max_amount) }}</span>
                 </div>
                 <div class="d-flex justify-content-between mb-3 border-bottom border-white border-opacity-5 pb-2">
                     <span class="extra-small text-muted text-uppercase fw-bold"><i class="fas fa-chart-pie me-2 text-primary"></i>Profit Type</span>
@@ -44,11 +44,11 @@
                 </div>
                 <div class="d-flex justify-content-between mb-3 border-bottom border-white border-opacity-5 pb-2">
                     <span class="extra-small text-muted text-uppercase fw-bold"><i class="fas fa-calendar-check me-2 text-primary"></i>Payout</span>
-                    <span class="small fw-bold text-white text-capitalize">{{ plan.payout_frequency }}</span>
+                    <span class="small fw-bold text-primary text-capitalize">{{ plan.payout_frequency }}</span>
                 </div>
                 <div class="d-flex justify-content-between">
                     <span class="extra-small text-muted text-uppercase fw-bold"><i class="fas fa-rotate-left me-2 text-primary"></i>Capital Return</span>
-                    <span class="small fw-bold text-white">{{ 'Guaranteed' if plan.return_capital else 'Principal Burn' }}</span>
+                    <span class="small fw-bold text-primary">{{ 'Guaranteed' if plan.return_capital else 'Principal Burn' }}</span>
                 </div>
             </div>
             
@@ -87,7 +87,7 @@
                 </div>
                 
                 <form method="POST" action="">
-                    {{ form.hidden_tag() }}
+                    {{ form.csrf_token }}
                     <input type="hidden" name="plan_id" value="{{ plan.id }}">
                     
                     <div class="mb-4">
