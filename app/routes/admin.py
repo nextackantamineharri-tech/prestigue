@@ -36,7 +36,7 @@ def dashboard():
     pending_withdrawals  = Withdrawal.query.filter_by(status='pending').count()
     pending_kyc          = KYC.query.filter_by(status='pending').count()
     total_deposits       = db.session.query(func.sum(Deposit.amount)).filter_by(status='approved').scalar() or 0
-    total_withdrawals    = db.session.query(func.sum(Withdrawal.amount)).filter_by(status='paid').scalar() or 0
+    total_withdrawals    = db.session.query(func.sum(Withdrawal.amount)).filter(Withdrawal.status.in_(['approved', 'paid'])).scalar() or 0
     total_profit         = db.session.query(func.sum(ProfitLog.amount)).scalar() or 0
     recent_deposits      = Deposit.query.order_by(Deposit.created_at.desc()).limit(5).all()
     recent_withdrawals   = Withdrawal.query.order_by(Withdrawal.created_at.desc()).limit(5).all()
@@ -284,15 +284,20 @@ def process_withdrawal(id):
     
     if form.validate_on_submit():
         if 'submit_approve' in request.form:
+            if withdrawal.status == 'pending':
+                withdrawal.user.total_withdrawn += withdrawal.amount
             withdrawal.status = 'approved'
             notify_withdrawal_approved(withdrawal.user, withdrawal)
             flash('Withdrawal request approved!', 'success')
         elif 'submit_paid' in request.form:
+            if withdrawal.status == 'pending':
+                withdrawal.user.total_withdrawn += withdrawal.amount
             withdrawal.status = 'paid'
-            withdrawal.user.total_withdrawn += withdrawal.amount
             flash('Withdrawal marked as paid!', 'success')
         else:
             # Rejection returns funds to user
+            if withdrawal.status in ['approved', 'paid']:
+                withdrawal.user.total_withdrawn -= withdrawal.amount
             withdrawal.status = 'rejected'
             withdrawal.admin_note = form.admin_note.data
             withdrawal.user.account_balance += withdrawal.amount
