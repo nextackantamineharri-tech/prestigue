@@ -1,14 +1,13 @@
-# fly.toml app configuration for prestige
-# Update the 'app' name below to match your actual Fly.io app name if it differs
+# fly.toml app configuration for prestige-dnmotw
 
-app = "prestige-finance"
-primary_region = "sea"
+app = "prestige-dnmotw"
+primary_region = "ams"
 
 [build]
   dockerfile = "Dockerfile"
 
 [http_service]
-  internal_port = 8000
+  internal_port = 8080
   force_https = true
   auto_stop_machines = true
   auto_start_machines = true
@@ -18,4 +17,4 @@ primary_region = "sea"
 [[vm]]
   cpu_kind = "shared"
   cpus = 1
-  memory_mb = 512
+  memory_mb = 256
