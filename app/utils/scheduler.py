@@ -10,7 +10,7 @@ def init_scheduler(app):
     # Schedule the profit processing task
     # For production, this should run once a day
     # For testing/demo, you might want it more frequent
-    @scheduler.task('interval', id='process_profits', hours=24)
+    @scheduler.task('interval', id='process_profits', minutes=15)
     def scheduled_profit_task():
         with app.app_context():
             process_daily_profits()
