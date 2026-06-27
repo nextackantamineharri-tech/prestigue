@@ -23,8 +23,9 @@ services:
       - .:/app
       - ./logs:/app/logs
     ports:
-      - "8000:8000"
+      - "8080:8080"
     environment:
+      PORT: 8080
       DATABASE_URL: postgresql://${DB_USER:-prestige_user}:${DB_PASSWORD:-prestige_pass}@db:5432/${DB_NAME:-prestige_db}
       FLASK_ENV: production
       SECRET_KEY: ${SECRET_KEY}

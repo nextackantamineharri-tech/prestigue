@@ -5,6 +5,7 @@ FROM python:3.12-slim
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV FLASK_APP=run.py
+ENV PORT=8080
 
 # Set the working directory in the container
 WORKDIR /app
@@ -32,7 +33,7 @@ RUN mkdir -p logs
 RUN chmod +x scripts/entrypoint.sh
 
 # Expose the port the app runs on
-EXPOSE 8000
+EXPOSE 8080
 
 # Set entrypoint
 ENTRYPOINT ["scripts/entrypoint.sh"]
