@@ -1,9 +1,9 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, session, flash, redirect, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_mail import Mail
-from flask_wtf.csrf import CSRFProtect
+from flask_wtf.csrf import CSRFProtect, CSRFError
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_bcrypt import Bcrypt
@@ -63,6 +63,13 @@ def create_app(config_class=Config):
     # Security headers on every response
     app.after_request(apply_security_headers)
 
+    # Keep the session cookie alive for its full lifetime instead of expiring
+    # it when the browser closes — a tab left open across a browser restart
+    # was losing its session cookie, which surfaces as a CSRF error on submit.
+    @app.before_request
+    def make_session_permanent():
+        session.permanent = True
+
     # Template context processors
     @app.context_processor
     def inject_globals():
@@ -76,6 +83,11 @@ def create_app(config_class=Config):
         return dict(settings=settings, now=datetime.utcnow(), unread_count=unread_count)
 
     # Error handlers
+    @app.errorhandler(CSRFError)
+    def csrf_error(e):
+        flash('Your session expired before the form was submitted. Please try again.', 'warning')
+        return redirect(request.path)
+
     @app.errorhandler(403)
     def forbidden(e):
         return render_template('errors/403.html'), 403
