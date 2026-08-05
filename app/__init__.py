@@ -1,7 +1,7 @@
 from flask import Flask, render_template, session, flash, redirect, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from flask_mail import Mail
 from flask_wtf.csrf import CSRFProtect, CSRFError
 from flask_limiter import Limiter
@@ -70,12 +70,26 @@ def create_app(config_class=Config):
     def make_session_permanent():
         session.permanent = True
 
+    # Site-wide login gate — everything requires an authenticated session
+    # except the auth pages themselves (login, register, OTP, forgot password)
+    # and static assets.
+    PUBLIC_ENDPOINTS = {
+        'auth.login', 'auth.register', 'auth.verify_otp', 'auth.resend_otp',
+        'auth.forgot_password', 'auth.logout', 'static',
+    }
+
+    @app.before_request
+    def require_login():
+        if request.endpoint is None or request.endpoint in PUBLIC_ENDPOINTS:
+            return
+        if not current_user.is_authenticated:
+            return login_manager.unauthorized()
+
     # Template context processors
     @app.context_processor
     def inject_globals():
         from app.models.user import SystemSettings
         from app.models.notification import Notification
-        from flask_login import current_user
         settings = SystemSettings.get_settings()
         unread_count = 0
         if current_user.is_authenticated:
