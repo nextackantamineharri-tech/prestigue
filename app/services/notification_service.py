@@ -1,37 +1,73 @@
 from flask import current_app, render_template
-from flask_mail import Message
-from app import mail, db
+from app import db
 from app.models.notification import Notification
 import threading
+import requests
 
-def _send_async(app, msg):
+
+def _send_via_brevo(app, subject, recipients, html_content):
+    """Send email through Brevo's transactional HTTP API (port 443 — no firewall issues)."""
     with app.app_context():
+        api_key = app.config.get('BREVO_API_KEY')
+        sender_email = app.config.get('MAIL_DEFAULT_SENDER', 'noreply@prestigefinanceglobal.net')
+        app_name = app.config.get('APP_NAME', 'Prestige Finance Global')
+
+        if not api_key:
+            app.logger.error('[Mail Error] BREVO_API_KEY is not set in config.')
+            return
+
+        payload = {
+            "sender": {"name": app_name, "email": sender_email},
+            "to": [{"email": r} for r in recipients],
+            "subject": subject,
+            "htmlContent": html_content,
+        }
+
         try:
-            app.logger.info(f"DEBUG: Background thread starting to send email to {msg.recipients}")
-            mail.send(msg)
-            app.logger.info("DEBUG: Background thread successfully sent email")
+            app.logger.info(f"Sending email via Brevo API to {recipients}")
+            response = requests.post(
+                "https://api.brevo.com/v3/smtp/email",
+                headers={
+                    "api-key": api_key,
+                    "Content-Type": "application/json",
+                },
+                json=payload,
+                timeout=15,
+            )
+            if response.status_code in (200, 201):
+                app.logger.info(f"Email sent successfully to {recipients}")
+            else:
+                app.logger.error(
+                    f"[Mail Error] Brevo API returned {response.status_code}: {response.text}"
+                )
         except Exception as e:
-            app.logger.error(f"DEBUG: Background thread FAILED to send email: {e}")
-            app.logger.error(f"[Mail Error] {e}")
+            app.logger.error(f"[Mail Error] Brevo API exception: {e}")
+
 
 def send_email(subject, recipients, template, **kwargs):
-    """Generic send function — runs in background thread."""
+    """Generic send function — renders template and dispatches via Brevo HTTP API in background thread."""
     app = current_app._get_current_object()
     from app.models.user import SystemSettings
     settings = SystemSettings.get_settings()
-    msg = Message(
-        subject=f"[{settings.site_name}] {subject}",
-        recipients=recipients if isinstance(recipients, list) else [recipients],
-        sender=app.config.get('MAIL_DEFAULT_SENDER', 'noreply@prestigefinance.com')
-    )
-    msg.html = render_template(template, settings=settings, **kwargs)
-    threading.Thread(target=_send_async, args=(app, msg)).start()
+
+    full_subject = f"[{settings.site_name}] {subject}"
+    recipient_list = recipients if isinstance(recipients, list) else [recipients]
+
+    # Render HTML inside the request context before handing off to the thread
+    html_content = render_template(template, settings=settings, **kwargs)
+
+    threading.Thread(
+        target=_send_via_brevo,
+        args=(app, full_subject, recipient_list, html_content),
+    ).start()
+
 
 def create_notification(user, title, message, type='info'):
     """Create an in-app notification."""
     notif = Notification(user_id=user.id, title=title, message=message, type=type)
     db.session.add(notif)
     db.session.commit()
+
 
 # ──────────────────────────────────────────
 # Notification helpers — one per event
@@ -52,6 +88,7 @@ def get_all_admin_emails():
         current_app.logger.error(f"Error fetching admin emails: {e}")
         config_admin = current_app.config.get('ADMIN_EMAIL')
         return [config_admin] if config_admin else []
+
 
 def notify_registration(user):
     send_email('Welcome to the Platform', user.email, 'emails/welcome.html', user=user)

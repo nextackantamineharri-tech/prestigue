@@ -2,7 +2,6 @@ from flask import Flask, render_template, session, flash, redirect, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager, current_user
-from flask_mail import Mail
 from flask_wtf.csrf import CSRFProtect, CSRFError
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -19,7 +18,6 @@ from config import Config
 db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
-mail = Mail()
 csrf = CSRFProtect()
 bcrypt = Bcrypt()
 limiter = Limiter(key_func=get_remote_address)
@@ -32,7 +30,6 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
-    mail.init_app(app)
     csrf.init_app(app)
     bcrypt.init_app(app)
     limiter.init_app(app)
