@@ -6,8 +6,14 @@ load_dotenv()
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard-to-guess-string'
     uri = os.environ.get('DATABASE_URL')
-    if uri and uri.startswith('postgres://'):
-        uri = uri.replace('postgres://', 'postgresql://', 1)
+    if uri:
+        if uri.startswith('postgres://'):
+            uri = uri.replace('postgres://', 'postgresql://', 1)
+        # Force the psycopg2 driver explicitly — SQLAlchemy's default dialect
+        # for a bare "postgresql://" URL is version-dependent, and only
+        # psycopg2-binary is installed (see requirements.txt).
+        if uri.startswith('postgresql://'):
+            uri = uri.replace('postgresql://', 'postgresql+psycopg2://', 1)
     SQLALCHEMY_DATABASE_URI = uri
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
